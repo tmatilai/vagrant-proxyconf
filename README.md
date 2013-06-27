@@ -1,10 +1,20 @@
 # Vagrant Proxy Configuration Plugin
 
+[![Gem Version](https://badge.fury.io/rb/vagrant-proxyconf.png)][gem]
+[![Build Status](https://travis-ci.org/tmatilai/vagrant-proxyconf.png?branch=master)][travis]
+[![Dependency Status](https://gemnasium.com/tmatilai/vagrant-proxyconf.png)][gemnasium]
+[![Code Climate](https://codeclimate.com/github/tmatilai/vagrant-proxyconf.png)][codeclimate]
+
+[gem]: https://rubygems.org/gems/vagrant-proxyconf
+[travis]: https://travis-ci.org/tmatilai/vagrant-proxyconf
+[gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
+[codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
+
 A [Vagrant](http://www.vagrantup.com/) 1.1+ plugin that configures the virtual machine to use specified proxies for package managers etc.
 
 At this state we support:
 
-- [APT](http://en.wikipedia.org/wiki/Advanced_Packaging_Tool) proxy/cacher.
+- [APT](http://en.wikipedia.org/wiki/Advanced_Packaging_Tool) proxy/cacher
 
 Support is planned for other package managers (at least yum).
 
