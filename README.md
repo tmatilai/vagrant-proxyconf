@@ -43,8 +43,11 @@ You can also use `APT_PROXY_HTTP` and `APT_PROXY_HTTPS` environment variables. T
 
 Proxy settings will be written to _/etc/apt/apt.conf.d/01proxy_ on the guest.
 
+[Here](https://github.com/tmatilai/apt-cacher-box) is an example for setting up apt-cacher proxy in a Vagrant VM.
+
 ## Related plugins and projects
 
+- [apt-cacher-box](https://github.com/tmatilai/apt-cacher-box) (Vagrant setup for apt-cacher-ng)
 - [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier) (Vagrant plugin)
-- [vagrant-proxy](https://github.com/clintoncwolfe/vagrant-proxy) (Vagrant plugin)
 - [vagrant-httpproxy](https://github.com/juliandunn/vagrant-httpproxy) (Chef cookbook)
+- [vagrant-proxy](https://github.com/clintoncwolfe/vagrant-proxy) (Vagrant plugin)
