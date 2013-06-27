@@ -15,6 +15,12 @@ module VagrantPlugins
           @app.call env
 
           proxy_config = env[:machine].config.apt_proxy
+
+          # Vagrant does not seem to call `finalize!` if the configuration
+          # key is not used in Vagrantfiles.
+          # https://github.com/tmatilai/vagrant-proxyconf/issues/2
+          proxy_config.finalize!
+
           if !proxy_config.enabled?
             logger.debug "apt_proxy not enabled or configured"
           elsif !proxy_conf_capability?(env[:machine])
