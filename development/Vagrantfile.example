@@ -1,0 +1,20 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+BOX = ENV.fetch('BOX', 'ubuntu-12.04')
+
+Vagrant.require_plugin 'vagrant-proxyconf'
+
+Vagrant.configure('2') do |config|
+  # Apt proxy
+  config.apt_proxy.http  = '192.168.33.200'
+  config.apt_proxy.https = 'DIRECT'
+
+  # Disable the default share
+  config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: true
+
+  config.vm.box = BOX
+  if BOX == 'ubuntu-12.04'
+    ubuntu.vm.box_url = 'https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box'
+  end
+end
