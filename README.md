@@ -45,5 +45,6 @@ Proxy settings will be written to _/etc/apt/apt.conf.d/01proxy_ on the guest.
 
 ## Related plugins and projects
 
-- [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)
-- [vagrant-proxy](https://github.com/clintoncwolfe/vagrant-proxy)
+- [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier) (Vagrant plugin)
+- [vagrant-proxy](https://github.com/clintoncwolfe/vagrant-proxy) (Vagrant plugin)
+- [vagrant-httpproxy](https://github.com/juliandunn/vagrant-httpproxy) (Chef cookbook)
