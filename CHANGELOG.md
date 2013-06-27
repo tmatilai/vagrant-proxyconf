@@ -1,4 +1,4 @@
-# 0.1.1 / _Not released yet_
+# 0.1.1 / 2013-06-27
 
 - Don't crash if there is no configuration for us in the Vagrantfiles ([GH-2])
     * Related [Vagrant issue](https://github.com/mitchellh/vagrant/issues/1877)
