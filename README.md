@@ -27,7 +27,9 @@ vagrant plugin install vagrant-proxyconf
 
 ### Apt
 
-The proxy for Apt can be specified in the Vagrantfile:
+The proxy for Apt can be specified in the Vagrantfile. You might want to set it to all boxes, in which case use _$HOME/.vagrant.d/Vagrantfile_. The configuration only triggers on Debian based machines, so there is no harm in setting it globally.
+
+Example configuration:
 ```ruby
 Vagrant.configure("2") do |config|
 
@@ -39,11 +41,16 @@ end
 
 The proxy can be specified as an IP address, name or full URL, with optional port (defaults to 3142).
 
-You can also use `APT_PROXY_HTTP` and `APT_PROXY_HTTPS` environment variables. These override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
+You can also use `APT_PROXY_HTTP` and `APT_PROXY_HTTPS` environment variables. These override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value. For example to spin up a VM while overriding a globally configured proxy, run:
+```sh
+APT_PROXY_HTTP="10.5.5.200:8080" vagrant up
+```
 
 Proxy settings will be written to _/etc/apt/apt.conf.d/01proxy_ on the guest.
 
-[Here](https://github.com/tmatilai/apt-cacher-box) is an example for setting up apt-cacher proxy in a Vagrant VM.
+#### Running apt-cacher-ng on a Vagrant box
+
+[Here](https://github.com/tmatilai/apt-cacher-box) is an example for setting up apt-cacher proxy server in a Vagrant VM.
 
 ## Related plugins and projects
 
