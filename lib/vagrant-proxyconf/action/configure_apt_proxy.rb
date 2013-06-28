@@ -32,6 +32,8 @@ module VagrantPlugins
           end
         end
 
+        private
+
         def write_apt_proxy_conf(machine, config)
           logger.debug "Configuration:\n#{config}"
 
