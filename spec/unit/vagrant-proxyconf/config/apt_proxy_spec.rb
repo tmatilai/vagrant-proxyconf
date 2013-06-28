@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'unit/support/shared/apt_proxy_config'
-require 'vagrant-proxyconf/apt_proxy_config'
+require 'vagrant-proxyconf/config/apt_proxy'
 
-describe VagrantPlugins::ProxyConf::AptProxyConfig do
+describe VagrantPlugins::ProxyConf::Config::AptProxy do
   let(:instance) { described_class.new }
 
   before :each do

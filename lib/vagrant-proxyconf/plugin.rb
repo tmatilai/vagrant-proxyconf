@@ -5,9 +5,9 @@ module VagrantPlugins
     class Plugin < Vagrant.plugin('2')
       name 'vagrant-proxyconf'
 
-      config('apt_proxy') do
-        require_relative 'apt_proxy_config'
-        AptProxyConfig
+      config 'apt_proxy' do
+        require_relative 'config/apt_proxy'
+        Config::AptProxy
       end
 
       guest_capability 'debian', 'apt_proxy_conf' do
@@ -16,7 +16,7 @@ module VagrantPlugins
       end
 
       proxyconf_action_hook = lambda do |hook|
-        require_relative 'action'
+        require_relative 'action/configure_apt_proxy'
         hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
       end
       action_hook 'proxyconf-machine-up', :machine_action_up, &proxyconf_action_hook
