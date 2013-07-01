@@ -12,11 +12,12 @@
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies for package managers etc.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies.
 
 At this state we support:
 
-* [APT](http://en.wikipedia.org/wiki/Advanced_Packaging_Tool) proxy/cacher
+* Generic `*_proxy` environment variables that many programs support
+* APT proxy/cacher
 
 Support is planned for other package managers (at least yum).
 
@@ -46,6 +47,50 @@ The plugin hooks itself to all Vagrant commands triggering provisioning (e.g. `v
 Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use _$HOME/.vagrant.d/Vagrantfile_ or environment variables. Package manager specific settings are only used on supporting platforms (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.
 
 Project specific Vagrantfile overrides global settings. Environment variables override both.
+
+### Global `*_proxy` environment variables
+
+Many programs (wget, curl, yum, etc.) can be configured to use proxies with `<protocol>_proxy` or `<PROTOCOL>_PROXY` environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.env_proxy.http     = "http://192.168.33.200:8888/"
+  config.env_proxy.https    = "$http_proxy"
+  config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  # ... other stuff
+end
+```
+
+#### Configuration keys
+
+* `config.env_proxy.http` - The proxy for HTTP URIs
+* `config.env_proxy.https` - The proxy for HTTPS URIs
+* `config.env_proxy.ftp` - The proxy for FTS URIs
+* `config.env_proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
+
+#### Possible values
+
+* If all keys are unset or `nil`, no configuration is written.
+* A proxy can be specified in the form of _protocol://[user:pass@]host[:port]_.
+* The values are used as specified, so you can use for example variables that will be evaluated by the shell on the VM.
+* Empty string (`""`) or `false` in any setting also force the configuration file to be written, but without configuration for that key. Can be used to clear the old configuration and/or override a global setting.
+
+#### Environment variables
+
+* `VAGRANT_ENV_HTTP_PROXY`
+* `VAGRANT_ENV_HTTPS_PROXY`
+* `VAGRANT_ENV_FTP_PROXY`
+* `VAGRANT_ENV_NO_PROXY`
+
+These also override the Vagrantfile configuration. To disable or remove the proxy use an empty value.
+
+For example to spin up a VM, run:
+
+```sh
+VAGRANT_ENV_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
+```
 
 ### Apt
 
