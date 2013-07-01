@@ -10,9 +10,13 @@ module VagrantPlugins
         # HTTPS proxy for Apt
         attr_accessor :https
 
+        # FTP proxy for Apt
+        attr_accessor :ftp
+
         def initialize
           @http  = UNSET_VALUE
           @https = UNSET_VALUE
+          @ftp   = UNSET_VALUE
         end
 
         def finalize!
@@ -21,15 +25,18 @@ module VagrantPlugins
 
           @https = override_from_env_var('https', @https)
           @https = nil if @https == UNSET_VALUE
+
+          @ftp = override_from_env_var('ftp', @ftp)
+          @ftp = nil if @ftp == UNSET_VALUE
         end
 
         def enabled?
-          !http.nil? || !https.nil?
+          !http.nil? || !https.nil? || !ftp.nil?
         end
 
         # @return [String] the full configuration stanza
         def to_s
-          "#{config_for('http')}#{config_for('https')}"
+          %w[http https ftp].map { |proto| config_for(proto) }.join
         end
 
         private
@@ -46,7 +53,7 @@ module VagrantPlugins
 
           attr_reader :proto, :value
 
-          # @param proto [String] the protocol ("http", "https")
+          # @param proto [String] the protocol ("http", "https", ...)
           # @param value [Object] the configuration value
           def initialize(proto, value)
             @proto = proto

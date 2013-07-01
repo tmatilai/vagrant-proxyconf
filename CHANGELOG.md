@@ -1,5 +1,6 @@
 # 0.1.2 / _Not released yet_
 
+- Add Apt proxy configuration for FTP URIs ([GH-5])
 
 # 0.1.1 / 2013-06-27
 
@@ -14,3 +15,4 @@
 
 
 [GH-2]:  https://github.com/tmatilai/vagrant-proxyconf/issues/2  "Issue 2"
+[GH-5]:  https://github.com/tmatilai/vagrant-proxyconf/issues/5  "Issue 5"
