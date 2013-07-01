@@ -47,8 +47,9 @@ end
 
 #### Configuration keys
 
-* `config.apt_proxy.http` - The proxy for HTTP URIs
+* `config.apt_proxy.http`  - The proxy for HTTP URIs
 * `config.apt_proxy.https` - The proxy for HTTPS URIs
+* `config.apt_proxy.ftp`   - The proxy for FTP URIs
 
 #### Possible values
 
@@ -62,6 +63,7 @@ end
 
 * `APT_PROXY_HTTP`
 * `APT_PROXY_HTTPS`
+* `APT_PROXY_FTP`
 
 These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
 
