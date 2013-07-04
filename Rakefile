@@ -14,6 +14,7 @@ namespace :test do
 end
 desc "Run all tests"
 task :test => ['test:unit']
+task :spec => :test
 
 Tailor::RakeTask.new do |task|
   task.file_set('lib/**/*.rb', 'code') do |style|
