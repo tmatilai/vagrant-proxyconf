@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="vagrant-proxyconf : Proxy all the things!" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>vagrant-proxyconf</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/tmatilai/vagrant-proxyconf">View on GitHub</a>
+
+          <h1 id="project_title">vagrant-proxyconf</h1>
+          <h2 id="project_tagline">Proxy all the things!</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/tmatilai/vagrant-proxyconf/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/tmatilai/vagrant-proxyconf/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="vagrant-proxy-configuration-plugin" class="anchor" href="#vagrant-proxy-configuration-plugin"><span class="octicon octicon-link"></span></a>Vagrant Proxy Configuration Plugin</h1>
+
+<p>A <a href="http://www.vagrantup.com/">Vagrant</a> plugin that configures the virtual machine to use specified proxies for package managers etc.</p>
+
+<p>At this state we support:</p>
+
+<ul>
+<li>
+<a href="http://en.wikipedia.org/wiki/Advanced_Packaging_Tool">APT</a> proxy/cacher</li>
+</ul><p>Support is planned for other package managers (at least yum).</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><strong>Note:</strong> This plugin requires Vagrant v1.2 or newer (<a href="http://downloads.vagrantup.com/">downloads</a>).</p>
+
+<p>Install using standard Vagrant plugin installation method:</p>
+
+<div class="highlight"><pre>vagrant plugin install vagrant-proxyconf
+</pre></div>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use <em>$HOME/.vagrant.d/Vagrantfile</em> or environment variables. Package manager specific settings are only used on supporting platforms (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.</p>
+
+<p>Project specific Vagrantfile overrides global settings. Environment variables override both.</p>
+
+<h3>
+<a name="apt" class="anchor" href="#apt"><span class="octicon octicon-link"></span></a>Apt</h3>
+
+<p>Configures Apt to use the specified proxy settings. The configuration will be written to <em>/etc/apt/apt.conf.d/01proxy</em> on the guest.</p>
+
+<h4>
+<a name="example-vagrantfile" class="anchor" href="#example-vagrantfile"><span class="octicon octicon-link"></span></a>Example Vagrantfile</h4>
+
+<div class="highlight"><pre><span class="no">Vagrant</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">"2"</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">apt_proxy</span><span class="o">.</span><span class="n">http</span>  <span class="o">=</span> <span class="s2">"192.168.33.1:3142"</span>
+  <span class="n">config</span><span class="o">.</span><span class="n">apt_proxy</span><span class="o">.</span><span class="n">https</span> <span class="o">=</span> <span class="s2">"DIRECT"</span>
+  <span class="c1"># ... other stuff</span>
+<span class="k">end</span>
+</pre></div>
+
+<h4>
+<a name="configuration-keys" class="anchor" href="#configuration-keys"><span class="octicon octicon-link"></span></a>Configuration keys</h4>
+
+<ul>
+<li>
+<code>config.apt_proxy.http</code>  - The proxy for HTTP URIs</li>
+<li>
+<code>config.apt_proxy.https</code> - The proxy for HTTPS URIs</li>
+<li>
+<code>config.apt_proxy.ftp</code>   - The proxy for FTP URIs</li>
+</ul><h4>
+<a name="possible-values" class="anchor" href="#possible-values"><span class="octicon octicon-link"></span></a>Possible values</h4>
+
+<ul>
+<li>If all keys are unset or <code>nil</code>, no configuration is written.</li>
+<li>A proxy can be specified in the form of <em>[http://][user:pass@]host[:port]</em>. So all but the <em>host</em> part are optional. The default port is 3142 and protocol is the same as the key.</li>
+<li>Empty string (<code>""</code>) or <code>false</code> in any protocol also force the configuration file to be written, but without configuration for that protocol. Can be used to clear the old configuration and/or override a global setting.</li>
+<li>
+<code>"DIRECT"</code> can be used to specify that no proxy should be used. This is mostly useful for disabling proxy for HTTPS URIs when HTTP proxy is set (as Apt defaults to the latter).</li>
+<li>Please refer to <a href="http://manpages.debian.net/man/5/apt.conf">apt.conf(5)</a> manual for more information.</li>
+</ul><h4>
+<a name="environment-variables" class="anchor" href="#environment-variables"><span class="octicon octicon-link"></span></a>Environment variables</h4>
+
+<ul>
+<li><code>APT_PROXY_HTTP</code></li>
+<li><code>APT_PROXY_HTTPS</code></li>
+<li><code>APT_PROXY_FTP</code></li>
+</ul><p>These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.</p>
+
+<p>For example to spin up a VM, run:</p>
+
+<div class="highlight"><pre><span class="nv">APT_PROXY_HTTP</span><span class="o">=</span><span class="s2">"proxy.example.com:8080"</span> vagrant up
+</pre></div>
+
+<h4>
+<a name="running-apt-cacher-ng-on-a-vagrant-box" class="anchor" href="#running-apt-cacher-ng-on-a-vagrant-box"><span class="octicon octicon-link"></span></a>Running apt-cacher-ng on a Vagrant box</h4>
+
+<p><a href="https://github.com/tmatilai/apt-cacher-box">Here</a> is an example for setting up apt-cacher proxy server in a Vagrant VM.</p>
+
+<h2>
+<a name="related-plugins-and-projects" class="anchor" href="#related-plugins-and-projects"><span class="octicon octicon-link"></span></a>Related plugins and projects</h2>
+
+<ul>
+<li>
+<a href="https://github.com/tmatilai/apt-cacher-box">apt-cacher-box</a><br>
+a Vagrant setup for apt-cacher-ng.</li>
+<li>
+<a href="https://github.com/fgrehm/vagrant-cachier">vagrant-cachier</a><br>
+An excellent Vagrant plugin that shares various cache directories among similar VM instances. Should work fine together with vagrant-proxyconf.</li>
+<li>
+<a href="https://github.com/juliandunn/vagrant-httpproxy">vagrant-httpproxy</a><br>
+A Chef cookbook for configuring Chef resources to use the specified proxy (while offline).</li>
+<li>
+<a href="https://github.com/clintoncwolfe/vagrant-proxy">vagrant-proxy</a><br>
+A Vagrant plugin that uses iptables rules to force the VM to use a proxy.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">vagrant-proxyconf maintained by <a href="https://github.com/tmatilai">tmatilai</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-42184227-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
