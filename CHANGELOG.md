@@ -17,3 +17,4 @@
 
 [GH-2]:  https://github.com/tmatilai/vagrant-proxyconf/issues/2  "Issue 2"
 [GH-5]:  https://github.com/tmatilai/vagrant-proxyconf/issues/5  "Issue 5"
+[GH-7]:  https://github.com/tmatilai/vagrant-proxyconf/issues/7  "Issue 7"
