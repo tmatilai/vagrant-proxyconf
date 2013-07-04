@@ -17,6 +17,7 @@ Support is planned for other package managers (at least yum).
 **Note:** This plugin requires Vagrant v1.2 or newer ([downloads](http://downloads.vagrantup.com/)).
 
 Install using standard Vagrant plugin installation method:
+
 ```sh
 vagrant plugin install vagrant-proxyconf
 ```
@@ -64,6 +65,7 @@ end
 These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
 
 For example to spin up a VM, run:
+
 ```sh
 APT_PROXY_HTTP="proxy.example.com:8080" vagrant up
 ```
