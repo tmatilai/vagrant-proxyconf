@@ -10,7 +10,7 @@
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) 1.1+ plugin that configures the virtual machine to use specified proxies for package managers etc.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies for package managers etc.
 
 At this state we support:
 
@@ -20,7 +20,9 @@ Support is planned for other package managers (at least yum).
 
 ## Installation
 
-Install using standard Vagrant 1.1+ plugin installation method:
+**Note:** This plugin requires Vagrant v1.2 or newer ([downloads](http://downloads.vagrantup.com/)).
+
+Install using standard Vagrant plugin installation method:
 ```sh
 vagrant plugin install vagrant-proxyconf
 ```
