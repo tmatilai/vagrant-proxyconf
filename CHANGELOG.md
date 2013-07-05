@@ -1,4 +1,4 @@
-# 0.1.2 / _Not released yet_
+# 0.2.0 / 2013-07-05
 
 - Add Apt proxy configuration for FTP URIs ([GH-5][])
 - Warn and fail if Vagrant is older than v1.2.0 ([GH-7][])
