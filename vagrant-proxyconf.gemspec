@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["teemu.matilainen@iki.fi"]
   spec.description   = "A Vagrant Plugin that configures the virtual machine to use proxies"
   spec.summary       = spec.description
-  spec.homepage      = "https://github.com/tmatilai/vagrant-proxyconf"
+  spec.homepage      = "http://tmatilai.github.io/vagrant-proxyconf/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
