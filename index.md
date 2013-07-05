@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v0.1.1
+latest_release: v0.2.0
 ---
 # Vagrant Proxy Configuration Plugin
 
