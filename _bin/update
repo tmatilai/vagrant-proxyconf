@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Updates the gh-pages using README.md from master (or specified commit)
+
+set -eu
+
+commit="${1:-origin/master}"
+rev=$(git rev-parse --short "$commit")
+latest_release="$(git describe --abbrev=0 --tags "$commit")"
+
+cat > index.md <<HEADER
+---
+layout: index
+latest_release: $latest_release
+---
+HEADER
+
+git show "$commit:README.md" >> index.md
+
+git commit --allow-empty -m "Update for $latest_release from rev $rev" index.md
+git push origin HEAD
