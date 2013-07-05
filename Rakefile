@@ -27,3 +27,16 @@ Tailor::RakeTask.new do |task|
     style.spaces_before_lbrace 1, level: :off
   end
 end
+
+desc "Update gh-pages"
+task 'gh-pages' do
+  require 'tmpdir'
+
+  rev = `git rev-parse HEAD`.chomp
+  Dir.mktmpdir do |clone|
+    sh %Q{git clone --branch gh-pages "#{File.expand_path('..', __FILE__)}" "#{clone}"}
+    Dir.chdir(clone) do
+      sh %Q{_bin/update "#{rev}"}
+    end
+  end
+end
