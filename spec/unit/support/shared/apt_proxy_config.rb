@@ -9,7 +9,8 @@ def conf_line(proto, name, port = 3142)
   if name == :direct
     %Q{Acquire::#{proto}::Proxy "DIRECT";\n}
   else
-    %Q{Acquire::#{proto}::Proxy "#{proto}://#{name}:#{port}";\n}
+    port = ":#{port}" if port
+    %Q{Acquire::#{proto}::Proxy "#{proto}://#{name}#{port}";\n}
   end
 end
 
@@ -41,7 +42,13 @@ shared_examples "apt proxy config" do |proto|
     context "with protocol and name" do
       subject        { config_with(proto => "#{proto}://proxy.foo.tld") }
       its(:enabled?) { should be_true }
-      its(:to_s)     { should eq conf_line(proto, "proxy.foo.tld") }
+      its(:to_s)     { should eq conf_line(proto, "proxy.foo.tld", nil) }
+    end
+
+    context "with trailing slash" do
+      subject        { config_with(proto => "#{proto}://proxy.foo.tld/") }
+      its(:enabled?) { should be_true }
+      its(:to_s)     { should eq conf_line(proto, "proxy.foo.tld/", nil) }
     end
 
     context "with protocol and name and port" do
