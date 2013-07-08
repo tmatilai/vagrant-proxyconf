@@ -84,7 +84,7 @@ module VagrantPlugins
           end
 
           def suffix
-            ":#{default_port}" if value !~ %r{:\d+$}
+            ":#{default_port}" if value !~ %r{:\d+$} && value !~ %r{/}
           end
 
           def default_port
