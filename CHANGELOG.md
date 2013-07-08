@@ -1,5 +1,6 @@
 # 0.2.1 / _Not released yet_
 
+- Do not add the default port to complete URIs (e.g. `http://proxy`) ([GH-9][])
 
 # 0.2.0 / 2013-07-05
 
@@ -23,3 +24,4 @@
 [GH-5]:  https://github.com/tmatilai/vagrant-proxyconf/issues/5  "Issue 5"
 [GH-7]:  https://github.com/tmatilai/vagrant-proxyconf/issues/7  "Issue 7"
 [GH-8]:  https://github.com/tmatilai/vagrant-proxyconf/issues/8  "Issue 8"
+[GH-9]:  https://github.com/tmatilai/vagrant-proxyconf/issues/9  "Issue 9"
