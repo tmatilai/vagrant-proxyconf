@@ -9,12 +9,12 @@ latest_release: v0.2.0
 [![Build Status](https://travis-ci.org/tmatilai/vagrant-proxyconf.png?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/tmatilai/vagrant-proxyconf.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/tmatilai/vagrant-proxyconf.png)][codeclimate]
+</span>
 
 [gem]: https://rubygems.org/gems/vagrant-proxyconf
 [travis]: https://travis-ci.org/tmatilai/vagrant-proxyconf
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
-</span>
 
 A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies for package managers etc.
 
