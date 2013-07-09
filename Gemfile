@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'cane', '~> 2.6'
 gem 'rake'
 gem 'rspec', '~> 2.11'
 gem 'tailor', '~> 1.2'

@@ -1,8 +1,9 @@
 require 'bundler/gem_tasks'
+require 'cane/rake_task'
 require 'rspec/core/rake_task'
 require 'tailor/rake_task'
 
-task :default => [:test, :tailor]
+task :default => [:test, :quality]
 
 # Remove 'install' task as the gem is installed to Vagrant, not to system
 Rake::Task[:install].clear
@@ -27,6 +28,16 @@ Tailor::RakeTask.new do |task|
     style.spaces_before_lbrace 1, level: :off
   end
 end
+
+Cane::RakeTask.new(:cane) do |task|
+  task.style_measure = 100
+  task.options[:color] = true
+  # TODO: Fix documentation and remove
+  task.max_violations = 5
+end
+
+desc 'Run all quality tasks'
+task :quality => [:cane, :tailor]
 
 desc "Update gh-pages"
 task 'gh-pages' do
