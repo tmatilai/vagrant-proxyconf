@@ -6,5 +6,11 @@ RSpec.configure do |config|
   config.tty = true
 end
 
+require 'simplecov'
+SimpleCov.start do
+  coverage_dir('tmp/coverage')
+  add_filter '/spec/'
+end
+
 require 'tempfile'
 require 'vagrant-proxyconf'
