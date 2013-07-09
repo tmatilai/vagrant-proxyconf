@@ -2,7 +2,7 @@
 layout: index
 latest_release: v0.2.0
 ---
-# Vagrant Proxy Configuration Plugin
+# Proxy Configuration Plugin for Vagrant
 
 <span class="badges">
 [![Gem Version](https://badge.fury.io/rb/vagrant-proxyconf.png)][gem]
