@@ -40,3 +40,10 @@ task 'gh-pages' do
     end
   end
 end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+  # gem not installed on the CI server
+end

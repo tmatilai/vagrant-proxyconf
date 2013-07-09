@@ -9,4 +9,6 @@ gem 'vagrant', github: 'mitchellh/vagrant', ref: 'v1.2.2'
 
 group :development do
   gem 'guard-rspec'
+  gem 'redcarpet'
+  gem 'yard', '~> 0.8'
 end
