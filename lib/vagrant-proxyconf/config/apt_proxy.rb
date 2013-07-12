@@ -3,14 +3,17 @@ require 'vagrant'
 module VagrantPlugins
   module ProxyConf
     module Config
+      # Proxy configuration for Apt
+      #
+      # @!parse class AptProxy < Vagrant::Plugin::V2::Config; end
       class AptProxy < Vagrant.plugin('2', :config)
-        # HTTP proxy for Apt
+        # @return [String] the HTTP proxy
         attr_accessor :http
 
-        # HTTPS proxy for Apt
+        # @return [String] the HTTPS proxy
         attr_accessor :https
 
-        # FTP proxy for Apt
+        # @return [String] the FTP proxy
         attr_accessor :ftp
 
         def initialize
@@ -49,6 +52,9 @@ module VagrantPlugins
           ConfigValue.new(proto, send(proto.to_sym))
         end
 
+        # Helper for building configuration lines
+        #
+        # @api private
         class ConfigValue
 
           attr_reader :proto, :value

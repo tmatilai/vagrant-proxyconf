@@ -32,8 +32,6 @@ end
 Cane::RakeTask.new(:cane) do |task|
   task.style_measure = 100
   task.options[:color] = true
-  # TODO: Fix documentation and remove
-  task.max_violations = 5
 end
 
 desc 'Run all quality tasks'

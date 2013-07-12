@@ -4,6 +4,7 @@ require 'tempfile'
 module VagrantPlugins
   module ProxyConf
     class Action
+      # Action for configuring Apt on the guest
       class ConfigureAptProxy
         attr_reader :logger
 

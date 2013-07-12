@@ -2,6 +2,9 @@ require 'vagrant'
 
 module VagrantPlugins
   module ProxyConf
+    # Vagrant Plugin class that registers all proxy configs, hooks, etc.
+    #
+    # @!parse class Plugin < Vagrant::Plugin::V2::Plugin; end
     class Plugin < Vagrant.plugin('2')
       # The minimum compatible Vagrant version
       MIN_VAGRANT_VERSION = '1.2.0'
@@ -43,6 +46,7 @@ module VagrantPlugins
       end
       action_hook 'proxyconf-machine-up', :machine_action_up, &proxyconf_action_hook
       action_hook 'proxyconf-machine-reload', :machine_action_reload, &proxyconf_action_hook
+      # Hook to vagrant-digitalocean's `rebuild` command
       action_hook 'proxyconf-machine-rebuild', :machine_action_rebuild, &proxyconf_action_hook
     end
   end
