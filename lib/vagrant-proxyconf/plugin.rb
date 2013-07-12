@@ -35,7 +35,7 @@ module VagrantPlugins
         Cap::Debian::AptProxyConf
       end
 
-      proxyconf_action_hook = lambda do |hook|
+      action_hook 'proxyconf_configure' do |hook|
         require_relative 'action/configure_apt_proxy'
         hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
 
@@ -44,10 +44,6 @@ module VagrantPlugins
           hook.after VagrantPlugins::AWS::Action::TimedProvision, Action::ConfigureAptProxy
         end
       end
-      action_hook 'proxyconf-machine-up', :machine_action_up, &proxyconf_action_hook
-      action_hook 'proxyconf-machine-reload', :machine_action_reload, &proxyconf_action_hook
-      # Hook to vagrant-digitalocean's `rebuild` command
-      action_hook 'proxyconf-machine-rebuild', :machine_action_rebuild, &proxyconf_action_hook
     end
   end
 end
