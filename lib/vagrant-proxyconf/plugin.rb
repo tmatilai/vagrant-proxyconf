@@ -35,6 +35,11 @@ module VagrantPlugins
       proxyconf_action_hook = lambda do |hook|
         require_relative 'action/configure_apt_proxy'
         hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
+
+        # vagrant-aws uses a non-standard provision action
+        if VagrantPlugins.const_defined?('AWS')
+          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action::ConfigureAptProxy
+        end
       end
       action_hook 'proxyconf-machine-up', :machine_action_up, &proxyconf_action_hook
       action_hook 'proxyconf-machine-reload', :machine_action_reload, &proxyconf_action_hook
