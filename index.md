@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v0.2.0
+latest_release: v0.3.0
 ---
 # Proxy Configuration Plugin for Vagrant
 
@@ -24,9 +24,18 @@ At this state we support:
 
 Support is planned for other package managers (at least yum).
 
-## Installation
+## Compatibility
 
-**Note:** This plugin requires Vagrant v1.2 or newer ([downloads](http://downloads.vagrantup.com/)).
+This plugin requires Vagrant 1.2 or newer ([downloads](http://downloads.vagrantup.com/)).
+
+The plugin is supposed to be compatible with all Vagrant providers. Please file an [issue](https://github.com/tmatilai/vagrant-proxyconf/issues) if this is not the case.
+The following providers are confirmed to work:
+[AWS](https://github.com/mitchellh/vagrant-aws),
+[Digital Ocean](https://github.com/smdahlen/vagrant-digitalocean),
+[VirtualBox](http://docs.vagrantup.com/v2/virtualbox),
+[VMware Fusion](http://docs.vagrantup.com/v2/vmware/index.html).
+
+## Installation
 
 Install using standard Vagrant plugin installation method:
 
@@ -35,6 +44,8 @@ vagrant plugin install vagrant-proxyconf
 ```
 
 ## Usage
+
+The plugin hooks itself to `vagrant up`, `vagrant reload` and `vagrant rebuild` commands.
 
 Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use _$HOME/.vagrant.d/Vagrantfile_ or environment variables. Package manager specific settings are only used on supporting platforms (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.
 
