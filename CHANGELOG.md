@@ -1,4 +1,4 @@
-# 0.2.1 / _Not released yet_
+# 0.3.0 / 2013-07-12
 
 - Support the [AWS provider](https://github.com/mitchellh/vagrant-aws) ([GH-10][])
 - Support `vagrant rebuild` command of the [Digital Ocean provider](https://github.com/smdahlen/vagrant-digitalocean) ([GH-11][])
