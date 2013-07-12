@@ -41,7 +41,7 @@ vagrant plugin install vagrant-proxyconf
 
 ## Usage
 
-The plugin hooks itself to `vagrant up`, `vagrant reload` and `vagrant rebuild` commands.
+The plugin hooks itself to all Vagrant commands triggering provisioning (e.g. `vagrant up`, `vagrant provision`, etc.). The proxy configurations are written just before provisioners are run.
 
 Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use _$HOME/.vagrant.d/Vagrantfile_ or environment variables. Package manager specific settings are only used on supporting platforms (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.
 
