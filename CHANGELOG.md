@@ -1,3 +1,6 @@
+# 0.3.1 / _Unreleased_
+
+
 # 0.3.0 / 2013-07-12
 
 - Support the [AWS provider](https://github.com/mitchellh/vagrant-aws) ([GH-10][])
