@@ -1,7 +1,7 @@
 # 0.2.1 / _Not released yet_
 
-- Support AWS provider ([GH-10][])
-- Support `vagrant rebuild` command of the Digital Ocean provider ([GH-11][])
+- Support the [AWS provider](https://github.com/mitchellh/vagrant-aws) ([GH-10][])
+- Support `vagrant rebuild` command of the [Digital Ocean provider](https://github.com/smdahlen/vagrant-digitalocean) ([GH-11][])
 - Do not add the default port to complete URIs (e.g. `http://proxy`) ([GH-9][])
 
 # 0.2.0 / 2013-07-05
