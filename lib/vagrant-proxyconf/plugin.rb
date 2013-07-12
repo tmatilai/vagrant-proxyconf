@@ -43,6 +43,7 @@ module VagrantPlugins
       end
       action_hook 'proxyconf-machine-up', :machine_action_up, &proxyconf_action_hook
       action_hook 'proxyconf-machine-reload', :machine_action_reload, &proxyconf_action_hook
+      action_hook 'proxyconf-machine-rebuild', :machine_action_rebuild, &proxyconf_action_hook
     end
   end
 end
