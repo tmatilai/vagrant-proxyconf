@@ -1,5 +1,6 @@
 require 'log4r'
 require 'tempfile'
+require 'vagrant'
 
 module VagrantPlugins
   module ProxyConf
@@ -16,24 +17,29 @@ module VagrantPlugins
         def call(env)
           @app.call env
 
-          proxy_config = env[:machine].config.apt_proxy
-
-          # Vagrant does not seem to call `finalize!` if the configuration
-          # key is not used in Vagrantfiles.
-          # https://github.com/tmatilai/vagrant-proxyconf/issues/2
-          proxy_config.finalize!
+          machine      = env[:machine]
+          proxy_config = proxy_config(machine)
 
           if !proxy_config.enabled?
             logger.debug "apt_proxy not enabled or configured"
-          elsif !proxy_conf_capability?(env[:machine])
+          elsif !proxy_conf_capability?(machine)
             env[:ui].info "Skipping Apt proxy config as the machine does not support it"
           else
             env[:ui].info "Configuring proxy for Apt..."
-            write_apt_proxy_conf(env[:machine], proxy_config)
+            write_apt_proxy_conf(machine, proxy_config)
           end
         end
 
         private
+
+        def proxy_config(machine)
+          machine.config.apt_proxy.tap do |config|
+            # Vagrant pre 1.2.5 does not call `finalize!` if the configuration
+            # key is not used in Vagrantfiles.
+            # https://github.com/tmatilai/vagrant-proxyconf/issues/2
+            config.finalize! if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new('1.2.5')
+          end
+        end
 
         def write_apt_proxy_conf(machine, config)
           logger.debug "Configuration:\n#{config}"
