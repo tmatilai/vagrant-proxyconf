@@ -11,7 +11,7 @@
 3. Test, hack, edit _Vagrantfile_ and test again:
 
         VAGRANT_LOG=debug bundle exec vagrant reload
-        APT_PROXY_HTTP="foo:8080" bundle exec vagrant reload
+        VAGRANT_APT_HTTP_PROXY="foo:8080" bundle exec vagrant provision
         # ...
 
 4. Goto 3.
