@@ -30,7 +30,7 @@ Tailor::RakeTask.new do |task|
 end
 
 Cane::RakeTask.new(:cane) do |task|
-  task.style_measure = 100
+  task.style_measure = 140
   task.options[:color] = true
 end
 
