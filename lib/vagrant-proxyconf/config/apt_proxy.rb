@@ -49,13 +49,13 @@ module VagrantPlugins
         end
 
         def config_for(proto)
-          ConfigValue.new(proto, send(proto.to_sym))
+          ConfigLine.new(proto, send(proto.to_sym))
         end
 
-        # Helper for building configuration lines
+        # Helper for constructing a configuration line for apt.conf
         #
         # @api private
-        class ConfigValue
+        class ConfigLine
 
           attr_reader :proto, :value
 
@@ -68,7 +68,7 @@ module VagrantPlugins
 
           # @return [String] the full Apt configuration line
           def to_s
-            set? ? %Q{Acquire::#{proto}::Proxy "#{proxy_uri}";\n} : ""
+            set? ? %Q{Acquire::#{proto}::Proxy "#{direct || proxy_uri}";\n} : ""
           end
 
           private
@@ -77,12 +77,12 @@ module VagrantPlugins
             value && !value.empty?
           end
 
-          def direct?
-            value.upcase == "DIRECT"
+          def direct
+            "DIRECT" if value.upcase == "DIRECT"
           end
 
           def proxy_uri
-            direct? ? "DIRECT" : "#{prefix}#{value}#{suffix}"
+            "#{prefix}#{value}#{suffix}"
           end
 
           def prefix
