@@ -30,6 +30,11 @@ module VagrantPlugins
         Config::AptProxy
       end
 
+      config 'env_proxy' do
+        require_relative 'config/env_proxy'
+        Config::EnvProxy
+      end
+
       guest_capability 'debian', 'apt_proxy_conf' do
         require_relative 'cap/debian/apt_proxy_conf'
         Cap::Debian::AptProxyConf
