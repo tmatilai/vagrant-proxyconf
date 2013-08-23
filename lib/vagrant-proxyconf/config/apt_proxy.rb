@@ -45,7 +45,7 @@ module VagrantPlugins
         private
 
         def override_from_env_var(proto, default)
-          ENV.fetch("APT_PROXY_#{proto.upcase}", default)
+          ENV.fetch("VAGRANT_APT_#{proto.upcase}_PROXY", default)
         end
 
         def config_for(proto)

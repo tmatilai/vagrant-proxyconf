@@ -77,16 +77,16 @@ end
 
 #### Environment variables
 
-* `APT_PROXY_HTTP`
-* `APT_PROXY_HTTPS`
-* `APT_PROXY_FTP`
+* `VAGRANT_APT_HTTP_PROXY`
+* `VAGRANT_APT_HTTPS_PROXY`
+* `VAGRANT_APT_FTP_PROXY`
 
 These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
 
 For example to spin up a VM, run:
 
 ```sh
-APT_PROXY_HTTP="proxy.example.com:8080" vagrant up
+VAGRANT_APT_HTTP_PROXY="proxy.example.com:8080" vagrant up
 ```
 
 #### Running apt-cacher-ng on a Vagrant box

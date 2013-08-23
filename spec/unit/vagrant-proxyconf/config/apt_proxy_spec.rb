@@ -7,7 +7,7 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
 
   before :each do
     # Ensure tests are not affected by environment variables
-    %w[APT_PROXY_HTTP APT_PROXY_HTTPS APT_PROXY_FTP].each { |k| ENV.delete(k) }
+    %w[HTTP HTTPS FTP].map { |proto| ENV.delete("VAGRANT_APT_#{proto}_PROXY") }
   end
 
   context "defaults" do
@@ -28,9 +28,9 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
   end
 
   context "with env var" do
-    include_examples "apt proxy env var", "APT_PROXY_HTTP", "http"
-    include_examples "apt proxy env var", "APT_PROXY_HTTPS", "https"
-    include_examples "apt proxy env var", "APT_PROXY_FTP", "ftp"
+    include_examples "apt proxy env var", "VAGRANT_APT_HTTP_PROXY", "http"
+    include_examples "apt proxy env var", "VAGRANT_APT_HTTPS_PROXY", "https"
+    include_examples "apt proxy env var", "VAGRANT_APT_FTP_PROXY", "ftp"
   end
 
 end
