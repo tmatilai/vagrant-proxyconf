@@ -40,6 +40,11 @@ module VagrantPlugins
         Cap::Debian::AptProxyConf
       end
 
+      guest_capability 'linux', 'env_proxy_conf' do
+        require_relative 'cap/linux/env_proxy_conf'
+        Cap::Linux::EnvProxyConf
+      end
+
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action/configure_apt_proxy'
         hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
