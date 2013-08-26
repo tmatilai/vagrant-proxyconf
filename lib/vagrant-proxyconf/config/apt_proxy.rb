@@ -1,4 +1,5 @@
 require 'vagrant'
+require_relative 'key_mixin'
 
 module VagrantPlugins
   module ProxyConf
@@ -7,49 +8,26 @@ module VagrantPlugins
       #
       # @!parse class AptProxy < Vagrant::Plugin::V2::Config; end
       class AptProxy < Vagrant.plugin('2', :config)
+        include KeyMixin
+        # @!parse extend KeyMixin::ClassMethods
+
+        # @!attribute
         # @return [String] the HTTP proxy
-        attr_accessor :http
+        key :http, env_var: 'VAGRANT_APT_HTTP_PROXY'
 
+        # @!attribute
         # @return [String] the HTTPS proxy
-        attr_accessor :https
+        key :https, env_var: 'VAGRANT_APT_HTTPS_PROXY'
 
+        # @!attribute
         # @return [String] the FTP proxy
-        attr_accessor :ftp
-
-        def initialize
-          @http  = UNSET_VALUE
-          @https = UNSET_VALUE
-          @ftp   = UNSET_VALUE
-        end
-
-        def finalize!
-          @http = override_from_env_var('http', @http)
-          @http = nil if @http == UNSET_VALUE
-
-          @https = override_from_env_var('https', @https)
-          @https = nil if @https == UNSET_VALUE
-
-          @ftp = override_from_env_var('ftp', @ftp)
-          @ftp = nil if @ftp == UNSET_VALUE
-        end
-
-        def enabled?
-          !http.nil? || !https.nil? || !ftp.nil?
-        end
-
-        # @return [String] the full configuration stanza
-        def to_s
-          %w[http https ftp].map { |proto| config_for(proto) }.join
-        end
+        key :ftp, env_var: 'VAGRANT_APT_FTP_PROXY'
 
         private
 
-        def override_from_env_var(proto, default)
-          ENV.fetch("VAGRANT_APT_#{proto.upcase}_PROXY", default)
-        end
-
-        def config_for(proto)
-          ConfigLine.new(proto, send(proto.to_sym))
+        # (see KeyMixin#config_for)
+        def config_for(key, value)
+          ConfigLine.new(key.name, value)
         end
 
         # Helper for constructing a configuration line for apt.conf
@@ -68,7 +46,7 @@ module VagrantPlugins
 
           # @return [String] the full Apt configuration line
           def to_s
-            set? ? %Q{Acquire::#{proto}::Proxy "#{direct || proxy_uri}";\n} : ""
+            %Q{Acquire::#{proto}::Proxy "#{direct || proxy_uri}";\n} if set?
           end
 
           private

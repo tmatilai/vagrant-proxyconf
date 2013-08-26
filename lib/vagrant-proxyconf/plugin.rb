@@ -30,18 +30,35 @@ module VagrantPlugins
         Config::AptProxy
       end
 
+      config 'env_proxy' do
+        require_relative 'config/env_proxy'
+        Config::EnvProxy
+      end
+
       guest_capability 'debian', 'apt_proxy_conf' do
         require_relative 'cap/debian/apt_proxy_conf'
         Cap::Debian::AptProxyConf
       end
 
+      guest_capability 'linux', 'env_proxy_conf' do
+        require_relative 'cap/linux/env_proxy_conf'
+        Cap::Linux::EnvProxyConf
+      end
+
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action/configure_apt_proxy'
-        hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
+        require_relative 'action/configure_env_proxy'
+
+        register_hooks = lambda do |provision_action|
+          hook.after provision_action, Action::ConfigureAptProxy
+          hook.after provision_action, Action::ConfigureEnvProxy
+        end
+
+        register_hooks.call Vagrant::Action::Builtin::Provision
 
         # vagrant-aws uses a non-standard provision action
         if VagrantPlugins.const_defined?('AWS')
-          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action::ConfigureAptProxy
+          register_hooks.call VagrantPlugins::AWS::Action::TimedProvision
         end
       end
     end
