@@ -49,13 +49,16 @@ module VagrantPlugins
         require_relative 'action/configure_apt_proxy'
         require_relative 'action/configure_env_proxy'
 
-        hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureAptProxy
-        hook.after Vagrant::Action::Builtin::Provision, Action::ConfigureEnvProxy
+        register_hooks = lambda do |provision_action|
+          hook.after provision_action, Action::ConfigureAptProxy
+          hook.after provision_action, Action::ConfigureEnvProxy
+        end
+
+        register_hooks.call Vagrant::Action::Builtin::Provision
 
         # vagrant-aws uses a non-standard provision action
         if VagrantPlugins.const_defined?('AWS')
-          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action::ConfigureAptProxy
-          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action::ConfigureEnvProxy
+          register_hooks.call VagrantPlugins::AWS::Action::TimedProvision
         end
       end
     end
