@@ -44,9 +44,52 @@ vagrant plugin install vagrant-proxyconf
 
 The plugin hooks itself to all Vagrant commands triggering provisioning (e.g. `vagrant up`, `vagrant provision`, etc.). The proxy configurations are written just before provisioners are run.
 
-Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use _$HOME/.vagrant.d/Vagrantfile_ or environment variables. Package manager specific settings are only used on supporting platforms (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.
+Proxy settings can be configured in Vagrantfile. In the common case that you want to use the same configuration in all Vagrant machines, you can use _$HOME/.vagrant.d/Vagrantfile_ or environment variables. Platform specific settings are only used on virtual machines that support them (i.e. Apt configuration on Debian based systems), so there is no harm using global configuration.
 
 Project specific Vagrantfile overrides global settings. Environment variables override both.
+
+### Default/global configuration
+
+It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.proxy.http     = "http://192.168.0.2:3128/"
+  config.proxy.https    = "http://192.168.0.2:3128/"
+  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  # ... other stuff
+end
+```
+
+#### Configuration keys
+
+* `config.proxy.http` - The proxy for HTTP URIs
+* `config.proxy.https` - The proxy for HTTPS URIs
+* `config.proxy.ftp` - The proxy for FTS URIs
+* `config.proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
+
+#### Possible values
+
+* If all keys are unset or `nil`, no configuration is written.
+* A proxy should be specified in the form of _protocol://[user:pass@]host[:port]_.
+* Empty string (`""`) or `false` in any setting also force the configuration files to be written, but without configuration for that key. Can be used to clear the old configuration and/or override a global setting.
+
+#### Environment variables
+
+* `VAGRANT_HTTP_PROXY`
+* `VAGRANT_HTTPS_PROXY`
+* `VAGRANT_FTP_PROXY`
+* `VAGRANT_NO_PROXY`
+
+These also override the Vagrantfile configuration. To disable or remove the proxy use an empty value.
+
+For example to spin up a VM, run:
+
+```sh
+VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
+```
 
 ### Global `*_proxy` environment variables
 
