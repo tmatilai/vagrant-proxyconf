@@ -21,11 +21,11 @@ module VagrantPlugins
           proxy_config = proxy_config(machine)
 
           if !proxy_config.enabled?
-            logger.debug "env_proxy not enabled or configured"
+            logger.debug I18n.t('vagrant_proxyconf.env_proxy.not_enabled')
           elsif !proxy_conf_capability?(machine)
-            env[:ui].info "Skipping environment variable based proxy config as the machine does not support it"
+            env[:ui].info I18n.t('vagrant_proxyconf.env_proxy.not_supported')
           else
-            env[:ui].info "Configuring proxy environment variables..."
+            env[:ui].info I18n.t('vagrant_proxyconf.env_proxy.configuring')
             write_env_proxy_conf(machine, proxy_config)
           end
         end
