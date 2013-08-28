@@ -15,12 +15,19 @@ module VagrantPlugins
       # is incompatible with the Vagrant version
       def self.check_vagrant_version!
         if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new(MIN_VAGRANT_VERSION)
-          msg = "vagrant-proxyconf plugin requires Vagrant #{MIN_VAGRANT_VERSION} or newer"
+          msg = I18n.t('vagrant_proxyconf.errors.vagrant_version', min_version: MIN_VAGRANT_VERSION)
           $stderr.puts msg
           raise msg
         end
       end
 
+      # Initializes the internationalization strings
+      def self.setup_i18n
+        I18n.load_path << File.expand_path('../../../locales/en.yml', __FILE__)
+        I18n.reload!
+      end
+
+      setup_i18n
       check_vagrant_version!
 
       name 'vagrant-proxyconf'
