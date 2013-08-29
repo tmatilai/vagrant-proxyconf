@@ -1,0 +1,21 @@
+en:
+  vagrant_proxyconf:
+    apt_proxy:
+      not_enabled: |-
+        apt_proxy not enabled or configured
+      not_supported: |-
+        Skipping Apt proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Apt...
+
+    env_proxy:
+      not_enabled: |-
+        env_proxy not enabled or configured
+      not_supported: |-
+        Skipping environment variable based proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy environment variables...
+
+    errors:
+      vagrant_version: |-
+        vagrant-proxyconf plugin requires Vagrant %{min_version} or newer
