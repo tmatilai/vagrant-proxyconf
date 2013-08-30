@@ -71,7 +71,22 @@ module VagrantPlugins
           "#{key}=#{value}\n"
         end
 
-        private
+        # Returns a new instance of this class where all nil keys are
+        # replaced from the specified default config
+        #
+        # @param defaults [KeyMixin] the default configuration
+        # @return [KeyMixin]
+        def merge_defaults(defaults)
+          result = dup
+          keys.each do |key|
+            if !set?(key) && defaults.key?(key)
+              result.set(key, defaults.get(key))
+            end
+          end
+          result
+        end
+
+        protected
 
         def keys
           self.class.keys
@@ -92,6 +107,8 @@ module VagrantPlugins
         def set(key, value)
           send(:"#{key.name}=", value)
         end
+
+        private
 
         def resolve_value(key)
           key.value_from_env_var do |default|
