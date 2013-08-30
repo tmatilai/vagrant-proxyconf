@@ -49,7 +49,7 @@ module VagrantPlugins
 
         # @return [Boolean] true if any of the configuration keys has a non-nil value
         def enabled?
-          keys.any? { |key| !get(key).nil? }
+          keys.any? { |key| set?(key) }
         end
 
         # Returns the full configuration stanza
@@ -77,8 +77,16 @@ module VagrantPlugins
           self.class.keys
         end
 
+        def key?(key)
+          keys.any? { |k| k.name == key.name }
+        end
+
         def get(key)
           send(key.name)
+        end
+
+        def set?(key)
+          !get(key).nil?
         end
 
         def set(key, value)
