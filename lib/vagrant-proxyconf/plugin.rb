@@ -27,6 +27,22 @@ module VagrantPlugins
         I18n.reload!
       end
 
+      def self.register_hooks(hook, provision_action)
+        require_relative 'action/configure_apt_proxy'
+        require_relative 'action/configure_env_proxy'
+
+        hook.after provision_action, Action::ConfigureAptProxy
+        hook.after provision_action, Action::ConfigureEnvProxy
+      end
+
+      def self.aws_plugin_installed?
+        VagrantPlugins.const_defined?('AWS')
+      end
+
+      def self.omnibus_plugin_installed?
+        VagrantPlugins.const_defined?('Omnibus')
+      end
+
       setup_i18n
       check_vagrant_version!
 
@@ -58,19 +74,14 @@ module VagrantPlugins
       end
 
       action_hook 'proxyconf_configure' do |hook|
-        require_relative 'action/configure_apt_proxy'
-        require_relative 'action/configure_env_proxy'
+        if omnibus_plugin_installed?
+          # configure the proxies before vagrant-omnibus
+          register_hooks(hook, VagrantPlugins::Omnibus::Action::InstallChef)
+        else
+          register_hooks(hook, Vagrant::Action::Builtin::Provision)
 
-        register_hooks = lambda do |provision_action|
-          hook.after provision_action, Action::ConfigureAptProxy
-          hook.after provision_action, Action::ConfigureEnvProxy
-        end
-
-        register_hooks.call Vagrant::Action::Builtin::Provision
-
-        # vagrant-aws uses a non-standard provision action
-        if VagrantPlugins.const_defined?('AWS')
-          register_hooks.call VagrantPlugins::AWS::Action::TimedProvision
+          # vagrant-aws uses a non-standard provision action
+          register_hooks(hook, VagrantPlugins::AWS::Action::TimedProvision) if aws_plugin_installed?
         end
       end
     end
