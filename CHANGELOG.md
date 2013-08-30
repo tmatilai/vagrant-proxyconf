@@ -1,6 +1,7 @@
 # 0.4.0 / _Unreleased_
 
 - BREAKING: Environment variables for Apt config renamed to `VAGRANT_APT_HTTP_PROXY` etc. ([GH-15][])
+- Configure all supported programs with a single `config.proxy` configuration or `VAGRANT_HTTP_PROXY` etc. environment variables ([GH-14][], [GH-17][])
 - Add support for global `*_proxy` environment variables via `config.env_proxy` ([GH-6][])
 - Configure the VM also on `vagrant provision` ([GH-12][])
     * Hook to all commands that trigger provisioning action
@@ -38,4 +39,6 @@
 [GH-10]: https://github.com/tmatilai/vagrant-proxyconf/issues/10 "Issue 10"
 [GH-11]: https://github.com/tmatilai/vagrant-proxyconf/issues/11 "Issue 11"
 [GH-12]: https://github.com/tmatilai/vagrant-proxyconf/issues/12 "Issue 12"
+[GH-14]: https://github.com/tmatilai/vagrant-proxyconf/issues/14 "Issue 14"
 [GH-15]: https://github.com/tmatilai/vagrant-proxyconf/issues/15 "Issue 15"
+[GH-17]: https://github.com/tmatilai/vagrant-proxyconf/issues/17 "Issue 17"

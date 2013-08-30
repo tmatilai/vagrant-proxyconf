@@ -41,6 +41,13 @@ module VagrantPlugins
         def config(machine)
           config = machine.config.send(config_name.to_sym)
           finalize_config(config)
+          config.merge_defaults(default_config(machine))
+        end
+
+        # @return [Vagrant::Plugin::V2::Config] the default configuration
+        def default_config(machine)
+          config = machine.config.proxy
+          finalize_config(config)
         end
 
         def finalize_config(config)
