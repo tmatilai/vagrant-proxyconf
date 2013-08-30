@@ -49,7 +49,7 @@ module VagrantPlugins
 
         # @return [Boolean] true if any of the configuration keys has a non-nil value
         def enabled?
-          keys.any? { |key| !get(key).nil? }
+          keys.any? { |key| set?(key) }
         end
 
         # Returns the full configuration stanza
@@ -71,19 +71,44 @@ module VagrantPlugins
           "#{key}=#{value}\n"
         end
 
-        private
+        # Returns a new instance of this class where all nil keys are
+        # replaced from the specified default config
+        #
+        # @param defaults [KeyMixin] the default configuration
+        # @return [KeyMixin]
+        def merge_defaults(defaults)
+          result = dup
+          keys.each do |key|
+            if !set?(key) && defaults.key?(key)
+              result.set(key, defaults.get(key))
+            end
+          end
+          result
+        end
+
+        protected
 
         def keys
           self.class.keys
+        end
+
+        def key?(key)
+          keys.any? { |k| k.name == key.name }
         end
 
         def get(key)
           send(key.name)
         end
 
+        def set?(key)
+          !get(key).nil?
+        end
+
         def set(key, value)
           send(:"#{key.name}=", value)
         end
+
+        private
 
         def resolve_value(key)
           key.value_from_env_var do |default|
