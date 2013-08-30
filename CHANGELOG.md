@@ -5,6 +5,7 @@
 - Add support for global `*_proxy` environment variables via `config.env_proxy` ([GH-6][])
 - Configure the VM also on `vagrant provision` ([GH-12][])
     * Hook to all commands that trigger provisioning action
+- Ensure the proxies are configured before [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus) ([GH-13][])
 
 # 0.3.0 / 2013-07-12
 
@@ -39,6 +40,7 @@
 [GH-10]: https://github.com/tmatilai/vagrant-proxyconf/issues/10 "Issue 10"
 [GH-11]: https://github.com/tmatilai/vagrant-proxyconf/issues/11 "Issue 11"
 [GH-12]: https://github.com/tmatilai/vagrant-proxyconf/issues/12 "Issue 12"
+[GH-13]: https://github.com/tmatilai/vagrant-proxyconf/issues/13 "Issue 13"
 [GH-14]: https://github.com/tmatilai/vagrant-proxyconf/issues/14 "Issue 14"
 [GH-15]: https://github.com/tmatilai/vagrant-proxyconf/issues/15 "Issue 15"
 [GH-17]: https://github.com/tmatilai/vagrant-proxyconf/issues/17 "Issue 17"
