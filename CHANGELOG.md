@@ -1,3 +1,6 @@
+# 0.4.0.rc2 / _Unreleased_
+
+
 # 0.4.0.rc1 / 2013-08-30
 
 - BREAKING: Environment variables for Apt config renamed to `VAGRANT_APT_HTTP_PROXY` etc. ([GH-15][])
