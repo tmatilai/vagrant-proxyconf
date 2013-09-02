@@ -40,6 +40,8 @@ Install using standard Vagrant plugin installation method:
 vagrant plugin install vagrant-proxyconf
 ```
 
+See the [wiki](https://github.com/tmatilai/vagrant-proxyconf/wiki) for instructions to install a pre-release version.
+
 ## Usage
 
 The plugin hooks itself to all Vagrant commands triggering provisioning (e.g. `vagrant up`, `vagrant provision`, etc.). The proxy configurations are written just before provisioners are run.
