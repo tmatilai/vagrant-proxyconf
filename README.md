@@ -32,6 +32,8 @@ The following providers are confirmed to work:
 [VirtualBox](http://docs.vagrantup.com/v2/virtualbox),
 [VMware Fusion](http://docs.vagrantup.com/v2/vmware/index.html).
 
+For the proxy configuration to take effect for [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus) plugin, version 1.1.1 or newer of it should be used.
+
 ## Installation
 
 Install using standard Vagrant plugin installation method:

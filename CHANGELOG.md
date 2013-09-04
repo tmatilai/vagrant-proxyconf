@@ -9,6 +9,7 @@
 - Configure the VM also on `vagrant provision` ([GH-12][])
     * Hook to all commands that trigger provisioning action
 - Ensure the proxies are configured before [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus) ([GH-13][])
+    * Requires vagrant-omnibus v1.1.1 or newer to work correctly
 
 # 0.3.0 / 2013-07-12
 
