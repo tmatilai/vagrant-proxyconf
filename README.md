@@ -12,7 +12,7 @@
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy, or you have a caching proxy.
 
 At this state we support:
 
