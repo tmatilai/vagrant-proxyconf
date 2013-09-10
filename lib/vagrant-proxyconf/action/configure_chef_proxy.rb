@@ -28,6 +28,7 @@ module VagrantPlugins
 
         private
 
+        # @return [Config::Proxy] the `config.proxy` configuration
         def config(machine)
           config = machine.config.proxy
           config.finalize! if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new('1.2.5')
@@ -40,10 +41,16 @@ module VagrantPlugins
         end
 
         # Configures all Chef provisioner based on the default config
+        #
+        # @param config [Config::Proxy] the default configuration
         def configure_chef_provisioners(machine, config)
           chef_provisioners(machine).each { |prov| configure_chef(prov.config, config) }
         end
 
+        # Configures proxies for the Chef provisioner if they are not set
+        #
+        # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
+        # @param config [Config::Proxy] the default configuration
         def configure_chef(chef, config)
           if chef.http_proxy.nil?
             chef.http_proxy      = config.http
