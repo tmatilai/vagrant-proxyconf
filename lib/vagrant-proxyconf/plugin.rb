@@ -29,9 +29,11 @@ module VagrantPlugins
 
       def self.register_hooks(hook, provision_action)
         require_relative 'action/configure_apt_proxy'
+        require_relative 'action/configure_chef_proxy'
         require_relative 'action/configure_env_proxy'
 
         hook.after provision_action, Action::ConfigureAptProxy
+        hook.after provision_action, Action::ConfigureChefProxy
         hook.after provision_action, Action::ConfigureEnvProxy
       end
 

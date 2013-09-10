@@ -1,5 +1,6 @@
 # 0.4.1 / _Unreleased_
 
+- Set default proxy configuration for all Chef provisioners ([GH-19][], [GH-21][])
 
 # 0.4.0 / 2013-09-04
 
@@ -48,3 +49,5 @@
 [GH-14]: https://github.com/tmatilai/vagrant-proxyconf/issues/14 "Issue 14"
 [GH-15]: https://github.com/tmatilai/vagrant-proxyconf/issues/15 "Issue 15"
 [GH-17]: https://github.com/tmatilai/vagrant-proxyconf/issues/17 "Issue 17"
+[GH-19]: https://github.com/tmatilai/vagrant-proxyconf/issues/19 "Issue 19"
+[GH-21]: https://github.com/tmatilai/vagrant-proxyconf/issues/21 "Issue 21"

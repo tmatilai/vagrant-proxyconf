@@ -8,6 +8,14 @@ en:
       configuring: |-
         Configuring proxy for Apt...
 
+    chef_proxy:
+      no_provisioners: |-
+        No Chef provisioners configured.
+      not_enabled: |-
+        Default proxy not enabled or configured. Skipping Chef provisioner configuration.
+      configuring: |-
+        Configuring proxy for Chef provisioners...
+
     env_proxy:
       not_enabled: |-
         env_proxy not enabled or configured

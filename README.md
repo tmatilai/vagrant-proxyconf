@@ -18,6 +18,7 @@ At this state we support:
 
 * Generic `*_proxy` environment variables that many programs support
 * APT proxy/cacher
+* Setting default proxy configuration for all Chef provisioners
 
 Support is planned for other package managers (at least yum).
 
@@ -54,7 +55,7 @@ Project specific Vagrantfile overrides global settings. Environment variables ov
 
 ### Default/global configuration
 
-It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys.
+It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
 
 #### Example Vagrantfile
 
