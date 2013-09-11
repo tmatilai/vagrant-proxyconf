@@ -1,4 +1,4 @@
-# 0.4.1 / _Unreleased_
+# 0.5.0 / 2013-09-11
 
 - Set default proxy configuration for all Chef provisioners ([GH-19][], [GH-21][])
 
