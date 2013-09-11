@@ -72,7 +72,7 @@ end
 
 * `config.proxy.http` - The proxy for HTTP URIs
 * `config.proxy.https` - The proxy for HTTPS URIs
-* `config.proxy.ftp` - The proxy for FTS URIs
+* `config.proxy.ftp` - The proxy for FTP URIs
 * `config.proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
 
 #### Possible values
