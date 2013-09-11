@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v0.4.0
+latest_release: v0.5.0
 ---
 # Proxy Configuration Plugin for Vagrant
 
@@ -16,12 +16,13 @@ latest_release: v0.4.0
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy, or you have a caching proxy.
 
 At this state we support:
 
 * Generic `*_proxy` environment variables that many programs support
 * APT proxy/cacher
+* Setting default proxy configuration for all Chef provisioners
 
 Support is planned for other package managers (at least yum).
 
@@ -58,7 +59,7 @@ Project specific Vagrantfile overrides global settings. Environment variables ov
 
 ### Default/global configuration
 
-It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys.
+It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
 
 #### Example Vagrantfile
 
@@ -75,7 +76,7 @@ end
 
 * `config.proxy.http` - The proxy for HTTP URIs
 * `config.proxy.https` - The proxy for HTTPS URIs
-* `config.proxy.ftp` - The proxy for FTS URIs
+* `config.proxy.ftp` - The proxy for FTP URIs
 * `config.proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
 
 #### Possible values
@@ -118,7 +119,7 @@ end
 
 * `config.env_proxy.http` - The proxy for HTTP URIs
 * `config.env_proxy.https` - The proxy for HTTPS URIs
-* `config.env_proxy.ftp` - The proxy for FTS URIs
+* `config.env_proxy.ftp` - The proxy for FTP URIs
 * `config.env_proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
 
 #### Possible values
