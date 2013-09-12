@@ -52,17 +52,17 @@ module VagrantPlugins
         # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
         # @param config [Config::Proxy] the default configuration
         def configure_chef(chef, config)
-          if chef.http_proxy.nil?
+          if !chef.http_proxy && config.http
             chef.http_proxy      = config.http
             chef.http_proxy_user = config.http_user
             chef.http_proxy_pass = config.http_pass
           end
-          if chef.https_proxy.nil?
+          if !chef.https_proxy && config.https
             chef.https_proxy      = config.https
             chef.https_proxy_user = config.https_user
             chef.https_proxy_pass = config.https_pass
           end
-          if chef.no_proxy.nil?
+          if !chef.no_proxy && config.no_proxy
             chef.no_proxy = config.no_proxy
           end
         end

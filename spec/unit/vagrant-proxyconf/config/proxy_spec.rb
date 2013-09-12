@@ -54,4 +54,14 @@ describe VagrantPlugins::ProxyConf::Config::Proxy do
     its(:https_user) { should eq '' }
     its(:https_pass) { should eq 'baz' }
   end
+
+  context "with false" do
+    let(:http_proxy)  { false }
+    let(:https_proxy) { false }
+
+    its(:http_user)  { should be_nil }
+    its(:http_pass)  { should be_nil }
+    its(:https_user) { should be_nil }
+    its(:https_pass) { should be_nil }
+  end
 end

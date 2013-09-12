@@ -51,11 +51,11 @@ module VagrantPlugins
         private
 
         def user(uri)
-          URI.parse(uri).user if !uri.nil?
+          URI.parse(uri).user if uri
         end
 
         def pass(uri)
-          URI.parse(uri).password if !uri.nil?
+          URI.parse(uri).password if uri
         end
       end
     end

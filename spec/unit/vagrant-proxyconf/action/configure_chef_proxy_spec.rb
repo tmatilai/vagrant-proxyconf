@@ -29,6 +29,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
       before :each do
         config.http      = 'http://foo:1234'
         config.http_user = 'bar'
+        config.https     = false
 
         configure_chef
       end
@@ -37,6 +38,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
         expect(chef.http_proxy).to  eq 'http://foo:1234'
         expect(chef.http_proxy_user).to eq 'bar'
         expect(chef.http_proxy_pass).to be_nil
+        expect(chef.https_proxy).to be_nil
+        expect(chef.https_proxy_user).to be_nil
+        expect(chef.https_proxy_pass).to be_nil
       end
     end
 
@@ -47,6 +51,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
 
         config.http      = 'http://default:7070/'
         config.http_user = 'foo'
+        config.http_pass = false
         config.https     = 'http://sslproxy:3128/'
 
         configure_chef
