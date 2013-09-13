@@ -1,6 +1,7 @@
 # 0.5.1 / _Unreleased_
 
 - Fix Chef provisioner configuration if a proxy is set to `false` ([GH-24][])
+- Create the directories for configuration files if they don't exist ([GH-25][])
 
 # 0.5.0 / 2013-09-11
 
@@ -56,3 +57,4 @@
 [GH-19]: https://github.com/tmatilai/vagrant-proxyconf/issues/19 "Issue 19"
 [GH-21]: https://github.com/tmatilai/vagrant-proxyconf/issues/21 "Issue 21"
 [GH-24]: https://github.com/tmatilai/vagrant-proxyconf/issues/24 "Issue 24"
+[GH-25]: https://github.com/tmatilai/vagrant-proxyconf/issues/25 "Issue 25"
