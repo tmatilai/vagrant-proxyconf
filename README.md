@@ -100,6 +100,8 @@ VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 
 Many programs (wget, curl, yum, etc.) can be configured to use proxies with `<protocol>_proxy` or `<PROTOCOL>_PROXY` environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
 
+Also sudo will be configured to preserve the variables. This requires that sudo in the VM is configured to support "sudoers.d", i.e. _/etc/sudoers_ contains line `#includedir /etc/sudoers.d`.
+
 #### Example Vagrantfile
 
 ```ruby
