@@ -26,7 +26,7 @@ module VagrantPlugins
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
           else
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.configuring")
-            write_config(machine, config)
+            configure_machine(machine, config)
           end
         end
 
@@ -58,8 +58,19 @@ module VagrantPlugins
           config
         end
 
-        def write_config(machine, config)
-          logger.debug "Configuration:\n#{config}"
+        # Configures the VM based on the config
+        def configure_machine(machine, config)
+          write_config(machine, config)
+        end
+
+        # Writes the config to the VM
+        #
+        # @param opts [Hash] optional file options
+        # @option opts [String] :path (#config_path) the path of the configuration file
+        # @option opts [String] :mode the mode of the file
+        def write_config(machine, config, opts = {})
+          path = opts[:path] || config_path(machine)
+          logger.debug "Configuration (#{path}):\n#{config}"
 
           temp = Tempfile.new("vagrant")
           temp.binmode
@@ -68,7 +79,9 @@ module VagrantPlugins
 
           machine.communicate.tap do |comm|
             comm.upload(temp.path, "/tmp/vagrant-proxyconf")
-            comm.sudo("cat /tmp/vagrant-proxyconf > #{config_path(machine)}")
+            comm.sudo("mkdir -p #{File.dirname(path)}")
+            comm.sudo("cat /tmp/vagrant-proxyconf > #{path}")
+            comm.sudo("chmod #{opts[:mode]} #{path}") if opts[:mode]
             comm.sudo("rm /tmp/vagrant-proxyconf")
           end
         end
