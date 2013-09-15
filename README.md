@@ -12,15 +12,32 @@
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy, or you have a caching proxy.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy server, or you have a caching proxy.
 
 At this state we support:
 
-* Generic `*_proxy` environment variables that many programs support
+* Generic `http_proxy` etc. environment variables that many programs support
 * APT proxy/cacher
 * Setting default proxy configuration for all Chef provisioners
 
-Support is planned for other package managers (at least yum).
+## Quick start
+
+Install the plugin:
+
+```sh
+vagrant plugin install vagrant-proxyconf
+```
+
+To configure all possible software on all Vagrant VMs, add the following to _$HOME/.vagrant.d/Vagrantfile_ (or to a project specific _Vagrantfile_):
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.proxy.http     = "http://192.168.0.2:3128/"
+  config.proxy.https    = "http://192.168.0.2:3128/"
+  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  # ... other stuff
+end
+```
 
 ## Compatibility
 
@@ -35,17 +52,9 @@ The following providers are confirmed to work:
 
 For the proxy configuration to take effect for [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus) plugin, version 1.1.1 or newer of it should be used.
 
-## Installation
-
-Install using standard Vagrant plugin installation method:
-
-```sh
-vagrant plugin install vagrant-proxyconf
-```
-
-See the [wiki](https://github.com/tmatilai/vagrant-proxyconf/wiki) for instructions to install a pre-release version.
-
 ## Usage
+
+Install using standard Vagrant plugin installation method: `vagrant plugin install vagrant-proxyconf`. See the [wiki](https://github.com/tmatilai/vagrant-proxyconf/wiki) for instructions to install a pre-release version.
 
 The plugin hooks itself to all Vagrant commands triggering provisioning (e.g. `vagrant up`, `vagrant provision`, etc.). The proxy configurations are written just before provisioners are run.
 
