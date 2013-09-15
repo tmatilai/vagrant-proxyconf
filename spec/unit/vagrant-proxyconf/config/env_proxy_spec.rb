@@ -3,7 +3,7 @@ require 'vagrant-proxyconf/config/env_proxy'
 
 def config_with(options)
   instance.tap do |c|
-    options.each_pair { |k, v| c.send("#{k}=".to_sym, v) }
+    options.each_pair { |k, v| c.public_send("#{k}=".to_sym, v) }
     c.finalize!
   end
 end

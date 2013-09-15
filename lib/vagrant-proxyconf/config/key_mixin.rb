@@ -97,7 +97,7 @@ module VagrantPlugins
         end
 
         def get(key)
-          send(key.name)
+          public_send(key.name)
         end
 
         def set?(key)
@@ -105,7 +105,7 @@ module VagrantPlugins
         end
 
         def set(key, value)
-          send(:"#{key.name}=", value)
+          public_send(:"#{key.name}=", value)
         end
 
         private

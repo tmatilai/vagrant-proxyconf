@@ -39,7 +39,7 @@ module VagrantPlugins
 
         # @return [Vagrant::Plugin::V2::Config] the configuration
         def config(machine)
-          config = machine.config.send(config_name.to_sym)
+          config = machine.config.public_send(config_name.to_sym)
           finalize_config(config)
           config.merge_defaults(default_config(machine))
         end
