@@ -67,6 +67,11 @@ module VagrantPlugins
         Config::Proxy
       end
 
+      config 'yum_proxy' do
+        require_relative 'config/yum_proxy'
+        Config::YumProxy
+      end
+
       guest_capability 'debian', 'apt_proxy_conf' do
         require_relative 'cap/debian/apt_proxy_conf'
         Cap::Debian::AptProxyConf
