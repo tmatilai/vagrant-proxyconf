@@ -82,6 +82,11 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'redhat', 'yum_proxy_conf' do
+        require_relative 'cap/redhat/yum_proxy_conf'
+        Cap::Redhat::YumProxyConf
+      end
+
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action'
 
