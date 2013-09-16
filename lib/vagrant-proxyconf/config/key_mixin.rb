@@ -21,6 +21,8 @@ module VagrantPlugins
           # Creates `attr_accessor` for the key name and adds a {Key} to {#keys}.
           # @param (see Key#initialize)
           # @option (see Key#initialize)
+          # @!macro [attach] key
+          #   @!attribute
           def key(name, opts = {})
             self.class_eval { attr_accessor name }
             keys << Key.new(name, opts)

@@ -11,15 +11,12 @@ module VagrantPlugins
         include KeyMixin
         # @!parse extend KeyMixin::ClassMethods
 
-        # @!attribute
         # @return [String] the HTTP proxy
         key :http, env_var: 'VAGRANT_APT_HTTP_PROXY'
 
-        # @!attribute
         # @return [String] the HTTPS proxy
         key :https, env_var: 'VAGRANT_APT_HTTPS_PROXY'
 
-        # @!attribute
         # @return [String] the FTP proxy
         key :ftp, env_var: 'VAGRANT_APT_FTP_PROXY'
 
