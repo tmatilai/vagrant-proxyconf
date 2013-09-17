@@ -1,4 +1,4 @@
-# 0.5.1 / _Unreleased_
+# 0.5.1 / 2013-09-17
 
 - Configure sudo to preserve the `*_proxy` environment variables ([GH-23][], [GH-25][])
     * Requires that sudo in VM is configured to support "sudoers.d", i.e. _/etc/sudoers_ contains line `#includedir /etc/sudoers.d`
