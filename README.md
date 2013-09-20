@@ -12,7 +12,7 @@
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
 
-A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy server, or you have a caching proxy.
+A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy server, or you have a caching proxy (for example [polipo](https://github.com/tmatilai/polipo-box)).
 
 At this state we support:
 
@@ -195,15 +195,13 @@ VAGRANT_APT_HTTP_PROXY="proxy.example.com:8080" vagrant up
 
 #### Running apt-cacher-ng on a Vagrant box
 
-[Here](https://github.com/tmatilai/apt-cacher-box) is an example for setting up apt-cacher proxy server in a Vagrant VM.
+[apt-cacher-box](https://github.com/tmatilai/apt-cacher-box) gives an example for setting up apt-cacher proxy server in a Vagrant VM.
 
 ## Related plugins and projects
 
 * [apt-cacher-box](https://github.com/tmatilai/apt-cacher-box)<br/>
   a Vagrant setup for apt-cacher-ng.
+* [polipo-box](https://github.com/tmatilai/polipo-box)<br/>
+  a Vagrant setup for [polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/) caching web proxy.
 * [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)<br/>
   An excellent Vagrant plugin that shares various cache directories among similar VM instances. Should work fine together with vagrant-proxyconf.
-* [vagrant-httpproxy](https://github.com/juliandunn/vagrant-httpproxy)<br/>
-  A Chef cookbook for configuring Chef resources to use the specified proxy (while offline).
-* [vagrant-proxy](https://github.com/clintoncwolfe/vagrant-proxy)<br/>
-  A Vagrant plugin that uses iptables rules to force the VM to use a proxy.
