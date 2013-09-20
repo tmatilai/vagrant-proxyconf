@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = VagrantPlugins::ProxyConf::VERSION
   spec.authors       = ["Teemu Matilainen"]
   spec.email         = ["teemu.matilainen@iki.fi"]
-  spec.description   = "A Vagrant plugin that configures the virtual machine to use proxies"
+  spec.description   = "A Vagrant plugin that configures the virtual machine to use proxy servers"
   spec.summary       = spec.description
   spec.homepage      = "http://tmatilai.github.io/vagrant-proxyconf/"
   spec.license       = "MIT"
