@@ -60,7 +60,7 @@ module VagrantPlugins
 
         # Configures the VM based on the config
         def configure_machine(machine, config)
-          write_config(machine, config)
+          write_config(machine, config, mode: '0644')
         end
 
         # Writes the config to the VM
