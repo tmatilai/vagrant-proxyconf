@@ -78,11 +78,12 @@ module VagrantPlugins
           temp.close
 
           machine.communicate.tap do |comm|
-            comm.upload(temp.path, "/tmp/vagrant-proxyconf")
+            tmp = "/tmp/vagrant-proxyconf"
+            comm.upload(temp.path, tmp)
+            comm.sudo("chmod #{opts[:mode]} #{tmp}") if opts[:mode]
+            comm.sudo("chown root:root #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
-            comm.sudo("cat /tmp/vagrant-proxyconf > #{path}")
-            comm.sudo("chmod #{opts[:mode]} #{path}") if opts[:mode]
-            comm.sudo("rm /tmp/vagrant-proxyconf")
+            comm.sudo("mv #{tmp} #{path}")
           end
         end
 
