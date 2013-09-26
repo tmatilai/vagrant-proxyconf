@@ -60,7 +60,7 @@ module VagrantPlugins
 
         # Configures the VM based on the config
         def configure_machine(machine, config)
-          write_config(machine, config, mode: '0644')
+          write_config(machine, config)
         end
 
         # Writes the config to the VM
@@ -80,7 +80,8 @@ module VagrantPlugins
           machine.communicate.tap do |comm|
             tmp = "/tmp/vagrant-proxyconf"
             comm.upload(temp.path, tmp)
-            comm.sudo("chmod #{opts[:mode]} #{tmp}") if opts[:mode]
+            mode = opts[:mode] || '0644'
+            comm.sudo("chmod #{mode} #{tmp}")
             comm.sudo("chown root:root #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
             comm.sudo("mv #{tmp} #{path}")
