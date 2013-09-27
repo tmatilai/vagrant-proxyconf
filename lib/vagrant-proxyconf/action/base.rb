@@ -72,10 +72,11 @@ module VagrantPlugins
         def write_config(machine, config, opts = {})
           tmp = "/tmp/vagrant-proxyconf"
           path = opts[:path] || config_path(machine)
+          local_tmp = tempfile(config)
 
           logger.debug "Configuration (#{path}):\n#{config}"
           machine.communicate.tap do |comm|
-            comm.upload(tempfile(config).path, tmp)
+            comm.upload(local_tmp.path, tmp)
             comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
             comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
