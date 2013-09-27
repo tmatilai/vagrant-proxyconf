@@ -2,6 +2,7 @@
 
 - Compatibility with vagrant-aws v0.4.0 ([GH-28][])
     * Next vagrant-aws release [will remove](https://github.com/mitchellh/vagrant-aws/commit/dd17f23) its custom TimedProvision action class
+- Ensure that generated configuration files are not deleted before uploading ([GH-29][])
 
 # 0.5.2 / 2013-09-27
 
@@ -75,3 +76,4 @@
 [GH-26]: https://github.com/tmatilai/vagrant-proxyconf/issues/26 "Issue 26"
 [GH-27]: https://github.com/tmatilai/vagrant-proxyconf/issues/27 "Issue 27"
 [GH-28]: https://github.com/tmatilai/vagrant-proxyconf/issues/28 "Issue 28"
+[GH-29]: https://github.com/tmatilai/vagrant-proxyconf/issues/29 "Issue 29"
