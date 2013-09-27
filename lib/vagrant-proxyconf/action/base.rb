@@ -67,24 +67,28 @@ module VagrantPlugins
         #
         # @param opts [Hash] optional file options
         # @option opts [String] :path (#config_path) the path of the configuration file
-        # @option opts [String] :mode the mode of the file
+        # @option opts [String] :mode ("0644") the mode of the file
+        # @option opts [String] :owner ("root:root") the owner (and group) of the file
         def write_config(machine, config, opts = {})
+          tmp = "/tmp/vagrant-proxyconf"
           path = opts[:path] || config_path(machine)
+
           logger.debug "Configuration (#{path}):\n#{config}"
-
-          temp = Tempfile.new("vagrant")
-          temp.binmode
-          temp.write(config)
-          temp.close
-
           machine.communicate.tap do |comm|
-            tmp = "/tmp/vagrant-proxyconf"
-            comm.upload(temp.path, tmp)
-            mode = opts[:mode] || '0644'
-            comm.sudo("chmod #{mode} #{tmp}")
-            comm.sudo("chown root:root #{tmp}")
+            comm.upload(tempfile(config).path, tmp)
+            comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
+            comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
             comm.sudo("mv #{tmp} #{path}")
+          end
+        end
+
+        # @return [Tempfile] a temporary file with the specified content
+        def tempfile(content)
+          Tempfile.new("vagrant").tap do |temp|
+            temp.binmode
+            temp.write(content)
+            temp.close
           end
         end
 
