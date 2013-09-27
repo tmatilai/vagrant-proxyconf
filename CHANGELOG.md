@@ -1,3 +1,6 @@
+# 0.5.3 / _Unreleased_
+
+
 # 0.5.2 / 2013-09-27
 
 - Fix sudo configuration on old Ubuntu 10.04 "lucid" guests ([GH-26][])
