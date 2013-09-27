@@ -27,16 +27,6 @@ module VagrantPlugins
         I18n.reload!
       end
 
-      def self.register_hooks(hook, provision_action)
-        require_relative 'action/configure_apt_proxy'
-        require_relative 'action/configure_chef_proxy'
-        require_relative 'action/configure_env_proxy'
-
-        hook.after provision_action, Action::ConfigureAptProxy
-        hook.after provision_action, Action::ConfigureChefProxy
-        hook.after provision_action, Action::ConfigureEnvProxy
-      end
-
       setup_i18n
       check_vagrant_version!
 
@@ -79,6 +69,18 @@ module VagrantPlugins
             register_hooks(hook, VagrantPlugins::AWS::Action::TimedProvision)
           end
         end
+      end
+
+      private
+
+      def self.register_hooks(hook, provision_action)
+        require_relative 'action/configure_apt_proxy'
+        require_relative 'action/configure_chef_proxy'
+        require_relative 'action/configure_env_proxy'
+
+        hook.after provision_action, Action::ConfigureAptProxy
+        hook.after provision_action, Action::ConfigureChefProxy
+        hook.after provision_action, Action::ConfigureEnvProxy
       end
     end
   end
