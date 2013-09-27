@@ -1,5 +1,8 @@
 # 0.5.2 / _Unreleased_
 
+- Fix sudo configuration on old Ubuntu 10.04 "lucid" guests ([GH-26][])
+    * Ubuntu bug [\#553786](https://bugs.launchpad.net/ubuntu/+source/sudo/+bug/553786)
+- Always set correct permissions on generated configuration files ([GH-27][], [GH-26][])
 
 # 0.5.1 / 2013-09-17
 
@@ -64,3 +67,5 @@
 [GH-23]: https://github.com/tmatilai/vagrant-proxyconf/issues/23 "Issue 23"
 [GH-24]: https://github.com/tmatilai/vagrant-proxyconf/issues/24 "Issue 24"
 [GH-25]: https://github.com/tmatilai/vagrant-proxyconf/issues/25 "Issue 25"
+[GH-26]: https://github.com/tmatilai/vagrant-proxyconf/issues/26 "Issue 26"
+[GH-27]: https://github.com/tmatilai/vagrant-proxyconf/issues/27 "Issue 27"
