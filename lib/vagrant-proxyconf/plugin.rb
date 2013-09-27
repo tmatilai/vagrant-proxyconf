@@ -37,14 +37,6 @@ module VagrantPlugins
         hook.after provision_action, Action::ConfigureEnvProxy
       end
 
-      def self.aws_plugin_installed?
-        VagrantPlugins.const_defined?('AWS')
-      end
-
-      def self.omnibus_plugin_installed?
-        VagrantPlugins.const_defined?('Omnibus')
-      end
-
       setup_i18n
       check_vagrant_version!
 
@@ -76,14 +68,16 @@ module VagrantPlugins
       end
 
       action_hook 'proxyconf_configure' do |hook|
-        if omnibus_plugin_installed?
+        if defined? VagrantPlugins::Omnibus::Action::InstallChef
           # configure the proxies before vagrant-omnibus
           register_hooks(hook, VagrantPlugins::Omnibus::Action::InstallChef)
         else
           register_hooks(hook, Vagrant::Action::Builtin::Provision)
 
-          # vagrant-aws uses a non-standard provision action
-          register_hooks(hook, VagrantPlugins::AWS::Action::TimedProvision) if aws_plugin_installed?
+          # vagrant-aws < 0.4.0 uses a non-standard provision action
+          if defined? VagrantPlugins::AWS::Action::TimedProvision
+            register_hooks(hook, VagrantPlugins::AWS::Action::TimedProvision)
+          end
         end
       end
     end
