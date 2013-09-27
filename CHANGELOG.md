@@ -1,5 +1,7 @@
 # 0.5.3 / _Unreleased_
 
+- Compatibility with vagrant-aws v0.4.0 ([GH-28][])
+    * Next vagrant-aws release [will remove](https://github.com/mitchellh/vagrant-aws/commit/dd17f23) its custom TimedProvision action class
 
 # 0.5.2 / 2013-09-27
 
@@ -72,3 +74,4 @@
 [GH-25]: https://github.com/tmatilai/vagrant-proxyconf/issues/25 "Issue 25"
 [GH-26]: https://github.com/tmatilai/vagrant-proxyconf/issues/26 "Issue 26"
 [GH-27]: https://github.com/tmatilai/vagrant-proxyconf/issues/27 "Issue 27"
+[GH-28]: https://github.com/tmatilai/vagrant-proxyconf/issues/28 "Issue 28"
