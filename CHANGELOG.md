@@ -1,3 +1,6 @@
+# 0.5.4 / _Unreleased_
+
+
 # 0.5.3 / 2013-09-30
 
 - Compatibility with vagrant-aws v0.4.0 ([GH-28][])
