@@ -1,4 +1,4 @@
-# 0.5.3 / _Unreleased_
+# 0.5.3 / 2013-09-30
 
 - Compatibility with vagrant-aws v0.4.0 ([GH-28][])
     * Next vagrant-aws release [will remove](https://github.com/mitchellh/vagrant-aws/commit/dd17f23) its custom TimedProvision action class
