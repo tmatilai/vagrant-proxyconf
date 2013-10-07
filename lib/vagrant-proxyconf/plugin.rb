@@ -58,29 +58,19 @@ module VagrantPlugins
       end
 
       action_hook 'proxyconf_configure' do |hook|
+        require_relative 'action'
+
         if defined? VagrantPlugins::Omnibus::Action::InstallChef
           # configure the proxies before vagrant-omnibus
-          register_hooks(hook, VagrantPlugins::Omnibus::Action::InstallChef)
+          hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
         else
-          register_hooks(hook, Vagrant::Action::Builtin::Provision)
+          hook.after Vagrant::Action::Builtin::Provision, Action.configure
 
           # vagrant-aws < 0.4.0 uses a non-standard provision action
           if defined? VagrantPlugins::AWS::Action::TimedProvision
-            register_hooks(hook, VagrantPlugins::AWS::Action::TimedProvision)
+            hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
           end
         end
-      end
-
-      private
-
-      def self.register_hooks(hook, provision_action)
-        require_relative 'action/configure_apt_proxy'
-        require_relative 'action/configure_chef_proxy'
-        require_relative 'action/configure_env_proxy'
-
-        hook.after provision_action, Action::ConfigureAptProxy
-        hook.after provision_action, Action::ConfigureChefProxy
-        hook.after provision_action, Action::ConfigureEnvProxy
       end
     end
   end
