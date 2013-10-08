@@ -10,7 +10,7 @@ en:
 
     chef_proxy:
       no_provisioners: |-
-        No Chef provisioners configured.
+        No Chef provisioners configured
       not_enabled: |-
         Default proxy not enabled or configured. Skipping Chef provisioner configuration.
       configuring: |-
