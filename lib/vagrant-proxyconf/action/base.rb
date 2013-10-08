@@ -1,17 +1,14 @@
-require 'log4r'
 require 'tempfile'
 require 'vagrant'
+require_relative '../logger'
 
 module VagrantPlugins
   module ProxyConf
     class Action
       # Base class for proxy configuration Actions
       class Base
-        attr_reader :logger
-
         def initialize(app, env)
-          @app    = app
-          @logger = Log4r::Logger.new('vagrant::proxyconf')
+          @app = app
         end
 
         def call(env)
@@ -36,6 +33,11 @@ module VagrantPlugins
         end
 
         private
+
+        # @return [Log4r::Logger]
+        def logger
+          ProxyConf.logger
+        end
 
         # @return [Vagrant::Plugin::V2::Config] the configuration
         def config(machine)

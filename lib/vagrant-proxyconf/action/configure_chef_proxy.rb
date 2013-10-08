@@ -1,13 +1,12 @@
+require_relative '../logger'
+
 module VagrantPlugins
   module ProxyConf
     class Action
       # Action for configuring Chef provisioners
       class ConfigureChefProxy
-        attr_reader :logger
-
         def initialize(app, env)
-          @app    = app
-          @logger = Log4r::Logger.new('vagrant::proxyconf')
+          @app = app
         end
 
         def call(env)
@@ -27,6 +26,11 @@ module VagrantPlugins
         end
 
         private
+
+        # @return [Log4r::Logger]
+        def logger
+          ProxyConf.logger
+        end
 
         # @return [Config::Proxy] the `config.proxy` configuration
         def config(machine)
