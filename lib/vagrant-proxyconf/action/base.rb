@@ -18,7 +18,7 @@ module VagrantPlugins
           config  = config(machine)
 
           if !config.enabled?
-            logger.debug I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
+            logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
           elsif !supported?(machine)
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
           else

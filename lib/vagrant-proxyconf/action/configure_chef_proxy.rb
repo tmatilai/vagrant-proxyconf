@@ -16,9 +16,9 @@ module VagrantPlugins
           config  = config(machine)
 
           if chef_provisioners(machine).empty?
-            logger.debug I18n.t("vagrant_proxyconf.chef_proxy.no_provisioners")
+            logger.info I18n.t("vagrant_proxyconf.chef_proxy.no_provisioners")
           elsif !config.enabled?
-            logger.debug I18n.t("vagrant_proxyconf.chef_proxy.not_enabled")
+            logger.info I18n.t("vagrant_proxyconf.chef_proxy.not_enabled")
           else
             env[:ui].info I18n.t("vagrant_proxyconf.chef_proxy.configuring")
             configure_chef_provisioners(machine, config)
