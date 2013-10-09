@@ -9,6 +9,9 @@ module VagrantPlugins
       # The minimum compatible Vagrant version
       MIN_VAGRANT_VERSION = '1.2.0'
 
+      # A list of plugins whose action classes we hook to if installed
+      OPTIONAL_PLUGIN_DEPENDENCIES = %w[vagrant-aws vagrant-omnibus]
+
       # Verifies that the Vagrant version fulfills the requirements
       #
       # @raise [VagrantPlugins::ProxyConf::VagrantVersionError] if this plugin
@@ -27,8 +30,25 @@ module VagrantPlugins
         I18n.reload!
       end
 
+      # Ensures a dependent plugin is loaded before us if it is installed.
+      # Ignores {Vagrant::Errors::PluginLoadError} but passes other exceptions.
+      #
+      # @param plugin [String] the plugin name
+      def self.load_optional_dependency(plugin)
+        begin
+          Vagrant.require_plugin plugin
+        rescue Vagrant::Errors::PluginLoadError; end
+      end
+
+      # Loads the plugins to ensure their action hooks are registered before us.
+      # Uses alphabetical order to not change the default behaviour otherwise.
+      def self.load_optional_dependencies
+        OPTIONAL_PLUGIN_DEPENDENCIES.sort.each { |plugin| load_optional_dependency plugin }
+      end
+
       setup_i18n
       check_vagrant_version!
+      load_optional_dependencies
 
       name 'vagrant-proxyconf'
 
