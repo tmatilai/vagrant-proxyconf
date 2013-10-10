@@ -21,9 +21,9 @@ module VagrantPlugins
           @app.call(env) if !@before
 
           if env[@block]
-            logger.info "Skipping repeated '#{@block}' stack"
+            logger.debug "Skipping repeated '#{@block}' stack"
           else
-            logger.info "'#{@block}' stack invoked first time"
+            logger.debug "'#{@block}' stack invoked first time"
             env[@block] = true
 
             new_env = build_and_run_block(env)
