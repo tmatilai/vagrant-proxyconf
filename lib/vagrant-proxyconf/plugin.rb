@@ -9,6 +9,9 @@ module VagrantPlugins
       # The minimum compatible Vagrant version
       MIN_VAGRANT_VERSION = '1.2.0'
 
+      # A list of plugins whose action classes we hook to if installed
+      OPTIONAL_PLUGIN_DEPENDENCIES = %w[vagrant-aws vagrant-omnibus vagrant-vbguest]
+
       # Verifies that the Vagrant version fulfills the requirements
       #
       # @raise [VagrantPlugins::ProxyConf::VagrantVersionError] if this plugin
@@ -27,8 +30,25 @@ module VagrantPlugins
         I18n.reload!
       end
 
+      # Ensures a dependent plugin is loaded before us if it is installed.
+      # Ignores {Vagrant::Errors::PluginLoadError} but passes other exceptions.
+      #
+      # @param plugin [String] the plugin name
+      def self.load_optional_dependency(plugin)
+        begin
+          Vagrant.require_plugin plugin
+        rescue Vagrant::Errors::PluginLoadError; end
+      end
+
+      # Loads the plugins to ensure their action hooks are registered before us.
+      # Uses alphabetical order to not change the default behaviour otherwise.
+      def self.load_optional_dependencies
+        OPTIONAL_PLUGIN_DEPENDENCIES.sort.each { |plugin| load_optional_dependency plugin }
+      end
+
       setup_i18n
       check_vagrant_version!
+      load_optional_dependencies
 
       name 'vagrant-proxyconf'
 
@@ -60,16 +80,22 @@ module VagrantPlugins
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action'
 
-        if defined? VagrantPlugins::Omnibus::Action::InstallChef
-          # configure the proxies before vagrant-omnibus
-          hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
-        else
-          hook.after Vagrant::Action::Builtin::Provision, Action.configure
+        # the standard provision action
+        hook.after Vagrant::Action::Builtin::Provision, Action.configure
 
-          # vagrant-aws < 0.4.0 uses a non-standard provision action
-          if defined? VagrantPlugins::AWS::Action::TimedProvision
-            hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
-          end
+        # vagrant-aws < 0.4.0 uses a non-standard provision action
+        if defined?(VagrantPlugins::AWS::Action::TimedProvision)
+          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
+        end
+
+        # configure the proxies before vagrant-omnibus
+        if defined?(VagrantPlugins::Omnibus::Action::InstallChef)
+          hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
+        end
+
+        # configure the proxies before vagrant-vbguest
+        if defined?(VagrantVbguest::Middleware)
+          hook.before VagrantVbguest::Middleware, Action.configure(before: true)
         end
       end
     end
