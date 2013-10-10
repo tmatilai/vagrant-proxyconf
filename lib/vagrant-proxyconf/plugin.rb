@@ -80,22 +80,22 @@ module VagrantPlugins
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action'
 
-        if defined? VagrantVbguest::Middleware
-          # configure the proxies before vagrant-vbguest
-          hook.before VagrantVbguest::Middleware, Action.configure(before: true)
+        # the standard provision action
+        hook.after Vagrant::Action::Builtin::Provision, Action.configure
+
+        # vagrant-aws < 0.4.0 uses a non-standard provision action
+        if defined?(VagrantPlugins::AWS::Action::TimedProvision)
+          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
         end
 
-        if defined? VagrantPlugins::Omnibus::Action::InstallChef
-          # configure the proxies before vagrant-omnibus
+        # configure the proxies before vagrant-omnibus
+        if defined?(VagrantPlugins::Omnibus::Action::InstallChef)
           hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
-        else
-          # the standard provision action
-          hook.after Vagrant::Action::Builtin::Provision, Action.configure
+        end
 
-          # vagrant-aws < 0.4.0 uses a non-standard provision action
-          if defined? VagrantPlugins::AWS::Action::TimedProvision
-            hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
-          end
+        # configure the proxies before vagrant-vbguest
+        if defined?(VagrantVbguest::Middleware)
+          hook.before VagrantVbguest::Middleware, Action.configure(before: true)
         end
       end
     end
