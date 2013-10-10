@@ -1,3 +1,6 @@
+# 0.6.0.rc2 / _Unreleased_
+
+
 # 0.6.0.rc1 / 2013-10-10
 
 - Add support for the [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) plugin ([GH-30][])
