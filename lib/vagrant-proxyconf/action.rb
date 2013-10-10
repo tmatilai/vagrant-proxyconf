@@ -21,9 +21,9 @@ module VagrantPlugins
       #   middleware builder
       def self.config_actions
         @actions ||= Proc.new do |builder|
-          builder.use ConfigureEnvProxy
-          builder.use ConfigureChefProxy
           builder.use ConfigureAptProxy
+          builder.use ConfigureChefProxy
+          builder.use ConfigureEnvProxy
         end
       end
     end

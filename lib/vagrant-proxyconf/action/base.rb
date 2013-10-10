@@ -12,8 +12,6 @@ module VagrantPlugins
         end
 
         def call(env)
-          @app.call env
-
           machine = env[:machine]
           config  = config(machine)
 
@@ -25,6 +23,8 @@ module VagrantPlugins
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.configuring")
             configure_machine(machine, config)
           end
+
+          @app.call env
         end
 
         # @return [String] the name of the configuration section
