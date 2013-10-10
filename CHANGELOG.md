@@ -1,5 +1,6 @@
 # 0.5.4 / _Unreleased_
 
+- Add support for the [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) plugin ([GH-30][])
 
 # 0.5.3 / 2013-09-30
 
@@ -80,3 +81,4 @@
 [GH-27]: https://github.com/tmatilai/vagrant-proxyconf/issues/27 "Issue 27"
 [GH-28]: https://github.com/tmatilai/vagrant-proxyconf/issues/28 "Issue 28"
 [GH-29]: https://github.com/tmatilai/vagrant-proxyconf/issues/29 "Issue 29"
+[GH-30]: https://github.com/tmatilai/vagrant-proxyconf/issues/30 "Issue 30"
