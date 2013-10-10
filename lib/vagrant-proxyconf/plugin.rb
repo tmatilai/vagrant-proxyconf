@@ -10,7 +10,7 @@ module VagrantPlugins
       MIN_VAGRANT_VERSION = '1.2.0'
 
       # A list of plugins whose action classes we hook to if installed
-      OPTIONAL_PLUGIN_DEPENDENCIES = %w[vagrant-aws vagrant-omnibus]
+      OPTIONAL_PLUGIN_DEPENDENCIES = %w[vagrant-aws vagrant-omnibus vagrant-vbguest]
 
       # Verifies that the Vagrant version fulfills the requirements
       #
@@ -80,10 +80,16 @@ module VagrantPlugins
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action'
 
+        if defined? VagrantVbguest::Middleware
+          # configure the proxies before vagrant-vbguest
+          hook.before VagrantVbguest::Middleware, Action.configure(before: true)
+        end
+
         if defined? VagrantPlugins::Omnibus::Action::InstallChef
           # configure the proxies before vagrant-omnibus
           hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
         else
+          # the standard provision action
           hook.after Vagrant::Action::Builtin::Provision, Action.configure
 
           # vagrant-aws < 0.4.0 uses a non-standard provision action
