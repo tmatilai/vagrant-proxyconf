@@ -27,9 +27,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
 
     context "with specified default configurations" do
       before :each do
-        config.http      = 'http://foo:1234'
-        config.http_user = 'bar'
-        config.https     = false
+        config.http  = 'http://bar:baz@foo:1234'
+        config.https = false
 
         configure_chef
       end
@@ -37,7 +36,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
       it "configures chef" do
         expect(chef.http_proxy).to  eq 'http://foo:1234'
         expect(chef.http_proxy_user).to eq 'bar'
-        expect(chef.http_proxy_pass).to be_nil
+        expect(chef.http_proxy_pass).to eq 'baz'
         expect(chef.https_proxy).to be_nil
         expect(chef.https_proxy_user).to be_nil
         expect(chef.https_proxy_pass).to be_nil
@@ -46,13 +45,11 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
 
     context "with specified chef configurations" do
       before :each do
-        chef.http_proxy  = 'http://proxy:8080/'
-        chef.no_proxy    = 'localhost'
+        chef.http_proxy = 'http://proxy:8080/'
+        chef.no_proxy   = 'localhost'
 
-        config.http      = 'http://default:7070/'
-        config.http_user = 'foo'
-        config.http_pass = false
-        config.https     = 'http://sslproxy:3128/'
+        config.http     = 'http://foo:@default:7070/'
+        config.https    = 'http://sslproxy:3128/'
 
         configure_chef
       end
@@ -65,7 +62,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
       end
 
       it "configures unset proxies" do
-        expect(chef.https_proxy).to  eq 'http://sslproxy:3128/'
+        expect(chef.https_proxy).to eq 'http://sslproxy:3128/'
       end
     end
   end

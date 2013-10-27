@@ -1,4 +1,5 @@
 require_relative '../logger'
+require_relative '../userinfo_uri'
 
 module VagrantPlugins
   module ProxyConf
@@ -51,23 +52,25 @@ module VagrantPlugins
           chef_provisioners(machine).each { |prov| configure_chef(prov.config, config) }
         end
 
-        # Configures proxies for the Chef provisioner if they are not set
+        # Configures proxies for a Chef provisioner if they are not set
         #
         # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
         # @param config [Config::Proxy] the default configuration
         def configure_chef(chef, config)
-          if !chef.http_proxy && config.http
-            chef.http_proxy      = config.http
-            chef.http_proxy_user = config.http_user
-            chef.http_proxy_pass = config.http_pass
-          end
-          if !chef.https_proxy && config.https
-            chef.https_proxy      = config.https
-            chef.https_proxy_user = config.https_user
-            chef.https_proxy_pass = config.https_pass
-          end
-          if !chef.no_proxy && config.no_proxy
-            chef.no_proxy = config.no_proxy
+          configure_chef_proxy(chef, 'http', config.http)
+          configure_chef_proxy(chef, 'https', config.https)
+          chef.no_proxy ||= config.no_proxy if config.no_proxy
+        end
+
+        # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
+        # @param scheme [String] the http protocol (http or https)
+        # @param uri [String] the URI with optional userinfo
+        def configure_chef_proxy(chef, scheme, uri)
+          if uri && !chef.public_send("#{scheme}_proxy")
+            u = UserinfoURI.new(uri)
+            chef.public_send("#{scheme}_proxy_user=", u.user)
+            chef.public_send("#{scheme}_proxy_pass=", u.pass)
+            chef.public_send("#{scheme}_proxy=", u.uri)
           end
         end
       end
