@@ -1,5 +1,6 @@
 # 0.6.1 / _Unreleased_
 
+- Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
 
 # 0.6.0 / 2013-10-15
 
@@ -63,6 +64,7 @@
 
 
 [GH-2]:  https://github.com/tmatilai/vagrant-proxyconf/issues/2  "Issue 2"
+[GH-4]:  https://github.com/tmatilai/vagrant-proxyconf/issues/4  "Issue 4"
 [GH-5]:  https://github.com/tmatilai/vagrant-proxyconf/issues/5  "Issue 5"
 [GH-6]:  https://github.com/tmatilai/vagrant-proxyconf/issues/6  "Issue 6"
 [GH-7]:  https://github.com/tmatilai/vagrant-proxyconf/issues/7  "Issue 7"
