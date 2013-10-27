@@ -1,4 +1,13 @@
 #!/usr/bin/env gawk
+#
+# Adds or modifies proxy configuration for Yum
+#
+# Usage:
+#   yum_config.awk -v proxy=http://proxy:1234 -v user=foo -v pass=bar /etc/yum.comf
+#
+# License: MIT
+# Copyright (c) 2013 Teemu Matilainen <teemu.matilainen@iki.fi>
+#
 
 BEGIN {
   FS = OFS = "="
