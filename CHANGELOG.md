@@ -1,4 +1,4 @@
-# 0.6.1 / _Unreleased_
+# 1.0.0 / _Unreleased_
 
 - Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
 
