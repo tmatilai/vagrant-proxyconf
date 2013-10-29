@@ -24,6 +24,14 @@ en:
       configuring: |-
         Configuring proxy environment variables...
 
+    yum_proxy:
+      not_enabled: |-
+        yum_proxy not enabled or configured
+      not_supported: |-
+        Skipping Yum proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Yum...
+
     errors:
       vagrant_version: |-
         vagrant-proxyconf plugin requires Vagrant %{min_version} or newer

@@ -1,6 +1,7 @@
 require_relative 'action/configure_apt_proxy'
 require_relative 'action/configure_chef_proxy'
 require_relative 'action/configure_env_proxy'
+require_relative 'action/configure_yum_proxy'
 require_relative 'action/only_once'
 
 module VagrantPlugins
@@ -24,6 +25,7 @@ module VagrantPlugins
           builder.use ConfigureAptProxy
           builder.use ConfigureChefProxy
           builder.use ConfigureEnvProxy
+          builder.use ConfigureYumProxy
         end
       end
     end
