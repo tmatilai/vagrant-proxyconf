@@ -18,6 +18,7 @@ module VagrantPlugins
           path = config_path(machine)
 
           machine.communicate.tap do |comm|
+            comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(ProxyConf.resource("yum_config.awk"), tmp)
             comm.sudo("touch #{path}")
             comm.sudo("gawk -f #{tmp} #{proxy_params(config)} #{path} > #{path}.new")

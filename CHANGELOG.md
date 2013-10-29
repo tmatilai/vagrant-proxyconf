@@ -1,6 +1,7 @@
 # 1.0.0 / _Unreleased_
 
 - Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
+- Remove the target path before uploading files to VM to avoid permission problems ([GH-32][])
 
 # 0.6.0 / 2013-10-15
 
@@ -87,3 +88,4 @@
 [GH-28]: https://github.com/tmatilai/vagrant-proxyconf/issues/28 "Issue 28"
 [GH-29]: https://github.com/tmatilai/vagrant-proxyconf/issues/29 "Issue 29"
 [GH-30]: https://github.com/tmatilai/vagrant-proxyconf/issues/30 "Issue 30"
+[GH-32]: https://github.com/tmatilai/vagrant-proxyconf/issues/32 "Issue 32"
