@@ -1,4 +1,4 @@
-# 1.0.0 / _Unreleased_
+# 1.0.0.rc1 / 2013-10-30
 
 - Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
 - Remove the target path before uploading files to VM to avoid permission problems ([GH-32][])
