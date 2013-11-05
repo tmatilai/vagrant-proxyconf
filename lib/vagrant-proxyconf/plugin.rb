@@ -82,6 +82,10 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'coreos', 'env_proxy_conf' do
+        # disabled on CoreOS
+      end
+
       guest_capability 'redhat', 'yum_proxy_conf' do
         require_relative 'cap/redhat/yum_proxy_conf'
         Cap::Redhat::YumProxyConf
