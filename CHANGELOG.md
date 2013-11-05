@@ -1,3 +1,6 @@
+# 1.0.0.rc2 / _Unreleased_
+
+
 # 1.0.0.rc1 / 2013-10-30
 
 - Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
