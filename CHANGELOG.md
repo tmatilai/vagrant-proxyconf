@@ -1,11 +1,8 @@
-# 1.0.0.rc2 / _Unreleased_
-
-- Disable environment variable setting on CoreOS ([GH-35][])
-
-# 1.0.0.rc1 / 2013-10-30
+# 1.0.0 / 2013-11-05
 
 - Add support for configuring Yum directly (not only via global env vars) ([GH-4][])
 - Remove the target path before uploading files to VM to avoid permission problems ([GH-32][])
+- Disable environment variable setting on CoreOS ([GH-35][])
 
 # 0.6.0 / 2013-10-15
 
