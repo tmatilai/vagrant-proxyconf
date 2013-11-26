@@ -30,9 +30,9 @@ module VagrantPlugins
       # @param uri [URI::Generic] the URI with optional userinfo
       # @return [String] the URI without userinfo
       def strip_userinfo(uri)
-        u = uri.dup
-        u.userinfo = ''
-        u.to_s
+        return '' if uri.to_s.empty?
+
+        "#{uri.scheme}://#{uri.host}:#{uri.port}"
       end
     end
   end

@@ -1,5 +1,6 @@
 # 1.0.1 / _Unreleased_
 
+- Ensure that Yum configuration includes the (default) port ([GH-36][])
 
 # 1.0.0 / 2013-11-05
 
@@ -94,3 +95,4 @@
 [GH-30]: https://github.com/tmatilai/vagrant-proxyconf/issues/30 "Issue 30"
 [GH-32]: https://github.com/tmatilai/vagrant-proxyconf/issues/32 "Issue 32"
 [GH-35]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 35"
+[GH-36]: https://github.com/tmatilai/vagrant-proxyconf/issues/36 "Issue 36"

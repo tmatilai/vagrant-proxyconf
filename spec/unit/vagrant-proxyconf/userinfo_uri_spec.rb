@@ -30,35 +30,51 @@ describe VagrantPlugins::ProxyConf::UserinfoURI do
   end
 
   context "without userinfo" do
-    let(:uri)  { 'http://proxy.example.com:8123/' }
-    its(:to_s) { should eq 'http://proxy.example.com:8123/' }
-    its(:uri)  { should eq 'http://proxy.example.com:8123/' }
+    let(:uri)  { 'http://proxy.example.com:8123' }
+    its(:to_s) { should eq 'http://proxy.example.com:8123' }
+    its(:uri)  { should eq 'http://proxy.example.com:8123' }
     its(:user) { should be_nil }
     its(:pass) { should be_nil }
   end
 
   context "with username" do
     let(:uri)  { 'http://foo@proxy.example.com:8123/' }
-    its(:to_s) { should eq 'http://proxy.example.com:8123/' }
-    its(:uri)  { should eq 'http://proxy.example.com:8123/' }
+    its(:to_s) { should eq 'http://proxy.example.com:8123' }
+    its(:uri)  { should eq 'http://proxy.example.com:8123' }
     its(:user) { should eq 'foo' }
     its(:pass) { should be_nil }
   end
 
   context "with password" do
-    let(:uri)  { 'http://:bar@proxy.example.com:8123/' }
-    its(:to_s) { should eq 'http://proxy.example.com:8123/' }
-    its(:uri)  { should eq 'http://proxy.example.com:8123/' }
+    let(:uri)  { 'http://:bar@proxy.example.com:8123' }
+    its(:to_s) { should eq 'http://proxy.example.com:8123' }
+    its(:uri)  { should eq 'http://proxy.example.com:8123' }
     its(:user) { should eq '' }
     its(:pass) { should eq 'bar' }
   end
 
   context "with userinfo" do
     let(:uri)  { 'http://foo:bar@proxy.example.com:8123/' }
-    its(:to_s) { should eq 'http://proxy.example.com:8123/' }
-    its(:uri)  { should eq 'http://proxy.example.com:8123/' }
+    its(:to_s) { should eq 'http://proxy.example.com:8123' }
+    its(:uri)  { should eq 'http://proxy.example.com:8123' }
     its(:user) { should eq 'foo' }
     its(:pass) { should eq 'bar' }
+  end
+
+  context "without port" do
+    let(:uri)  { 'http://foo:bar@proxy.example.com' }
+    its(:to_s) { should eq 'http://proxy.example.com:80' }
+    its(:uri)  { should eq 'http://proxy.example.com:80' }
+    its(:user) { should eq 'foo' }
+    its(:pass) { should eq 'bar' }
+  end
+
+  context "with default port" do
+    let(:uri)  { 'http://proxy.example.com:80/' }
+    its(:to_s) { should eq 'http://proxy.example.com:80' }
+    its(:uri)  { should eq 'http://proxy.example.com:80' }
+    its(:user) { should be_nil }
+    its(:pass) { should be_nil }
   end
 
 end

@@ -62,7 +62,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
       end
 
       it "configures unset proxies" do
-        expect(chef.https_proxy).to eq 'http://sslproxy:3128/'
+        expect(chef.https_proxy).to eq 'http://sslproxy:3128'
       end
     end
   end

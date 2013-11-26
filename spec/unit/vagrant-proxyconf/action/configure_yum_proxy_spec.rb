@@ -19,7 +19,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureYumProxy do
 
     context "without userinfo" do
       let(:http) { 'http://proxy:1234/' }
-      it { should eq %q{-v proxy=http://proxy:1234/ -v user='' -v pass=''} }
+      it { should eq %q{-v proxy=http://proxy:1234 -v user='' -v pass=''} }
     end
 
     context "with userinfo" do
