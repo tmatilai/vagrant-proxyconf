@@ -11,6 +11,9 @@ module VagrantPlugins
         include KeyMixin
         # @!parse extend KeyMixin::ClassMethods
 
+        # Defines the mode of the plugin
+        key :enabled, env_var: 'VAGRANT_PROXY'
+
         # @return [String] the HTTP proxy
         key :http, env_var: 'VAGRANT_HTTP_PROXY'
 

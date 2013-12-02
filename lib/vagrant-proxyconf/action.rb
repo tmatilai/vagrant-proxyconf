@@ -1,7 +1,9 @@
+require 'vagrant/action/builtin/call'
 require_relative 'action/configure_apt_proxy'
 require_relative 'action/configure_chef_proxy'
 require_relative 'action/configure_env_proxy'
 require_relative 'action/configure_yum_proxy'
+require_relative 'action/is_enabled'
 require_relative 'action/only_once'
 
 module VagrantPlugins
@@ -22,10 +24,14 @@ module VagrantPlugins
       #   middleware builder
       def self.config_actions
         @actions ||= Proc.new do |builder|
-          builder.use ConfigureAptProxy
-          builder.use ConfigureChefProxy
-          builder.use ConfigureEnvProxy
-          builder.use ConfigureYumProxy
+          builder.use Vagrant::Action::Builtin::Call, IsEnabled do |env, b2|
+            next if !env[:result]
+
+            b2.use ConfigureAptProxy
+            b2.use ConfigureChefProxy
+            b2.use ConfigureEnvProxy
+            b2.use ConfigureYumProxy
+          end
         end
       end
     end
