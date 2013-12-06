@@ -107,6 +107,23 @@ For example to spin up a VM, run:
 VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
+### Disabling the plugin
+
+The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`). This can be useful to for example disable it for some provider.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.proxy.http = "http://192.168.0.2:3128/"
+
+  config.vm.provider :my_cloud do |cloud, override|
+    override.proxy.enabled = false
+  end
+  # ... other stuff
+end
+```
+
 ### Global `*_proxy` environment variables
 
 Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
