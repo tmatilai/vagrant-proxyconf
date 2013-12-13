@@ -1,5 +1,6 @@
 # 1.0.2 / _Unreleased_
 
+- Add `config.proxy.enabled` option which can be set to `false` to disable the plugin (on some providers) ([GH-39][])
 
 # 1.0.1 / 2013-12-01
 
@@ -99,3 +100,4 @@
 [GH-32]: https://github.com/tmatilai/vagrant-proxyconf/issues/32 "Issue 32"
 [GH-35]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 35"
 [GH-36]: https://github.com/tmatilai/vagrant-proxyconf/issues/36 "Issue 36"
+[GH-39]: https://github.com/tmatilai/vagrant-proxyconf/issues/39 "Issue 39"
