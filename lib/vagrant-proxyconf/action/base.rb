@@ -84,7 +84,12 @@ module VagrantPlugins
             comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
             comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
-            comm.sudo("mv #{tmp} #{path}")
+
+            if opts[:append]
+              comm.sudo("cat #{tmp} | tee -a #{path}")
+            else
+              comm.sudo("mv #{tmp} #{path}")
+            end
           end
         end
 

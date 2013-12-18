@@ -13,6 +13,11 @@ module VagrantPlugins
         Config::EnvProxy
       end
 
+      config 'git_proxy' do
+        require_relative 'config/git_proxy'
+        Config::GitProxy
+      end
+
       config 'proxy' do
         require_relative 'config/proxy'
         Config::Proxy
