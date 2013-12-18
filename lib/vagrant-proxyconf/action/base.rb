@@ -84,7 +84,12 @@ module VagrantPlugins
             comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
             comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
             comm.sudo("mkdir -p #{File.dirname(path)}")
-            comm.sudo("mv #{tmp} #{path}")
+
+            if opts[:append]
+              comm.sudo("cat #{tmp} | tee -a #{path}")
+            else
+              comm.sudo("mv #{tmp} #{path}")
+            end
           end
         end
 
@@ -113,6 +118,10 @@ module VagrantPlugins
 
         def config_path
           @machine.guest.capability(cap_name)
+
+        # @param value [String, nil] the string to escape for shell usage
+        def escape(value)
+          value.to_s.shellescape
         end
       end
     end

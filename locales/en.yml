@@ -40,6 +40,14 @@ en:
       configuring: |-
         Configuring proxy for Yum...
 
+    git_proxy:
+      not_enabled: |-
+        git_proxy not enabled or configured
+      not_supported: |-
+        Skipping Git proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Git...
+
     errors:
       vagrant_version: |-
         vagrant-proxyconf plugin requires Vagrant version %{requirement}
