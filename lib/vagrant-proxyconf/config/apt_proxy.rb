@@ -49,7 +49,7 @@ module VagrantPlugins
           private
 
           def set?
-            value && !value.empty?
+            value
           end
 
           def direct

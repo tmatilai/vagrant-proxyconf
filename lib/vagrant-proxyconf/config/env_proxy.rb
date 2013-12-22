@@ -27,7 +27,7 @@ module VagrantPlugins
 
         # (see KeyMixin#config_for)
         def config_for(key, value)
-          if value && !value.empty?
+          if value
             var = env_variable_name(key)
             [var.upcase, var.downcase].map { |v| "export #{v}=#{value}\n" }.join
           end

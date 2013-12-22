@@ -113,10 +113,11 @@ module VagrantPlugins
         private
 
         def resolve_value(key)
-          key.value_from_env_var do |default|
+          ret = key.value_from_env_var do |default|
             value = get(key)
             value == self.class::UNSET_VALUE ? default : value
           end
+          ret == '' ? false : ret
         end
       end
     end
