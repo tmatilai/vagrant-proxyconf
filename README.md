@@ -135,7 +135,7 @@ Also sudo will be configured to preserve the variables. This requires that sudo 
 ```ruby
 Vagrant.configure("2") do |config|
   config.env_proxy.http     = "http://192.168.33.200:8888/"
-  config.env_proxy.https    = "$http_proxy"
+  config.env_proxy.https    = "http://192.168.33.200:8888/"
   config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
   # ... other stuff
 end
@@ -193,7 +193,7 @@ end
 #### Possible values
 
 * If all keys are unset or `nil`, no configuration is written or modified.
-* A proxy can be specified in the form of _[http://][user:pass@]host[:port]_. So all but the _host_ part are optional. The default port is 3142 and scheme is the same as the key.
+* A proxy can be specified in the form of _http://[user:pass@]host:port_.
 * Empty string (`""`) or `false` in any key also force the configuration file to be written, but without configuration for that scheme. Can be used to clear the old configuration and/or override a global setting.
 * `"DIRECT"` can be used to specify that no proxy should be used. This is mostly useful for disabling proxy for HTTPS URIs when HTTP proxy is set (as Apt defaults to the latter).
 * Please refer to [apt.conf(5)](http://manpages.debian.net/man/5/apt.conf) manual for more information.
