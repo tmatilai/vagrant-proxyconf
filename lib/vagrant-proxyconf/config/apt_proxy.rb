@@ -20,56 +20,56 @@ module VagrantPlugins
         # @return [String] the FTP proxy
         key :ftp, env_var: 'VAGRANT_APT_FTP_PROXY'
 
+        def finalize!
+          super
+
+          keys.each do |key|
+            value = get(key)
+            set(key, finalize_uri(key, value)) if value
+          end
+        end
+
         private
 
         # (see KeyMixin#config_for)
         def config_for(key, value)
-          ConfigLine.new(key.name, value)
+          %Q{Acquire::#{key.name}::Proxy "#{value}";\n} if value
         end
 
-        # Helper for constructing a configuration line for apt.conf
+        def finalize_uri(key, value)
+          AptProxyURI.new(key.name, value).to_s
+        end
+
+        # Helper for constructing configuration values for apt.conf
         #
         # @api private
-        class ConfigLine
+        class AptProxyURI
 
-          attr_reader :proto, :value
+          attr_reader :scheme, :value
 
-          # @param proto [String] the protocol ("http", "https", ...)
+          # @param scheme [String] the protocol ("http", "https", ...)
           # @param value [Object] the configuration value
-          def initialize(proto, value)
-            @proto = proto
+          def initialize(scheme, value)
+            @scheme = scheme
             @value = value
           end
 
-          # @return [String] the full Apt configuration line
           def to_s
-            %Q{Acquire::#{proto}::Proxy "#{direct || proxy_uri}";\n} if set?
+            direct || "#{prefix}#{value}#{suffix}"
           end
 
           private
 
-          def set?
-            value
-          end
-
           def direct
-            "DIRECT" if value.upcase == "DIRECT"
-          end
-
-          def proxy_uri
-            "#{prefix}#{value}#{suffix}"
+            'DIRECT' if value.upcase == 'DIRECT'
           end
 
           def prefix
-            "#{proto}://" if value !~ %r{^.*://}
+            "#{scheme}://" if value !~ %r{^.*://}
           end
 
           def suffix
-            ":#{default_port}" if value !~ %r{:\d+$} && value !~ %r{/}
-          end
-
-          def default_port
-            3142
+            ':3142' if value !~ %r{:\d+$} && value !~ %r{/}
           end
         end
       end
