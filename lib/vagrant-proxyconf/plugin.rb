@@ -82,6 +82,11 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'linux', 'pear_proxy_conf' do
+        require_relative 'cap/linux/env_proxy_conf'
+        Cap::Linux::PearProxyConf
+      end
+
       guest_capability 'coreos', 'env_proxy_conf' do
         # disabled on CoreOS
       end
