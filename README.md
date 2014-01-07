@@ -35,9 +35,11 @@ To configure all possible software on all Vagrant VMs, add the following to _$HO
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.proxy.http     = "http://192.168.0.2:3128/"
-  config.proxy.https    = "http://192.168.0.2:3128/"
-  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://192.168.0.2:3128/"
+    config.proxy.https    = "http://192.168.0.2:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
   # ... other stuff
 end
 ```
@@ -72,9 +74,11 @@ It's a common case that you want all possible connections to pass through the sa
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.proxy.http     = "http://192.168.0.2:3128/"
-  config.proxy.https    = "http://192.168.0.2:3128/"
-  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://192.168.0.2:3128/"
+    config.proxy.https    = "http://192.168.0.2:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
   # ... other stuff
 end
 ```
@@ -134,9 +138,11 @@ Also sudo will be configured to preserve the variables. This requires that sudo 
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.env_proxy.http     = "http://192.168.33.200:8888/"
-  config.env_proxy.https    = "http://192.168.33.200:8888/"
-  config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.env_proxy.http     = "http://192.168.33.200:8888/"
+    config.env_proxy.https    = "http://192.168.33.200:8888/"
+    config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
   # ... other stuff
 end
 ```
