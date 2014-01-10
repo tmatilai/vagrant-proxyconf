@@ -1,6 +1,7 @@
 # 1.0.2 / _Unreleased_
 
 - Add `config.proxy.enabled` option which can be set to `false` to disable the plugin (on some providers) ([GH-39][])
+- Run Travis tests against all supported Vagrant minor versions with correct Ruby version
 
 # 1.0.1 / 2013-12-01
 
