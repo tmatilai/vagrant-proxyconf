@@ -1,4 +1,5 @@
 require 'vagrant'
+require_relative 'logger'
 
 module VagrantPlugins
   module ProxyConf
@@ -42,19 +43,36 @@ module VagrantPlugins
       end
 
       # Ensures a dependent plugin is loaded before us if it is installed.
-      # Ignores {Vagrant::Errors::PluginLoadError} but passes other exceptions.
+      # Ignores Errors while loading, as Vagrant itself anyway shows them to
+      # used when *it* tries to load the plugin.
       #
       # @param plugin [String] the plugin name
       def self.load_optional_dependency(plugin)
-        begin
-          Vagrant.require_plugin plugin
-        rescue Vagrant::Errors::PluginLoadError; end
+        logger = ProxyConf.logger
+        logger.info "Trying to load #{plugin}"
+
+        if check_vagrant_version('< 1.5.0.dev')
+          begin
+            Vagrant.require_plugin plugin
+          rescue Vagrant::Errors::PluginLoadError
+            logger.info "Ignoring the load error of #{plugin}"
+          end
+        else
+          begin
+            require plugin
+          rescue Exception => e
+            logger.info "Failed to load #{plugin}: #{e.inspect}"
+            logger.info "Ignoring the error"
+          end
+        end
       end
 
       # Loads the plugins to ensure their action hooks are registered before us.
       # Uses alphabetical order to not change the default behaviour otherwise.
       def self.load_optional_dependencies
-        OPTIONAL_PLUGIN_DEPENDENCIES.sort.each { |plugin| load_optional_dependency plugin }
+        OPTIONAL_PLUGIN_DEPENDENCIES.sort.each do |plugin|
+          load_optional_dependency plugin
+        end
       end
 
       setup_i18n

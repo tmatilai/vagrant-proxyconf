@@ -67,19 +67,35 @@ describe VagrantPlugins::ProxyConf::Plugin do
     subject { described_class.load_optional_dependency(plugin_name) }
     let(:plugin_name) { 'vagrant-foo' }
 
-    it "loads the specified plugin" do
-      expect(Vagrant).to receive(:require_plugin).with(plugin_name)
-      subject
-    end
+    # Vagrant plugin loading API changed in v1.5.0
+    if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new('1.5.0.dev')
+      it "loads the specified plugin" do
+        expect(Vagrant).to receive(:require_plugin).with(plugin_name)
+        subject
+      end
 
-    it "ignores PluginLoadError" do
-      expect(Vagrant).to receive(:require_plugin).and_raise(Vagrant::Errors::PluginLoadError, plugin: plugin_name)
-      expect { subject }.not_to raise_error
-    end
+      it "ignores PluginLoadError" do
+        expect(Vagrant).to receive(:require_plugin).
+          and_raise(Vagrant::Errors::PluginLoadError, plugin: plugin_name)
+        expect { subject }.not_to raise_error
+      end
 
-    it "won't ignore other error" do
-      expect(Vagrant).to receive(:require_plugin).and_raise(Vagrant::Errors::PluginLoadFailed, plugin: plugin_name)
-      expect { subject }.to raise_error(Vagrant::Errors::PluginLoadFailed)
+      it "won't ignore other error" do
+        expect(Vagrant).to receive(:require_plugin).
+          and_raise(Vagrant::Errors::PluginLoadFailed, plugin: plugin_name)
+        expect { subject }.to raise_error(Vagrant::Errors::PluginLoadFailed)
+      end
+    else
+      it "loads the specified plugin" do
+        expect(described_class).to receive(:require).with(plugin_name)
+        subject
+      end
+
+      it "ignores errors" do
+        expect(described_class).to receive(:require).
+          and_raise(LoadError, path: plugin_name)
+        expect { subject }.not_to raise_error
+      end
     end
   end
 
