@@ -1,5 +1,7 @@
 # 1.0.2 / _Unreleased_
 
+- Compatibility with Vagrant v1.5:
+    * `Vagrant.require_plugin` deprecated ([GH-44][])
 - Add `config.proxy.enabled` option which can be set to `false` to disable the plugin (on some providers) ([GH-39][])
 - Run Travis tests against all supported Vagrant minor versions with correct Ruby version
 
@@ -102,3 +104,4 @@
 [GH-35]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 35"
 [GH-36]: https://github.com/tmatilai/vagrant-proxyconf/issues/36 "Issue 36"
 [GH-39]: https://github.com/tmatilai/vagrant-proxyconf/issues/39 "Issue 39"
+[GH-44]: https://github.com/tmatilai/vagrant-proxyconf/issues/44 "Issue 44"
