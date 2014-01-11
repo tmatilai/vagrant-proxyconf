@@ -6,19 +6,30 @@ module VagrantPlugins
     #
     # @!parse class Plugin < Vagrant::Plugin::V2::Plugin; end
     class Plugin < Vagrant.plugin('2')
-      # The minimum compatible Vagrant version
-      MIN_VAGRANT_VERSION = '1.2.0'
+      # Compatible Vagrant versions
+      VAGRANT_VERSION_REQUIREMENT = '>= 1.2.0'
 
       # A list of plugins whose action classes we hook to if installed
       OPTIONAL_PLUGIN_DEPENDENCIES = %w[vagrant-aws vagrant-omnibus vagrant-vbguest]
+
+      # Returns true if the Vagrant version fulfills the requirements
+      #
+      # @param requirements [String, Array<String>] the version requirement
+      # @return [Boolean]
+      def self.check_vagrant_version(*requirements)
+        Gem::Requirement.new(*requirements).satisfied_by?(
+          Gem::Version.new(Vagrant::VERSION))
+      end
 
       # Verifies that the Vagrant version fulfills the requirements
       #
       # @raise [VagrantPlugins::ProxyConf::VagrantVersionError] if this plugin
       # is incompatible with the Vagrant version
       def self.check_vagrant_version!
-        if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new(MIN_VAGRANT_VERSION)
-          msg = I18n.t('vagrant_proxyconf.errors.vagrant_version', min_version: MIN_VAGRANT_VERSION)
+        if !check_vagrant_version(VAGRANT_VERSION_REQUIREMENT)
+          msg = I18n.t(
+            'vagrant_proxyconf.errors.vagrant_version',
+            requirement: VAGRANT_VERSION_REQUIREMENT.inspect)
           $stderr.puts msg
           raise msg
         end

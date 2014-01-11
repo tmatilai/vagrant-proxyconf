@@ -34,4 +34,4 @@ en:
 
     errors:
       vagrant_version: |-
-        vagrant-proxyconf plugin requires Vagrant %{min_version} or newer
+        vagrant-proxyconf plugin requires Vagrant version %{requirement}

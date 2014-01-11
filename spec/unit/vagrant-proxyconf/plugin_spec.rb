@@ -3,13 +3,36 @@ require 'vagrant-proxyconf/plugin'
 
 describe VagrantPlugins::ProxyConf::Plugin do
 
+  describe '.check_vagrant_version' do
+    before :each do
+      stub_const('Vagrant::VERSION', '1.2.3')
+    end
+
+    it "accepts single String argument" do
+      expect(described_class.check_vagrant_version('~> 1.1')).to be_true
+      expect(described_class.check_vagrant_version('1.2')).to be_false
+    end
+
+    it "accepts an Array argument" do
+      expect(described_class.check_vagrant_version(['>= 1.1', '< 1.3.0.beta'])).to be_true
+      expect(described_class.check_vagrant_version(['>= 1.3'])).to be_false
+    end
+
+    it "accepts multiple arguments" do
+      expect(described_class.check_vagrant_version('>= 1.0', '<= 1.3')).to be_true
+      expect(described_class.check_vagrant_version('~> 1.2', '>= 1.2.5')).to be_false
+    end
+  end
+
   describe '.check_vagrant_version!' do
     subject { described_class.check_vagrant_version! }
-    let(:min_vagrant_verision) { '1.2.3' }
-    let(:err_msg) { /requires Vagrant #{min_vagrant_verision}/ }
+    let(:requirement) { '>= 1.2.3' }
+    let(:err_msg) { /requires Vagrant version #{Regexp.escape(requirement.inspect)}/ }
 
     before :each do
-      stub_const('VagrantPlugins::ProxyConf::Plugin::MIN_VAGRANT_VERSION', min_vagrant_verision)
+      stub_const(
+        'VagrantPlugins::ProxyConf::Plugin::VAGRANT_VERSION_REQUIREMENT',
+        requirement)
       stub_const('Vagrant::VERSION', vagrant_version)
       $stderr.stub(:puts)
     end
@@ -26,7 +49,7 @@ describe VagrantPlugins::ProxyConf::Plugin do
     end
 
     context "on exact required Vagrant version" do
-      let(:vagrant_version) { min_vagrant_verision }
+      let(:vagrant_version) { '1.2.3' }
       it "does not raise" do
         expect { subject }.not_to raise_error
       end
