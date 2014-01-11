@@ -66,6 +66,8 @@ Proxy settings can be configured in Vagrantfile. In the common case that you wan
 
 Project specific Vagrantfile overrides global settings. Environment variables override both.
 
+It is a good practise to wrap plugin specific configuration with `Vagrant.has_plugin?` checks so the user's Vagrantfiles do not break if plugin is uninstalled or Vagrantfile shared with people not having the plugin installed. (For Vagrant 1.2 you have to use `if defined?(VagrantPlugins::ProxyConf)` instead.)
+
 ### Default/global configuration
 
 It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
@@ -138,11 +140,9 @@ Also sudo will be configured to preserve the variables. This requires that sudo 
 
 ```ruby
 Vagrant.configure("2") do |config|
-  if Vagrant.has_plugin?("vagrant-proxyconf")
-    config.env_proxy.http     = "http://192.168.33.200:8888/"
-    config.env_proxy.https    = "http://192.168.33.200:8888/"
-    config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
-  end
+  config.env_proxy.http     = "http://192.168.33.200:8888/"
+  config.env_proxy.https    = "http://192.168.33.200:8888/"
+  config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
   # ... other stuff
 end
 ```
