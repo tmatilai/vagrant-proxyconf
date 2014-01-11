@@ -29,6 +29,13 @@ module VagrantPlugins
         def config_for(key, value)
           if value
             var = env_variable_name(key)
+
+            # Quote the `no_proxy` value in case there are spaces and special
+            # characters. Unfortunately we can't escape other values before
+            # v2.0 as even the README had an example of using shell variables
+            # still in v1.0.x.
+            value = value.inspect if key.name == :no_proxy
+
             [var.upcase, var.downcase].map { |v| "export #{v}=#{value}\n" }.join
           end
         end

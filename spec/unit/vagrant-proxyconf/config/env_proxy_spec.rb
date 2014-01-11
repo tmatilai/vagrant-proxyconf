@@ -8,10 +8,6 @@ def config_with(options)
   end
 end
 
-def conf_lines(env_var, val)
-  [env_var.upcase, env_var.downcase].map { |var| "export #{var}=#{val}\n" }
-end
-
 RSpec::Matchers.define :match_lines do |expected|
   match do |actual|
     expect(actual.lines.to_a).to match_array(expected)
@@ -38,15 +34,23 @@ describe VagrantPlugins::ProxyConf::Config::EnvProxy do
     let(:proxy)    { 'http://proxy.example.com:8888' }
     subject        { config_with({ http: proxy }) }
     its(:enabled?) { should be_true }
-    its(:to_s)     { should match_lines conf_lines('http_proxy', proxy) }
+    its(:to_s)     { should match_lines [
+      %Q{export HTTP_PROXY=#{proxy}\n},
+      %Q{export http_proxy=#{proxy}\n},
+    ] }
   end
 
   context "with http and no_proxy config" do
     let(:proxy)    { 'http://proxy.example.com:8888' }
-    let(:no_proxy) { 'localhost,127.0.0.1' }
+    let(:no_proxy) { 'localhost, 127.0.0.1' }
     subject        { config_with({ http: proxy, no_proxy: no_proxy }) }
     its(:enabled?) { should be_true }
-    its(:to_s)     { should match_lines conf_lines('http_proxy', proxy) + conf_lines('no_proxy', no_proxy) }
+    its(:to_s)     { should match_lines [
+      %Q{export HTTP_PROXY=#{proxy}\n},
+      %Q{export http_proxy=#{proxy}\n},
+      %Q{export NO_PROXY="#{no_proxy}"\n},
+      %Q{export no_proxy="#{no_proxy}"\n},
+    ] }
   end
 
   context "with VAGRANT_ENV_HTTP_PROXY env var" do
@@ -54,6 +58,9 @@ describe VagrantPlugins::ProxyConf::Config::EnvProxy do
     before(:each)  { ENV['VAGRANT_ENV_HTTP_PROXY'] = proxy }
     subject        { config_with({ http: 'http://default:3128' }) }
     its(:enabled?) { should be_true }
-    its(:to_s)     { should match_lines conf_lines('HTTP_PROXY', proxy) }
+    its(:to_s)     { should match_lines [
+      %Q{export HTTP_PROXY=#{proxy}\n},
+      %Q{export http_proxy=#{proxy}\n},
+    ] }
   end
 end
