@@ -1,4 +1,4 @@
-# 1.0.2 / _Unreleased_
+# 1.1.0 / _Unreleased_
 
 - Compatibility with Vagrant v1.5:
     * `Vagrant.require_plugin` deprecated ([GH-44][])
