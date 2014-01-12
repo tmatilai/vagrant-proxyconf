@@ -88,6 +88,11 @@ module VagrantPlugins
           end
         end
 
+        # @param value [String, nil] the string to escape for shell usage
+        def escape(value)
+          value.to_s.shellescape
+        end
+
         # @return [Tempfile] a temporary file with the specified content
         def tempfile(content)
           Tempfile.new("vagrant").tap do |temp|

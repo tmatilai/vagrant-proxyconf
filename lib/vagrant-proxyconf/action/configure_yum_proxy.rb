@@ -33,11 +33,6 @@ module VagrantPlugins
           u = UserinfoURI.new(config.http)
           "-v proxy=#{escape(u.uri)} -v user=#{escape(u.user)} -v pass=#{escape(u.pass)}"
         end
-
-        # @param value [String, nil] the string to escape for shell usage
-        def escape(value)
-          value.to_s.shellescape
-        end
       end
     end
   end
