@@ -2,11 +2,11 @@ module VagrantPlugins
   module ProxyConf
     module Cap
       module Linux
-        # Capability for Env proxy configuration
+        # Capability for PEAR proxy configuration
         module PearProxyConf
-          # @return [String] the path to the configuration file
+          # @return [Boolean] if PEAR is installed
           def self.pear_proxy_conf(machine)
-            '/etc/profile.d/proxy.sh'
+            machine.communicate.test("which pear")
           end
         end
       end

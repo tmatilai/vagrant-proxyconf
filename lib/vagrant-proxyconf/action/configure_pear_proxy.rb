@@ -1,11 +1,5 @@
 require_relative 'base'
 
-# Should only execute if pear is present
-# test -x /usr/bin/pear
-
-# should run following:
-# pear config-set http_proxy 'http://...'
-
 module VagrantPlugins
   module ProxyConf
     class Action
@@ -17,8 +11,15 @@ module VagrantPlugins
 
         private
 
+        # @return [Vagrant::Plugin::V2::Config] the configuration
+        def config
+          # Use global proxy config
+          @config ||= finalize_config(@machine.config.proxy)
+        end
+
         def configure_machine
-          comm.sudo("pear config-set http_proxy #{escape(config.http)} system")
+          @machine.communicate.sudo(
+            "pear config-set http_proxy #{escape(config.http)} system")
         end
       end
     end
