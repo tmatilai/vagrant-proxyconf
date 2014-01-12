@@ -112,7 +112,7 @@ module VagrantPlugins
       end
 
       guest_capability 'linux', 'pear_proxy_conf' do
-        require_relative 'cap/linux/env_proxy_conf'
+        require_relative 'cap/linux/pear_proxy_conf'
         Cap::Linux::PearProxyConf
       end
 
