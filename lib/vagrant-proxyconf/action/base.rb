@@ -12,16 +12,15 @@ module VagrantPlugins
         end
 
         def call(env)
-          machine = env[:machine]
-          config  = config(machine)
+          @machine = env[:machine]
 
           if !config.enabled?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
-          elsif !supported?(machine)
+          elsif !supported?
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
           else
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.configuring")
-            configure_machine(machine, config)
+            configure_machine
           end
 
           @app.call env
@@ -40,15 +39,17 @@ module VagrantPlugins
         end
 
         # @return [Vagrant::Plugin::V2::Config] the configuration
-        def config(machine)
-          config = machine.config.public_send(config_name.to_sym)
+        def config
+          return @config if @config
+
+          config = @machine.config.public_send(config_name.to_sym)
           finalize_config(config)
-          config.merge_defaults(default_config(machine))
+          @config = config.merge_defaults(default_config)
         end
 
         # @return [Vagrant::Plugin::V2::Config] the default configuration
-        def default_config(machine)
-          config = machine.config.proxy
+        def default_config
+          config = @machine.config.proxy
           finalize_config(config)
         end
 
@@ -61,8 +62,8 @@ module VagrantPlugins
         end
 
         # Configures the VM based on the config
-        def configure_machine(machine, config)
-          write_config(machine, config)
+        def configure_machine
+          write_config(config)
         end
 
         # Writes the config to the VM
@@ -71,13 +72,13 @@ module VagrantPlugins
         # @option opts [String] :path (#config_path) the path of the configuration file
         # @option opts [String] :mode ("0644") the mode of the file
         # @option opts [String] :owner ("root:root") the owner (and group) of the file
-        def write_config(machine, config, opts = {})
+        def write_config(config, opts = {})
           tmp = "/tmp/vagrant-proxyconf"
-          path = opts[:path] || config_path(machine)
+          path = opts[:path] || config_path
           local_tmp = tempfile(config)
 
           logger.debug "Configuration (#{path}):\n#{config}"
-          machine.communicate.tap do |comm|
+          @machine.communicate.tap do |comm|
             comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
             comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
@@ -100,12 +101,12 @@ module VagrantPlugins
           "#{config_name}_conf".to_sym
         end
 
-        def supported?(machine)
-          machine.guest.capability?(cap_name)
+        def supported?
+          @machine.guest.capability?(cap_name)
         end
 
-        def config_path(machine)
-          machine.guest.capability(cap_name)
+        def config_path
+          @machine.guest.capability(cap_name)
         end
       end
     end

@@ -11,9 +11,9 @@ module VagrantPlugins
 
         private
 
-        def configure_machine(machine, config)
+        def configure_machine
           super
-          write_config(machine, sudo_config, path: '/etc/sudoers.d/proxy', mode: '0440')
+          write_config(sudo_config, path: '/etc/sudoers.d/proxy', mode: '0440')
         end
 
         def sudo_config

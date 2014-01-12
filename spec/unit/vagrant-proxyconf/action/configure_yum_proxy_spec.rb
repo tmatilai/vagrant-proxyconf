@@ -9,7 +9,11 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureYumProxy do
   end
 
   describe '#proxy_params' do
-    subject { described_class.new(nil, nil).send(:proxy_params, config) }
+    subject do
+      action = described_class.new(nil, nil)
+      action.stub(:config => config)
+      action.send(:proxy_params)
+    end
     let(:config) { OpenStruct.new(http: http) }
 
     context "with `false`" do

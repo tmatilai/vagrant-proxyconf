@@ -13,15 +13,15 @@ module VagrantPlugins
 
         private
 
-        def configure_machine(machine, config)
+        def configure_machine
           tmp = "/tmp/vagrant-proxyconf"
-          path = config_path(machine)
+          path = config_path
 
-          machine.communicate.tap do |comm|
+          @machine.communicate.tap do |comm|
             comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(ProxyConf.resource("yum_config.awk"), tmp)
             comm.sudo("touch #{path}")
-            comm.sudo("gawk -f #{tmp} #{proxy_params(config)} #{path} > #{path}.new")
+            comm.sudo("gawk -f #{tmp} #{proxy_params} #{path} > #{path}.new")
             comm.sudo("chmod 0644 #{path}.new")
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv #{path}.new #{path}")
@@ -29,7 +29,7 @@ module VagrantPlugins
           end
         end
 
-        def proxy_params(config)
+        def proxy_params
           u = UserinfoURI.new(config.http)
           "-v proxy=#{escape(u.uri)} -v user=#{escape(u.user)} -v pass=#{escape(u.pass)}"
         end

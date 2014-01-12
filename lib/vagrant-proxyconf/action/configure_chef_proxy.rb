@@ -11,16 +11,15 @@ module VagrantPlugins
         end
 
         def call(env)
-          machine = env[:machine]
-          config  = config(machine)
+          @machine = env[:machine]
 
-          if chef_provisioners(machine).empty?
+          if chef_provisioners.empty?
             logger.info I18n.t("vagrant_proxyconf.chef_proxy.no_provisioners")
           elsif !config.enabled?
             logger.info I18n.t("vagrant_proxyconf.chef_proxy.not_enabled")
           else
             env[:ui].info I18n.t("vagrant_proxyconf.chef_proxy.configuring")
-            configure_chef_provisioners(machine, config)
+            configure_chef_provisioners
           end
 
           @app.call env
@@ -34,29 +33,30 @@ module VagrantPlugins
         end
 
         # @return [Config::Proxy] the `config.proxy` configuration
-        def config(machine)
-          config = machine.config.proxy
+        def config
+          return @config if @config
+
+          config = @machine.config.proxy
           config.finalize! if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new('1.2.5')
-          config
+          @config = config
         end
 
         # @return [Array] all Chef provisioners
-        def chef_provisioners(machine)
-          machine.config.vm.provisioners.select { |prov| [:chef_solo, :chef_client].include?(prov.name) }
+        def chef_provisioners
+          @machine.config.vm.provisioners.select do |prov|
+            [:chef_solo, :chef_client].include?(prov.name)
+          end
         end
 
         # Configures all Chef provisioner based on the default config
-        #
-        # @param config [Config::Proxy] the default configuration
-        def configure_chef_provisioners(machine, config)
-          chef_provisioners(machine).each { |prov| configure_chef(prov.config, config) }
+        def configure_chef_provisioners
+          chef_provisioners.each { |prov| configure_chef(prov.config) }
         end
 
         # Configures proxies for a Chef provisioner if they are not set
         #
         # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
-        # @param config [Config::Proxy] the default configuration
-        def configure_chef(chef, config)
+        def configure_chef(chef)
           configure_chef_proxy(chef, 'http', config.http)
           configure_chef_proxy(chef, 'https', config.https)
           chef.no_proxy ||= config.no_proxy if config.no_proxy

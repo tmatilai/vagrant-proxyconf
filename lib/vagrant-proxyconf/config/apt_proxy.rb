@@ -33,7 +33,7 @@ module VagrantPlugins
 
         # (see KeyMixin#config_for)
         def config_for(key, value)
-          %Q{Acquire::#{key.name}::Proxy "#{value}";\n} if value
+          %Q{Acquire::#{key.name}::Proxy #{value.inspect};\n} if value
         end
 
         def finalize_uri(key, value)

@@ -9,7 +9,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
     let(:config) { OpenStruct.new }
 
     def configure_chef
-      described_class.new(nil, nil).send(:configure_chef, chef, config)
+      action = described_class.new(nil, nil)
+      action.stub(:config => config)
+      action.send(:configure_chef, chef)
     end
 
     context "with no configurations" do
