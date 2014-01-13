@@ -70,7 +70,7 @@ module VagrantPlugins
         # @param value [String, nil] the configuration value
         # @return [#to_s] the configuration line(s)
         def config_for(key, value)
-          "#{key}=#{value}\n"
+          "#{key}=#{value && value}\n"
         end
 
         # Returns a new instance of this class where all nil keys are

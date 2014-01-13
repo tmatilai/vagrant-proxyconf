@@ -18,8 +18,10 @@ module VagrantPlugins
         end
 
         def configure_machine
+          proxy = config.http || ''
+
           @machine.communicate.sudo(
-            "pear config-set http_proxy #{escape(config.http)} system")
+            "pear config-set http_proxy #{escape(proxy)} system")
         end
       end
     end
