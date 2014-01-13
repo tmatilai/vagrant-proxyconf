@@ -146,6 +146,11 @@ module VagrantPlugins
           hook.before VagrantVbguest::Middleware, Action.configure(before: true)
         end
       end
+
+      action_hook 'proxyconf_configure', :provisioner_run do |hook|
+        require_relative 'action'
+        hook.append Action.configure_after_provisoner
+      end
     end
   end
 end
