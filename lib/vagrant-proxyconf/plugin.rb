@@ -96,6 +96,11 @@ module VagrantPlugins
         Config::GitProxy
       end
 
+      config 'svn_proxy' do
+        require_relative 'config/svn_proxy'
+        Config::SvnProxy
+      end
+
       config 'proxy' do
         require_relative 'config/proxy'
         Config::Proxy
@@ -124,6 +129,11 @@ module VagrantPlugins
       guest_capability 'linux', 'git_proxy_conf' do
         require_relative 'cap/linux/git_proxy_conf'
         Cap::Linux::GitProxyConf
+      end
+
+      guest_capability 'linux', 'svn_proxy_conf' do
+        require_relative 'cap/linux/svn_proxy_conf'
+        Cap::Linux::SvnProxyConf
       end
 
       guest_capability 'coreos', 'env_proxy_conf' do

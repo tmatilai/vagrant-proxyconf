@@ -5,6 +5,7 @@ require_relative 'action/configure_env_proxy'
 require_relative 'action/configure_pear_proxy'
 require_relative 'action/configure_yum_proxy'
 require_relative 'action/configure_git_proxy'
+require_relative 'action/configure_svn_proxy'
 require_relative 'action/is_enabled'
 require_relative 'action/only_once'
 
@@ -50,6 +51,7 @@ module VagrantPlugins
             b2.use ConfigurePearProxy
             b2.use ConfigureYumProxy
             b2.use ConfigureGitProxy
+            b2.use ConfigureSvnProxy
           end
         end
       end

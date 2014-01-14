@@ -118,6 +118,7 @@ module VagrantPlugins
 
         def config_path
           @machine.guest.capability(cap_name)
+        end
 
         # @param value [String, nil] the string to escape for shell usage
         def escape(value)

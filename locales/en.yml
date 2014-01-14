@@ -48,6 +48,14 @@ en:
       configuring: |-
         Configuring proxy for Git...
 
+    svn_proxy:
+      not_enabled: |-
+        svn_proxy not enabled or configured
+      not_supported: |-
+        Skipping Subversion proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Subversion...
+
     errors:
       vagrant_version: |-
         vagrant-proxyconf plugin requires Vagrant version %{requirement}
