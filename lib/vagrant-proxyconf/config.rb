@@ -23,6 +23,11 @@ module VagrantPlugins
         Config::Proxy
       end
 
+      config 'svn_proxy' do
+        require_relative 'config/svn_proxy'
+        Config::SvnProxy
+      end
+
       config 'yum_proxy' do
         require_relative 'config/yum_proxy'
         Config::YumProxy
