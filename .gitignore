@@ -2,5 +2,5 @@
 /.yardoc
 /Gemfile.lock
 /doc
-/pkg
 /tmp
+vagrant-proxyconf-*.gem
