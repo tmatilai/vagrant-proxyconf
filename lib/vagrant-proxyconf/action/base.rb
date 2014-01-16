@@ -107,7 +107,8 @@ module VagrantPlugins
         end
 
         def supported?
-          @machine.guest.capability?(cap_name)
+          @machine.guest.capability?(cap_name) &&
+            @machine.guest.capability(cap_name)
         end
 
         def config_path

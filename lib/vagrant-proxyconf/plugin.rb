@@ -111,6 +111,11 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'linux', 'pear_proxy_conf' do
+        require_relative 'cap/linux/pear_proxy_conf'
+        Cap::Linux::PearProxyConf
+      end
+
       guest_capability 'coreos', 'env_proxy_conf' do
         # disabled on CoreOS
       end
@@ -140,6 +145,11 @@ module VagrantPlugins
         if defined?(VagrantVbguest::Middleware)
           hook.before VagrantVbguest::Middleware, Action.configure(before: true)
         end
+      end
+
+      action_hook 'proxyconf_configure', :provisioner_run do |hook|
+        require_relative 'action'
+        hook.append Action.configure_after_provisoner
       end
     end
   end
