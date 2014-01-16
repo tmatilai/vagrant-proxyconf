@@ -131,6 +131,11 @@ module VagrantPlugins
         # the standard provision action
         hook.after Vagrant::Action::Builtin::Provision, Action.configure
 
+        # Vagrant 1.5+ can install NFS client
+        if check_vagrant_version('>= 1.5.0.dev')
+          hook.after Vagrant::Action::Builtin::SyncedFolders, Action.configure
+        end
+
         # vagrant-aws < 0.4.0 uses a non-standard provision action
         if defined?(VagrantPlugins::AWS::Action::TimedProvision)
           hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure

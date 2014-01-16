@@ -9,6 +9,7 @@ Improvements:
 
   - Compatibility with Vagrant v1.5:
     * `Vagrant.require_plugin` deprecated ([GH-44][])
+    * Hook before `SyncedFolders` action as it can install NFS client ([GH-45][])
   - Run Travis tests against all supported Vagrant minor versions with correct Ruby version
 
 Bug fixes:
@@ -111,9 +112,10 @@ Bug fixes:
 [GH-29]: https://github.com/tmatilai/vagrant-proxyconf/issues/29 "Issue 29"
 [GH-30]: https://github.com/tmatilai/vagrant-proxyconf/issues/30 "Issue 30"
 [GH-32]: https://github.com/tmatilai/vagrant-proxyconf/issues/32 "Issue 32"
-[GH-34]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 34"
+[GH-34]: https://github.com/tmatilai/vagrant-proxyconf/issues/34 "Issue 34"
 [GH-35]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 35"
 [GH-36]: https://github.com/tmatilai/vagrant-proxyconf/issues/36 "Issue 36"
 [GH-39]: https://github.com/tmatilai/vagrant-proxyconf/issues/39 "Issue 39"
-[GH-42]: https://github.com/tmatilai/vagrant-proxyconf/issues/44 "Issue 42"
+[GH-42]: https://github.com/tmatilai/vagrant-proxyconf/issues/42 "Issue 42"
 [GH-44]: https://github.com/tmatilai/vagrant-proxyconf/issues/44 "Issue 44"
+[GH-45]: https://github.com/tmatilai/vagrant-proxyconf/issues/45 "Issue 45"
