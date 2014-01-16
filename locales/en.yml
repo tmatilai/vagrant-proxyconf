@@ -28,7 +28,7 @@ en:
       not_enabled: |-
         pear_proxy not enabled or configured
       not_supported: |-
-        Skipping PEAR proxy config as the machine does not support it or `pear` is not found
+        Skipping PEAR proxy config as `pear` is not found
       configuring: |-
         Configuring proxy for PEAR...
 
