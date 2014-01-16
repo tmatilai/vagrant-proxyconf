@@ -22,6 +22,7 @@ The plugin can set:
 * default proxy configuration for all Chef provisioners
 * proxy configuration for Apt
 * proxy configuration for Yum
+* proxy configuration for PEAR
 
 ## Quick start
 
