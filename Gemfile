@@ -4,7 +4,7 @@ gemspec
 
 gem 'vagrant',
   github: 'mitchellh/vagrant',
-  ref: ENV.fetch('VAGRANT_VERSION', 'v1.4.2')
+  ref: ENV.fetch('VAGRANT_VERSION', 'v1.4.3')
 
 gem 'cane', '~> 2.6'
 gem 'coveralls', require: false
