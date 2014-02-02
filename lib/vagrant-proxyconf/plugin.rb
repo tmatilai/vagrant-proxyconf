@@ -125,6 +125,7 @@ module VagrantPlugins
         Cap::Redhat::YumProxyConf
       end
 
+      # Actions to run before any provisioner or other plugin
       action_hook 'proxyconf_configure' do |hook|
         require_relative 'action'
 
@@ -152,9 +153,10 @@ module VagrantPlugins
         end
       end
 
+      # Actions to run after each provisioner run
       action_hook 'proxyconf_configure', :provisioner_run do |hook|
         require_relative 'action'
-        hook.append Action.configure_after_provisoner
+        hook.after :run_provisioner, Action.configure_after_provisoner
       end
     end
   end
