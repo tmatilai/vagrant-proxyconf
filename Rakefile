@@ -19,10 +19,12 @@ task :spec => :test
 
 Tailor::RakeTask.new do |task|
   task.file_set('lib/**/*.rb', 'code') do |style|
+    style.allow_unnecessary_double_quotes false, level: :off
     style.max_line_length 100, level: :warn
     style.max_line_length 140, level: :error
   end
   task.file_set('spec/**/*.rb', 'tests') do |style|
+    style.allow_unnecessary_double_quotes false, level: :off
     style.max_line_length 120, level: :warn
     # allow vertical alignment of `let(:foo) { block }` blocks
     style.spaces_before_lbrace 1, level: :off

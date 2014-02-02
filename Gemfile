@@ -10,7 +10,7 @@ gem 'cane', '~> 2.6'
 gem 'coveralls', require: false
 gem 'rake'
 gem 'rspec', '~> 2.11'
-gem 'tailor', '~> 1.2'
+gem 'tailor', '~> 1.4'
 
 group :development do
   gem 'guard-rspec'
