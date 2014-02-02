@@ -1,0 +1,31 @@
+require 'vagrant'
+
+module VagrantPlugins
+  module ProxyConf
+    class Plugin < Vagrant.plugin('2')
+      guest_capability 'debian', 'apt_proxy_conf' do
+        require_relative 'cap/debian/apt_proxy_conf'
+        Cap::Debian::AptProxyConf
+      end
+
+      guest_capability 'coreos', 'env_proxy_conf' do
+        # disabled on CoreOS
+      end
+
+      guest_capability 'linux', 'env_proxy_conf' do
+        require_relative 'cap/linux/env_proxy_conf'
+        Cap::Linux::EnvProxyConf
+      end
+
+      guest_capability 'linux', 'pear_proxy_conf' do
+        require_relative 'cap/linux/pear_proxy_conf'
+        Cap::Linux::PearProxyConf
+      end
+
+      guest_capability 'redhat', 'yum_proxy_conf' do
+        require_relative 'cap/redhat/yum_proxy_conf'
+        Cap::Redhat::YumProxyConf
+      end
+    end
+  end
+end
