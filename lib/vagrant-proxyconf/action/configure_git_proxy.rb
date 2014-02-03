@@ -1,6 +1,4 @@
 require_relative 'base'
-require_relative '../resource'
-require_relative '../userinfo_uri'
 
 module VagrantPlugins
   module ProxyConf
