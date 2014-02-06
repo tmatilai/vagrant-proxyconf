@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v1.0.1
+latest_release: v1.1.0
 ---
 # Proxy Configuration Plugin for Vagrant
 
@@ -9,12 +9,14 @@ latest_release: v1.0.1
 [![Build Status](https://travis-ci.org/tmatilai/vagrant-proxyconf.png?branch=master)][travis]
 [![Dependency Status](https://gemnasium.com/tmatilai/vagrant-proxyconf.png)][gemnasium]
 [![Code Climate](https://codeclimate.com/github/tmatilai/vagrant-proxyconf.png)][codeclimate]
+[![Coverage Status](https://coveralls.io/repos/tmatilai/vagrant-proxyconf/badge.png)][coveralls]
 </span>
 
 [gem]: https://rubygems.org/gems/vagrant-proxyconf
 [travis]: https://travis-ci.org/tmatilai/vagrant-proxyconf
 [gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
 [codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
+[coveralls]: https://coveralls.io/r/tmatilai/vagrant-proxyconf
 
 A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy server, or you have a caching proxy (for example [polipo](https://github.com/tmatilai/polipo-box)).
 
@@ -24,6 +26,7 @@ The plugin can set:
 * default proxy configuration for all Chef provisioners
 * proxy configuration for Apt
 * proxy configuration for Yum
+* proxy configuration for PEAR
 
 ## Quick start
 
@@ -37,9 +40,11 @@ To configure all possible software on all Vagrant VMs, add the following to _$HO
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.proxy.http     = "http://192.168.0.2:3128/"
-  config.proxy.https    = "http://192.168.0.2:3128/"
-  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://192.168.0.2:3128/"
+    config.proxy.https    = "http://192.168.0.2:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
   # ... other stuff
 end
 ```
@@ -66,6 +71,8 @@ Proxy settings can be configured in Vagrantfile. In the common case that you wan
 
 Project specific Vagrantfile overrides global settings. Environment variables override both.
 
+It is a good practise to wrap plugin specific configuration with `Vagrant.has_plugin?` checks so the user's Vagrantfiles do not break if plugin is uninstalled or Vagrantfile shared with people not having the plugin installed. (For Vagrant 1.2 you have to use `if defined?(VagrantPlugins::ProxyConf)` instead.)
+
 ### Default/global configuration
 
 It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
@@ -74,9 +81,11 @@ It's a common case that you want all possible connections to pass through the sa
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.proxy.http     = "http://192.168.0.2:3128/"
-  config.proxy.https    = "http://192.168.0.2:3128/"
-  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  if Vagrant.has_plugin?("vagrant-proxyconf")
+    config.proxy.http     = "http://192.168.0.2:3128/"
+    config.proxy.https    = "http://192.168.0.2:3128/"
+    config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  end
   # ... other stuff
 end
 ```
@@ -109,6 +118,23 @@ For example to spin up a VM, run:
 VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
+### Disabling the plugin
+
+The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`). This can be useful to for example disable it for some provider.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.proxy.http = "http://192.168.0.2:3128/"
+
+  config.vm.provider :my_cloud do |cloud, override|
+    override.proxy.enabled = false
+  end
+  # ... other stuff
+end
+```
+
 ### Global `*_proxy` environment variables
 
 Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
@@ -120,7 +146,7 @@ Also sudo will be configured to preserve the variables. This requires that sudo 
 ```ruby
 Vagrant.configure("2") do |config|
   config.env_proxy.http     = "http://192.168.33.200:8888/"
-  config.env_proxy.https    = "$http_proxy"
+  config.env_proxy.https    = "http://192.168.33.200:8888/"
   config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
   # ... other stuff
 end
@@ -178,7 +204,7 @@ end
 #### Possible values
 
 * If all keys are unset or `nil`, no configuration is written or modified.
-* A proxy can be specified in the form of _[http://][user:pass@]host[:port]_. So all but the _host_ part are optional. The default port is 3142 and scheme is the same as the key.
+* A proxy can be specified in the form of _http://[user:pass@]host:port_.
 * Empty string (`""`) or `false` in any key also force the configuration file to be written, but without configuration for that scheme. Can be used to clear the old configuration and/or override a global setting.
 * `"DIRECT"` can be used to specify that no proxy should be used. This is mostly useful for disabling proxy for HTTPS URIs when HTTP proxy is set (as Apt defaults to the latter).
 * Please refer to [apt.conf(5)](http://manpages.debian.net/man/5/apt.conf) manual for more information.
