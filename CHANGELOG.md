@@ -11,6 +11,7 @@ Improvements:
     * `Vagrant.require_plugin` deprecated ([GH-44][])
     * Hook before `SyncedFolders` action as it can install NFS client ([GH-45][])
   - Run Travis tests against all supported Vagrant minor versions with correct Ruby version
+  - Decrease noise level, don't print messages when configuring something
 
 Bug fixes:
 
