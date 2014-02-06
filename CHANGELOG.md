@@ -1,8 +1,8 @@
-# 1.1.0 / _Unreleased_
+# 1.1.0 / 2014-02-06
 
 Features:
 
-  - Add `config.proxy.enabled` option which can be set to `false` to disable the plugin (on some providers) ([GH-39][])
+  - Add `config.proxy.enabled` option which can be set to `false` to disable the plugin ([GH-39][])
   - Support for configuring PEAR ([GH-34][])
 
 Improvements:
@@ -10,6 +10,7 @@ Improvements:
   - Compatibility with Vagrant v1.5:
     * `Vagrant.require_plugin` deprecated ([GH-44][])
     * Hook before `SyncedFolders` action as it can install NFS client ([GH-45][])
+    * Vagrant 1.5.0 is not released at the time of this release, so compatibility can't be guaranteed yet
   - Run Travis tests against all supported Vagrant minor versions with correct Ruby version
   - Decrease noise level, don't print messages when configuring something
 
