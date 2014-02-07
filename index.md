@@ -51,7 +51,7 @@ end
 
 ## Compatibility
 
-This plugin requires Vagrant 1.2 or newer ([downloads](http://downloads.vagrantup.com/)).
+This plugin requires Vagrant 1.2 or newer ([downloads](http://www.vagrantup.com/downloads)).
 
 The plugin is supposed to be compatible with all Vagrant providers and other plugins. Please file an [issue](https://github.com/tmatilai/vagrant-proxyconf/issues) if this is not the case. The following providers are confirmed to work:
 [AWS](https://github.com/mitchellh/vagrant-aws),
