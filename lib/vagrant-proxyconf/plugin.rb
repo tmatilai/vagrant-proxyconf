@@ -80,6 +80,102 @@ module VagrantPlugins
       load_optional_dependencies
 
       name 'vagrant-proxyconf'
+
+      config 'apt_proxy' do
+        require_relative 'config/apt_proxy'
+        Config::AptProxy
+      end
+
+      config 'env_proxy' do
+        require_relative 'config/env_proxy'
+        Config::EnvProxy
+      end
+
+      config 'git_proxy' do
+        require_relative 'config/git_proxy'
+        Config::GitProxy
+      end
+
+      config 'svn_proxy' do
+        require_relative 'config/svn_proxy'
+        Config::SvnProxy
+      end
+
+      config 'proxy' do
+        require_relative 'config/proxy'
+        Config::Proxy
+      end
+
+      config 'yum_proxy' do
+        require_relative 'config/yum_proxy'
+        Config::YumProxy
+      end
+
+      guest_capability 'debian', 'apt_proxy_conf' do
+        require_relative 'cap/debian/apt_proxy_conf'
+        Cap::Debian::AptProxyConf
+      end
+
+      guest_capability 'linux', 'env_proxy_conf' do
+        require_relative 'cap/linux/env_proxy_conf'
+        Cap::Linux::EnvProxyConf
+      end
+
+      guest_capability 'linux', 'pear_proxy_conf' do
+        require_relative 'cap/linux/pear_proxy_conf'
+        Cap::Linux::PearProxyConf
+      end
+
+      guest_capability 'linux', 'git_proxy_conf' do
+        require_relative 'cap/linux/git_proxy_conf'
+        Cap::Linux::GitProxyConf
+      end
+
+      guest_capability 'linux', 'svn_proxy_conf' do
+        require_relative 'cap/linux/svn_proxy_conf'
+        Cap::Linux::SvnProxyConf
+      end
+
+      guest_capability 'coreos', 'env_proxy_conf' do
+        # disabled on CoreOS
+      end
+
+      guest_capability 'redhat', 'yum_proxy_conf' do
+        require_relative 'cap/redhat/yum_proxy_conf'
+        Cap::Redhat::YumProxyConf
+      end
+
+      action_hook 'proxyconf_configure' do |hook|
+        require_relative 'action'
+
+        # the standard provision action
+        hook.after Vagrant::Action::Builtin::Provision, Action.configure
+
+        # Vagrant 1.5+ can install NFS client
+        if check_vagrant_version('>= 1.5.0.dev')
+          hook.after Vagrant::Action::Builtin::SyncedFolders, Action.configure
+        end
+
+        # vagrant-aws < 0.4.0 uses a non-standard provision action
+        if defined?(VagrantPlugins::AWS::Action::TimedProvision)
+          hook.after VagrantPlugins::AWS::Action::TimedProvision, Action.configure
+        end
+
+        # configure the proxies before vagrant-omnibus
+        if defined?(VagrantPlugins::Omnibus::Action::InstallChef)
+          hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
+        end
+
+        # configure the proxies before vagrant-vbguest
+        if defined?(VagrantVbguest::Middleware)
+          hook.before VagrantVbguest::Middleware, Action.configure(before: true)
+        end
+      end
+
+      action_hook 'proxyconf_configure', :provisioner_run do |hook|
+        require_relative 'action'
+        hook.append Action.configure_after_provisoner
+      end
     end
   end
 end
