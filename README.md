@@ -216,7 +216,7 @@ These also override the Vagrantfile configuration. To disable or remove the prox
 For example to spin up a VM, run:
 
 ```sh
-VAGRANT_APT_HTTP_PROXY="proxy.example.com:8080" vagrant up
+VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
 #### Running apt-cacher-ng on a Vagrant box
