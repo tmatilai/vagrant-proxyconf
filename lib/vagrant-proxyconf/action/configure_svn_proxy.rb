@@ -27,19 +27,15 @@ module VagrantPlugins
 
         def svn_config
           u = UserinfoURI.new(config.http)
-          no_proxy = config.no_proxy
 
-          config = (<<-CONFIG)
-[global]
-http-proxy-host=#{u.host}
-http-proxy-port=#{u.port}
+          <<-CONFIG.gsub(/^. */, '')
+          [global]
+          http-proxy-host=#{u.host}
+          http-proxy-port=#{u.port}
+          http-proxy-username=#{u.user}
+          http-proxy-password=#{u.pass}
+          http-proxy-exceptions=#{config.no_proxy}
           CONFIG
-
-          config.concat("http-proxy-username=#{u.user}") if u.user
-          config.concat("http-proxy-password=#{u.pass}") if u.pass
-          config.concat("http-proxy-exceptions=#{no_proxy}") if no_proxy
-
-          config
         end
       end
     end
