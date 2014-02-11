@@ -12,19 +12,8 @@ module VagrantPlugins
         private
 
         def configure_machine
-          if @machine.guest.capability(:git_proxy_conf)
-            @machine.communicate.sudo("git config --system http.proxy #{config.http}")
-          else
-            write_config(git_config, path: '/etc/gitconfig', append: true)
-          end
-        end
-
-        def git_config
-          (<<-CONFIG)
-
-[http]
-        proxy = "#{config.http}"
-          CONFIG
+          @machine.communicate.sudo(
+            "git config --system http.proxy #{config.http}")
         end
       end
     end

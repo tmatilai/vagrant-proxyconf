@@ -5,7 +5,7 @@ module VagrantPlugins
         # Capability for Git command
         module GitProxyConf
           def self.git_proxy_conf(machine)
-            machine.communicate.test('sudo which git')
+            machine.communicate.test('which git')
           end
         end
       end

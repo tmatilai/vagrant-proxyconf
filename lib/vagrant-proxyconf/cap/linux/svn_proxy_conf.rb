@@ -5,7 +5,7 @@ module VagrantPlugins
         # Capability for Svn command
         module SvnProxyConf
           def self.svn_proxy_conf(machine)
-            machine.communicate.test('test -d /etc/subversion')
+            machine.communicate.test('which svn')
           end
         end
       end
