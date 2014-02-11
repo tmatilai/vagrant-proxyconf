@@ -12,6 +12,15 @@ module VagrantPlugins
 
         private
 
+        # @return [Vagrant::Plugin::V2::Config] the configuration
+        def config
+          return @config if @config
+
+          # Use only `config.svn_proxy`, don't merge with the default config
+          @config = @machine.config.svn_proxy
+          finalize_config(@config)
+        end
+
         def configure_machine
           write_config(svn_config, path: '/etc/subversion/servers')
         end
