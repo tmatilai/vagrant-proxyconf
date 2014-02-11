@@ -1,5 +1,5 @@
-require 'uri'
 require_relative 'base'
+require_relative '../userinfo_uri'
 
 module VagrantPlugins
   module ProxyConf
@@ -26,19 +26,17 @@ module VagrantPlugins
         end
 
         def svn_config
-          uri = URI.parse(config.http)
-          user = uri.user
-          pass = uri.password
+          u = UserinfoURI.new(config.http)
           no_proxy = config.no_proxy
 
           config = (<<-CONFIG)
 [global]
-http-proxy-host=#{uri.host}
-http-proxy-port=#{uri.port}
+http-proxy-host=#{u.host}
+http-proxy-port=#{u.port}
           CONFIG
 
-          config.concat("http-proxy-username=#{user}") if user
-          config.concat("http-proxy-password=#{pass}") if pass
+          config.concat("http-proxy-username=#{u.user}") if u.user
+          config.concat("http-proxy-password=#{u.pass}") if u.pass
           config.concat("http-proxy-exceptions=#{no_proxy}") if no_proxy
 
           config
