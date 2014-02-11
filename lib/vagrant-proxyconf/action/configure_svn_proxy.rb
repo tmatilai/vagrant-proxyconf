@@ -29,6 +29,8 @@ module VagrantPlugins
           uri = URI.parse(config.http)
           user = uri.user
           pass = uri.password
+          no_proxy = config.no_proxy
+
           config = (<<-CONFIG)
 [global]
 http-proxy-host=#{uri.host}
@@ -37,6 +39,8 @@ http-proxy-port=#{uri.port}
 
           config.concat("http-proxy-username=#{user}") if user
           config.concat("http-proxy-password=#{pass}") if pass
+          config.concat("http-proxy-exceptions=#{no_proxy}") if no_proxy
+
           config
         end
       end
