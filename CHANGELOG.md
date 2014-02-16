@@ -1,5 +1,8 @@
 # 1.2.0 / _Unreleased_
 
+Deprecations:
+
+  - Deprecate `config.env_proxy` and `VAGRANT_ENV_*_PROXY`, as `config.proxy.*` and `VAGRANT_*_PROXY` should be enough. The env_proxy config options will be removed in v2.0.0.
 
 # 1.1.0 / 2014-02-06
 

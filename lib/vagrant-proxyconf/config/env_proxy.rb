@@ -23,6 +23,16 @@ module VagrantPlugins
         # @return [String] a comma separated list of hosts or domains which do not use proxies
         key :no_proxy, env_var: 'VAGRANT_ENV_NO_PROXY'
 
+        def validate(machine)
+          if enabled?
+            puts 'DEPRECATION: `config.env_proxy.*` and `VAGRANT_ENV_*_PROXY`'
+            puts 'configuration is deprecated and will be removed in v2.0.0.'
+            puts 'Please use `config.proxy.*` and `VAGRANT_*_PROXY` instead.'
+            puts
+          end
+          super
+        end
+
         private
 
         # (see KeyMixin#config_for)
