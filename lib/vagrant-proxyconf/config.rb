@@ -13,9 +13,19 @@ module VagrantPlugins
         Config::EnvProxy
       end
 
+      config 'git_proxy' do
+        require_relative 'config/git_proxy'
+        Config::GitProxy
+      end
+
       config 'proxy' do
         require_relative 'config/proxy'
         Config::Proxy
+      end
+
+      config 'svn_proxy' do
+        require_relative 'config/svn_proxy'
+        Config::SvnProxy
       end
 
       config 'yum_proxy' do

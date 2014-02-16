@@ -17,9 +17,19 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'linux', 'git_proxy_conf' do
+        require_relative 'cap/linux/git_proxy_conf'
+        Cap::Linux::GitProxyConf
+      end
+
       guest_capability 'linux', 'pear_proxy_conf' do
         require_relative 'cap/linux/pear_proxy_conf'
         Cap::Linux::PearProxyConf
+      end
+
+      guest_capability 'linux', 'svn_proxy_conf' do
+        require_relative 'cap/linux/svn_proxy_conf'
+        Cap::Linux::SvnProxyConf
       end
 
       guest_capability 'redhat', 'yum_proxy_conf' do
