@@ -3,6 +3,7 @@
 Deprecations:
 
   - Deprecate `config.env_proxy` and `VAGRANT_ENV_*_PROXY`, as `config.proxy.*` and `VAGRANT_*_PROXY` should be enough. The env_proxy config options will be removed in v2.0.0.
+  - `config.apt_proxy.*` and `VAGRANT_APT_*_PROXY` URIs should explicitly set the scheme and port. In v2.0.0 the scheme will be required, and default port will be scheme's default (currently 3142).
 
 Features:
 

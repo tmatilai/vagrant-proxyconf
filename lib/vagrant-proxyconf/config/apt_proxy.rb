@@ -64,12 +64,35 @@ module VagrantPlugins
             'DIRECT' if value.upcase == 'DIRECT'
           end
 
+          # Hash of deprecation warning sentinels
+          @@warned = {}
+
           def prefix
-            "#{scheme}://" if value !~ %r{^.*://}
+            if value !~ %r{^.*://}
+              if !@@warned[:scheme]
+                @@warned[:scheme] = true
+
+                puts 'DEPRECATION: Specifying the scheme (http://) for `apt_proxy` URIs'
+                puts 'will be mandatory in v2.0.0.'
+                puts
+              end
+
+              "#{scheme}://"
+            end
           end
 
           def suffix
-            ':3142' if value !~ %r{:\d+$} && value !~ %r{/}
+            if value !~ %r{:\d+$} && value !~ %r{/}
+              if !@@warned[:port]
+                @@warned[:port] = true
+
+                puts 'DEPRECATION: Please specify the port (3142) for `apt_proxy` URIs,'
+                puts 'as the default will change in v2.0.0.'
+                puts
+              end
+
+              ':3142'
+            end
           end
         end
       end
