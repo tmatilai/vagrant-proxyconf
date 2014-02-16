@@ -4,6 +4,10 @@ Deprecations:
 
   - Deprecate `config.env_proxy` and `VAGRANT_ENV_*_PROXY`, as `config.proxy.*` and `VAGRANT_*_PROXY` should be enough. The env_proxy config options will be removed in v2.0.0.
 
+Features:
+
+  - Support for configuring git and svn ([GH-40][], [GH-49][])
+
 # 1.1.0 / 2014-02-06
 
 Features:
@@ -124,6 +128,8 @@ Bug fixes:
 [GH-35]: https://github.com/tmatilai/vagrant-proxyconf/issues/35 "Issue 35"
 [GH-36]: https://github.com/tmatilai/vagrant-proxyconf/issues/36 "Issue 36"
 [GH-39]: https://github.com/tmatilai/vagrant-proxyconf/issues/39 "Issue 39"
+[GH-40]: https://github.com/tmatilai/vagrant-proxyconf/issues/40 "Issue 40"
 [GH-42]: https://github.com/tmatilai/vagrant-proxyconf/issues/42 "Issue 42"
 [GH-44]: https://github.com/tmatilai/vagrant-proxyconf/issues/44 "Issue 44"
 [GH-45]: https://github.com/tmatilai/vagrant-proxyconf/issues/45 "Issue 45"
+[GH-49]: https://github.com/tmatilai/vagrant-proxyconf/issues/49 "Issue 49"
