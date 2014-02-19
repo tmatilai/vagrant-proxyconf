@@ -22,6 +22,11 @@ module VagrantPlugins
         Cap::Linux::GitProxyConf
       end
 
+      guest_capability 'linux', 'npm_proxy_conf' do
+        require_relative 'cap/linux/npm_proxy_conf'
+        Cap::Linux::NpmProxyConf
+      end
+
       guest_capability 'linux', 'pear_proxy_conf' do
         require_relative 'cap/linux/pear_proxy_conf'
         Cap::Linux::PearProxyConf

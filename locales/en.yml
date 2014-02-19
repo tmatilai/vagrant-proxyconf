@@ -24,6 +24,14 @@ en:
       configuring: |-
         Configuring proxy environment variables...
 
+    npm_proxy:
+      not_enabled: |-
+        npm_proxy not enabled or configured
+      not_supported: |-
+        Skipping npm proxy config as `npm` is not found
+      configuring: |-
+        Configuring proxy for npm...
+
     pear_proxy:
       not_enabled: |-
         pear_proxy not enabled or configured
