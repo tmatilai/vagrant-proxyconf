@@ -8,6 +8,7 @@ Deprecations:
 Features:
 
   - Support for configuring git and svn ([GH-40][], [GH-49][])
+  - Support for configuring npm ([GH-50][], [GH-51][])
 
 # 1.1.0 / 2014-02-06
 
@@ -134,3 +135,5 @@ Bug fixes:
 [GH-44]: https://github.com/tmatilai/vagrant-proxyconf/issues/44 "Issue 44"
 [GH-45]: https://github.com/tmatilai/vagrant-proxyconf/issues/45 "Issue 45"
 [GH-49]: https://github.com/tmatilai/vagrant-proxyconf/issues/49 "Issue 49"
+[GH-50]: https://github.com/tmatilai/vagrant-proxyconf/issues/50 "Issue 50"
+[GH-51]: https://github.com/tmatilai/vagrant-proxyconf/issues/51 "Issue 51"
