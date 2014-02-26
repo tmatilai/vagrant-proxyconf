@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'vagrant',
-  github: 'mitchellh/vagrant',
+  git: 'https://github.com/mitchellh/vagrant',
   ref: ENV.fetch('VAGRANT_VERSION', 'v1.4.3')
 
 gem 'cane', '~> 2.6'
