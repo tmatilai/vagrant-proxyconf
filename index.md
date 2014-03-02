@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v1.1.0
+latest_release: v1.2.0
 ---
 # Proxy Configuration Plugin for Vagrant
 
@@ -25,6 +25,7 @@ The plugin can set:
 * generic `http_proxy` etc. environment variables that many programs support
 * default proxy configuration for all Chef provisioners
 * proxy configuration for Apt
+* proxy configuration for npm
 * proxy configuration for Yum
 * proxy configuration for PEAR
 
@@ -76,6 +77,10 @@ It is a good practise to wrap plugin specific configuration with `Vagrant.has_pl
 ### Default/global configuration
 
 It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
+
+Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
+
+Also sudo will be configured to preserve the variables. This requires that sudo in the VM is configured to support "sudoers.d", i.e. _/etc/sudoers_ contains line `#includedir /etc/sudoers.d`.
 
 #### Example Vagrantfile
 
@@ -135,52 +140,6 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-### Global `*_proxy` environment variables
-
-Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
-
-Also sudo will be configured to preserve the variables. This requires that sudo in the VM is configured to support "sudoers.d", i.e. _/etc/sudoers_ contains line `#includedir /etc/sudoers.d`.
-
-#### Example Vagrantfile
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.env_proxy.http     = "http://192.168.33.200:8888/"
-  config.env_proxy.https    = "http://192.168.33.200:8888/"
-  config.env_proxy.no_proxy = "localhost,127.0.0.1,.example.com"
-  # ... other stuff
-end
-```
-
-#### Configuration keys
-
-* `config.env_proxy.http` - The proxy for HTTP URIs
-* `config.env_proxy.https` - The proxy for HTTPS URIs
-* `config.env_proxy.ftp` - The proxy for FTP URIs
-* `config.env_proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
-
-#### Possible values
-
-* If all keys are unset or `nil`, no configuration is written.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* The values are used as specified, so you can use for example variables that will be evaluated by the shell on the VM.
-* Empty string (`""`) or `false` in any setting also force the configuration file to be written, but without configuration for that key. Can be used to clear the old configuration and/or override a global setting.
-
-#### Environment variables
-
-* `VAGRANT_ENV_HTTP_PROXY`
-* `VAGRANT_ENV_HTTPS_PROXY`
-* `VAGRANT_ENV_FTP_PROXY`
-* `VAGRANT_ENV_NO_PROXY`
-
-These also override the Vagrantfile configuration. To disable or remove the proxy use an empty value.
-
-For example to spin up a VM, run:
-
-```sh
-VAGRANT_ENV_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
-```
-
 ### Apt
 
 Configures Apt to use the specified proxy settings. The configuration will be written to _/etc/apt/apt.conf.d/01proxy_ on the guest.
@@ -220,7 +179,7 @@ These also override the Vagrantfile configuration. To disable or remove the prox
 For example to spin up a VM, run:
 
 ```sh
-VAGRANT_APT_HTTP_PROXY="proxy.example.com:8080" vagrant up
+VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
 #### Running apt-cacher-ng on a Vagrant box
