@@ -1,5 +1,8 @@
 # 1.2.1 / _Unreleased_
 
+Bug fixes:
+
+  - Fix https proxy configuration for npm if different to http ([GH-57][])
 
 # 1.2.0 / 2014-03-02
 
@@ -140,3 +143,4 @@ Bug fixes:
 [GH-49]: https://github.com/tmatilai/vagrant-proxyconf/issues/49 "Issue 49"
 [GH-50]: https://github.com/tmatilai/vagrant-proxyconf/issues/50 "Issue 50"
 [GH-51]: https://github.com/tmatilai/vagrant-proxyconf/issues/51 "Issue 51"
+[GH-57]: https://github.com/tmatilai/vagrant-proxyconf/issues/57 "Issue 57"
