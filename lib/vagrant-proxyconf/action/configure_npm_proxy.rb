@@ -24,7 +24,7 @@ module VagrantPlugins
 
         def set_or_delete_proxy(key, value)
           if value
-            command = "npm config set #{key} #{escape(config.http)}"
+            command = "npm config set #{key} #{escape(value)}"
           else
             command = "npm config delete #{key}"
           end
