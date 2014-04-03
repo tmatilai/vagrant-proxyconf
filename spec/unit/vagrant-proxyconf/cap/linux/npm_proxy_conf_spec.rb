@@ -12,12 +12,14 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::NpmProxyConf do
     end
 
     it "returns true when npm is installed" do
-      expect(communicator).to receive(:test).with('which npm').and_return(true)
+      expect(communicator).
+        to receive(:test).with('which npm', sudo: true).and_return(true)
       expect(described_class.npm_proxy_conf(machine)).to be_true
     end
 
     it "returns false when npm is not installed" do
-      expect(communicator).to receive(:test).with('which npm').and_return(false)
+      expect(communicator).
+        to receive(:test).with('which npm', sudo: true).and_return(false)
       expect(described_class.npm_proxy_conf(machine)).to be_false
     end
   end
