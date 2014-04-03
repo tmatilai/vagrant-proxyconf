@@ -3,6 +3,7 @@
 Bug fixes:
 
   - Fix https proxy configuration for npm if different to http ([GH-57][])
+  - Check existence of `npm` with sudo as the configuration is also done with it ([GH-59][])
 
 # 1.2.0 / 2014-03-02
 
@@ -144,3 +145,4 @@ Bug fixes:
 [GH-50]: https://github.com/tmatilai/vagrant-proxyconf/issues/50 "Issue 50"
 [GH-51]: https://github.com/tmatilai/vagrant-proxyconf/issues/51 "Issue 51"
 [GH-57]: https://github.com/tmatilai/vagrant-proxyconf/issues/57 "Issue 57"
+[GH-59]: https://github.com/tmatilai/vagrant-proxyconf/issues/59 "Issue 59"
