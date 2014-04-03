@@ -6,7 +6,7 @@ module VagrantPlugins
         module NpmProxyConf
           # @return [Boolean] if npm is installed
           def self.npm_proxy_conf(machine)
-            machine.communicate.test('sudo which npm')
+            machine.communicate.test('which npm', sudo: true)
           end
         end
       end
