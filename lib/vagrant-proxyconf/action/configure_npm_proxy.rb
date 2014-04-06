@@ -23,12 +23,17 @@ module VagrantPlugins
         end
 
         def set_or_delete_proxy(key, value)
+          command = "#{npm_path} config "
           if value
-            command = "npm config set #{key} #{escape(value)}"
+            command << "set #{key} #{escape(value)}"
           else
-            command = "npm config delete #{key}"
+            command << "delete #{key}"
           end
           @machine.communicate.sudo(command)
+        end
+
+        def npm_path
+          @machine.guest.capability(cap_name)
         end
       end
     end

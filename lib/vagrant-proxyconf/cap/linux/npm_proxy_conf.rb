@@ -1,12 +1,14 @@
+require_relative '../util'
+
 module VagrantPlugins
   module ProxyConf
     module Cap
       module Linux
         # Capability for npm proxy configuration
         module NpmProxyConf
-          # @return [Boolean] if npm is installed
+          # @return [String, false] the path to npm or `false` if not found
           def self.npm_proxy_conf(machine)
-            machine.communicate.test('which npm', sudo: true)
+            Util.which(machine, 'npm')
           end
         end
       end
