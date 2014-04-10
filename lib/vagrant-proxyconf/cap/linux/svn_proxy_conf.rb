@@ -1,11 +1,14 @@
+require_relative '../util'
+
 module VagrantPlugins
   module ProxyConf
     module Cap
       module Linux
-        # Capability for Svn command
+        # Capability for svn proxy configuration
         module SvnProxyConf
+          # @return [String, false] the path to svn or `false` if not found
           def self.svn_proxy_conf(machine)
-            machine.communicate.test('which svn')
+            Util.which(machine, 'svn')
           end
         end
       end

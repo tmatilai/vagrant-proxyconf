@@ -21,7 +21,11 @@ module VagrantPlugins
           proxy = config.http || ''
 
           @machine.communicate.sudo(
-            "pear config-set http_proxy #{escape(proxy)} system")
+            "#{pear_path} config-set http_proxy #{escape(proxy)} system")
+        end
+
+        def pear_path
+          @machine.guest.capability(cap_name)
         end
       end
     end

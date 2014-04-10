@@ -1,24 +1,19 @@
 require 'spec_helper'
 require 'vagrant-proxyconf/cap/linux/svn_proxy_conf'
+require 'vagrant-proxyconf/cap/util'
 
 describe VagrantPlugins::ProxyConf::Cap::Linux::SvnProxyConf do
 
   describe '.svn_proxy_conf' do
-    let(:subject) { described_class.svn_proxy_conf(double) }
     let(:machine) { double }
-    let(:communicator) { double }
-
-    before do
-      machine.stub(:communicate => communicator)
-    end
 
     it "returns true when svn is installed" do
-      expect(communicator).to receive(:test).with('which svn').and_return(true)
-      expect(described_class.svn_proxy_conf(machine)).to be_true
+      VagrantPlugins::ProxyConf::Cap::Util.stub(which: '/path/to/svn')
+      expect(described_class.svn_proxy_conf(machine)).to eq '/path/to/svn'
     end
 
     it "returns false when pear is not installed" do
-      expect(communicator).to receive(:test).with('which svn').and_return(false)
+      VagrantPlugins::ProxyConf::Cap::Util.stub(which: false)
       expect(described_class.svn_proxy_conf(machine)).to be_false
     end
   end
