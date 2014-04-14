@@ -40,7 +40,7 @@ module VagrantPlugins
 
           if config.no_proxy
             logger.info("Setting no_proxy to #{config.no_proxy}")
-            @machine.communicate.sudo("cmd.exe /c SETX no_proxy #{config.no_proxy}")
+            @machine.communicate.sudo("cmd.exe /c SETX no_proxy \"#{config.no_proxy}\"")
           end
 
         end
