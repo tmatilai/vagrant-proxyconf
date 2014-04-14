@@ -7,6 +7,7 @@ require_relative 'action/configure_npm_proxy'
 require_relative 'action/configure_pear_proxy'
 require_relative 'action/configure_svn_proxy'
 require_relative 'action/configure_yum_proxy'
+require_relative 'action/configure_win_proxy'
 require_relative 'action/is_enabled'
 require_relative 'action/only_once'
 
@@ -36,6 +37,7 @@ module VagrantPlugins
             b2.use ConfigureNpmProxy
             b2.use ConfigurePearProxy
             b2.use ConfigureSvnProxy
+            b2.use ConfigureWinProxy
           end
         end
       end
@@ -57,6 +59,7 @@ module VagrantPlugins
             b2.use ConfigurePearProxy
             b2.use ConfigureSvnProxy
             b2.use ConfigureYumProxy
+            b2.use ConfigureWinProxy
           end
         end
       end
