@@ -31,7 +31,7 @@ module VagrantPlugins
         def set_or_delete_proxy(key, value)
           command = "cmd.exe /c SETX "
           if value
-            command << "#{key} #{escape(value)}"
+            command << "#{key} #{value}"
           else
             command << key
           end
