@@ -37,7 +37,6 @@ module VagrantPlugins
             b2.use ConfigureNpmProxy
             b2.use ConfigurePearProxy
             b2.use ConfigureSvnProxy
-            b2.use ConfigureWinProxy
           end
         end
       end

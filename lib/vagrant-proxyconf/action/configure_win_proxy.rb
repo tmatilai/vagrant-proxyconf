@@ -6,7 +6,7 @@ module VagrantPlugins
       # Action for configuring Windows proxy on the windows guest
       class ConfigureWinProxy < Base
         def config_name
-          'win_proxy'
+          'env_proxy'
         end
 
         private
@@ -15,34 +15,28 @@ module VagrantPlugins
         def config
           return @config if @config
 
-          # Use only `config.win_proxy`, don't merge with the default config
-          @config = @machine.config.win_proxy
+          # Use only `config.env_proxy`, don't merge with the default config
+          @config = @machine.config.env_proxy
           finalize_config(@config)
         end
 
         def configure_machine
           logger.info('Setting the Windows Proxy environment variables')
+          set_or_delete_proxy('http_proxy', config.http)
+          set_or_delete_proxy('https_proxy', config.https)
+          set_or_delete_proxy('ftp_proxy', config.ftp_proxy)
+          set_or_delete_proxy('no_proxy', config.no_proxy)
+        end
 
-          if config.http
-            logger.info("Setting http_proxy to #{config.http}")
-            @machine.communicate.sudo("cmd.exe /c SETX http_proxy #{config.http}")
+        def set_or_delete_proxy(key, value)
+          command = "cmd.exe /c SETX "
+          if value
+            command << "#{key} #{escape(value)}"
+          else
+            command << key
           end
-
-          if config.https
-            logger.info("Setting https_proxy to #{config.https}")
-            @machine.communicate.sudo("cmd.exe /c SETX https_proxy #{config.https}")
-          end
-
-          if config.ftp
-            logger.info("Setting ftp_proxy to #{config.ftp}")
-            @machine.communicate.sudo("cmd.exe /c SETX ftp_proxy #{config.ftp}")
-          end
-
-          if config.no_proxy
-            logger.info("Setting no_proxy to #{config.no_proxy}")
-            @machine.communicate.sudo("cmd.exe /c SETX no_proxy \"#{config.no_proxy}\"")
-          end
-
+          logger.info("Setting #{key} to #{value}")
+          @machine.communicate.sudo(command)
         end
 
       end

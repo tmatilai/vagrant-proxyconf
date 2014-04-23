@@ -33,11 +33,6 @@ module VagrantPlugins
         Config::YumProxy
       end
 
-      config 'win_proxy' do
-        require_relative 'config/win_proxy'
-        Config::WinProxy
-      end
-
     end
   end
 end

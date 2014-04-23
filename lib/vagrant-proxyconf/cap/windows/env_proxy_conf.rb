@@ -5,9 +5,9 @@ module VagrantPlugins
     module Cap
       module Windows
         # Capability for windows host proxy configuration
-        module WinProxyConf
+        module EnvProxyConf
           # @return [String, false]
-          def self.win_proxy_conf(machine)
+          def self.env_proxy_conf(machine)
             return true
           end
         end

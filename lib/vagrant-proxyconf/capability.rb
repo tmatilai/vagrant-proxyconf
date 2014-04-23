@@ -42,9 +42,8 @@ module VagrantPlugins
         Cap::Redhat::YumProxyConf
       end
 
-      guest_capability 'windows', 'win_proxy_conf' do
-        require_relative 'cap/windows/win_proxy_conf'
-        Cap::Windows::WinProxyConf
+      guest_capability 'windows', 'env_proxy_conf' do
+        Cap::Windows::EnvProxyConf
       end
 
     end
