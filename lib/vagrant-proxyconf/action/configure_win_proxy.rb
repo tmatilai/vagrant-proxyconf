@@ -22,21 +22,20 @@ module VagrantPlugins
 
         def configure_machine
           logger.info('Setting the Windows Proxy environment variables')
-          set_or_delete_proxy('http_proxy', config.http)
-          set_or_delete_proxy('https_proxy', config.https)
-          set_or_delete_proxy('ftp_proxy', config.ftp_proxy)
-          set_or_delete_proxy('no_proxy', config.no_proxy)
+          set_proxy('http_proxy', config.http)
+          set_proxy('https_proxy', config.https)
+          set_proxy('ftp_proxy', config.ftp)
+          set_proxy('no_proxy', "\"#{config.no_proxy}\"")
         end
 
-        def set_or_delete_proxy(key, value)
-          command = "cmd.exe /c SETX "
+        def set_proxy(key, value)
           if value
-            command << "#{key} #{value}"
+            command = "cmd.exe /c SETX #{key} #{value} /M"
+            logger.info("Setting #{key} to #{value}")
+            @machine.communicate.sudo(command)
           else
-            command << key
+            logger.info("Not setting #{key}")
           end
-          logger.info("Setting #{key} to #{value}")
-          @machine.communicate.sudo(command)
         end
 
       end

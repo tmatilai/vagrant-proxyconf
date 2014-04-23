@@ -64,14 +64,6 @@ en:
       configuring: |-
         Configuring proxy for Yum...
 
-    win_proxy:
-      not_enabled: |-
-        win_proxy not enabled or configured
-      not_supported: |-
-        Skipping Windows proxy config as the machine does not support it
-      configuring: |-
-        Configuring proxy for Windows Hosts...
-
     errors:
       vagrant_version: |-
         vagrant-proxyconf plugin requires Vagrant version %{requirement}

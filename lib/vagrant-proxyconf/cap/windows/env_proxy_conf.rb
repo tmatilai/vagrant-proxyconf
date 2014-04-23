@@ -1,5 +1,3 @@
-require_relative '../util'
-
 module VagrantPlugins
   module ProxyConf
     module Cap
@@ -8,7 +6,7 @@ module VagrantPlugins
         module EnvProxyConf
           # @return [String, false]
           def self.env_proxy_conf(machine)
-            return true
+            '/proxy.conf'
           end
         end
       end
