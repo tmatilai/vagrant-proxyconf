@@ -39,6 +39,7 @@ module VagrantPlugins
       end
 
       guest_capability 'windows', 'env_proxy_conf' do
+        require_relative 'cap/windows/env_proxy_conf'
         Cap::Windows::EnvProxyConf
       end
 

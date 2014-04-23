@@ -218,49 +218,6 @@ For example to spin up a VM, run:
 VAGRANT_YUM_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
 ```
 
-### Windows and Linux Environment Variables
-
-Configures Windows and Linux guests with the http_proxy, https_proxy, ftp_proxy and no_proxy environment variables.
-
-#### Example Vagrantfile
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.env_proxy.http  = "http://192.168.33.1:3142"
-  config.env_proxy.https = "http://192.168.33.1:3142"
-  config.env_proxy.no_proxy = "localhost"
-  # ... other stuff
-end
-```
-
-#### Configuration keys
-
-* `config.env_proxy.http`   - The proxy for HTTP URIs
-* `config.env_proxy.https`  - The proxy for HTTPS URIs
-* `config.env_proxy.ftp`    - The proxy for FTP URIs
-* `config.env_no_proxy.ftp` - The proxy for FTP URIs
-
-#### Possible values
-
-* If all keys are unset or `nil`, no configuration is written or modified.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* Empty string (`""`) or `false` in any key also force the configuration file to be written, but without configuration for that scheme. Can be used to clear the old configuration and/or override a global setting.
-
-#### Environment variables
-
-* `VAGRANT_ENV_HTTP_PROXY`
-* `VAGRANT_ENV_HTTPS_PROXY`
-* `VAGRANT_ENV_FTP_PROXY`
-* `VAGRANT_ENV_NO_PROXY`
-
-These also override the Vagrantfile configuration. To disable or remove the proxy use an empty value.
-
-For example to spin up a VM, run:
-
-```sh
-VAGRANT_ENV_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
-```
-
 ## Related plugins and projects
 
 * [apt-cacher-box](https://github.com/tmatilai/apt-cacher-box)<br/>
