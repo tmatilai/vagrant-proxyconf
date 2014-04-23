@@ -8,10 +8,6 @@ module VagrantPlugins
         Cap::Debian::AptProxyConf
       end
 
-      guest_capability 'coreos', 'env_proxy_conf' do
-        # disabled on CoreOS
-      end
-
       guest_capability 'linux', 'env_proxy_conf' do
         require_relative 'cap/linux/env_proxy_conf'
         Cap::Linux::EnvProxyConf
