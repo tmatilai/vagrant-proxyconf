@@ -24,6 +24,7 @@ The plugin can set:
 * proxy configuration for npm
 * proxy configuration for Yum
 * proxy configuration for PEAR
+* simple proxy configuration for Windows
 
 ## Quick start
 
@@ -215,6 +216,47 @@ For example to spin up a VM, run:
 
 ```sh
 VAGRANT_YUM_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
+```
+
+### Windows
+
+Configures Windows guests with the http_proxy, https_proxy, and no_proxy environment variables.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.win_proxy.http  = "http://192.168.33.1:3142"
+  config.win_proxy.https = "http://192.168.33.1:3142"
+  config.win_proxy.no_proxy = "localhost"
+  # ... other stuff
+end
+```
+
+#### Configuration keys
+
+* `config.win_proxy.http`  - The proxy for HTTP URIs
+* `config.win_proxy.https` - The proxy for HTTPS URIs
+* `config.win_proxy.ftp`   - The proxy for FTP URIs
+
+#### Possible values
+
+* If all keys are unset or `nil`, no configuration is written or modified.
+* A proxy can be specified in the form of _http://[user:pass@]host:port_.
+* Empty string (`""`) or `false` in any key also force the configuration file to be written, but without configuration for that scheme. Can be used to clear the old configuration and/or override a global setting.
+
+#### Environment variables
+
+* `VAGRANT_WIN_HTTP_PROXY`
+* `VAGRANT_WIN_HTTPS_PROXY`
+* `VAGRANT_WIN_FTP_PROXY`
+
+These also override the Vagrantfile configuration. To disable or remove the proxy use an empty value.
+
+For example to spin up a VM, run:
+
+```sh
+VAGRANT_WIN_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
 ## Related plugins and projects
