@@ -1,9 +1,14 @@
 # 1.2.1 / _Unreleased_
 
+Features:
+
+  - Support for setting proxy environment variables in CoreOS guests ([GH-62][])
+    * Requires CoreOS 286.0 or later
+
 Bug fixes:
 
   - Fix https proxy configuration for npm if different to http ([GH-57][])
-  - Check existence of `npm` with sudo as the configuration is also done with it ([GH-59][])
+  - Use absolute paths to `git`, `npm`, and `pear` commands when configuring them using sudo to avoid PATH problems ([GH-59][], [GH-60][])
 
 # 1.2.0 / 2014-03-02
 
@@ -146,3 +151,5 @@ Bug fixes:
 [GH-51]: https://github.com/tmatilai/vagrant-proxyconf/issues/51 "Issue 51"
 [GH-57]: https://github.com/tmatilai/vagrant-proxyconf/issues/57 "Issue 57"
 [GH-59]: https://github.com/tmatilai/vagrant-proxyconf/issues/59 "Issue 59"
+[GH-60]: https://github.com/tmatilai/vagrant-proxyconf/issues/60 "Issue 60"
+[GH-62]: https://github.com/tmatilai/vagrant-proxyconf/issues/62 "Issue 62"
