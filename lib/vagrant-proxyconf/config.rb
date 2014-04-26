@@ -32,6 +32,7 @@ module VagrantPlugins
         require_relative 'config/yum_proxy'
         Config::YumProxy
       end
+
     end
   end
 end
