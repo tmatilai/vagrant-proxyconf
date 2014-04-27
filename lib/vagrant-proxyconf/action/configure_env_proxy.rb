@@ -26,7 +26,7 @@ module VagrantPlugins
           set_windows_proxy('http_proxy', config.http)
           set_windows_proxy('https_proxy', config.https)
           set_windows_proxy('ftp_proxy', config.ftp)
-          set_windows_proxy('no_proxy', "\"#{config.no_proxy}\"")
+          set_windows_proxy('no_proxy', config.no_proxy)
         end
 
         def sudo_config
@@ -38,7 +38,7 @@ module VagrantPlugins
 
         def set_windows_proxy(key, value)
           if value
-            command = "cmd.exe /c SETX #{key} #{value} /M"
+            command = "cmd.exe /c SETX #{key} #{escape(value)} /M"
             logger.info("Setting #{key} to #{value}")
             @machine.communicate.sudo(command)
           else
