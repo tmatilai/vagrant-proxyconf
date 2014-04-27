@@ -2,7 +2,8 @@
 
 Features:
 
-  - Support for setting proxy environment variables in CoreOS guests ([GH-62][])
+  - Support setting proxy environment variables on Windows guests ([GH-63][])
+  - Support setting proxy environment variables on CoreOS guests ([GH-62][])
     * Requires CoreOS 286.0 or later
 
 Bug fixes:
@@ -153,3 +154,4 @@ Bug fixes:
 [GH-59]: https://github.com/tmatilai/vagrant-proxyconf/issues/59 "Issue 59"
 [GH-60]: https://github.com/tmatilai/vagrant-proxyconf/issues/60 "Issue 60"
 [GH-62]: https://github.com/tmatilai/vagrant-proxyconf/issues/62 "Issue 62"
+[GH-63]: https://github.com/tmatilai/vagrant-proxyconf/issues/63 "Issue 63"

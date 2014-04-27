@@ -13,6 +13,11 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'windows', 'env_proxy_conf' do
+        require_relative 'cap/windows/env_proxy_conf'
+        Cap::Windows::EnvProxyConf
+      end
+
       guest_capability 'linux', 'git_proxy_conf' do
         require_relative 'cap/linux/git_proxy_conf'
         Cap::Linux::GitProxyConf
