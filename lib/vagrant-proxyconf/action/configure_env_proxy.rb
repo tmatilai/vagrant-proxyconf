@@ -38,7 +38,7 @@ module VagrantPlugins
 
         def set_windows_proxy(key, value)
           if value
-            command = "cmd.exe /c SETX #{key} #{escape(value)} /M"
+            command = "cmd.exe /c SETX #{key} #{value.inspect} /M"
             logger.info("Setting #{key} to #{value}")
             @machine.communicate.sudo(command)
           else
