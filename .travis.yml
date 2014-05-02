@@ -1,8 +1,9 @@
 language: ruby
 
 before_install:
-  - gem uninstall bundler --all
+  - rvm @global do gem uninstall bundler --all --executables
   - gem install bundler --version '~> 1.5.2'
+  - bundle --version
 bundler_args: --without=development
 
 rvm:
