@@ -1,6 +1,8 @@
 language: ruby
 
-before_install: gem install bundler --version '~> 1.5.2'
+before_install:
+  - gem uninstall bundler --all
+  - gem install bundler --version '~> 1.5.2'
 bundler_args: --without=development
 
 rvm:
