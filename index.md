@@ -1,6 +1,6 @@
 ---
 layout: index
-latest_release: v1.2.0
+latest_release: v1.3.0
 ---
 # Proxy Configuration Plugin for Vagrant
 
@@ -28,6 +28,7 @@ The plugin can set:
 * proxy configuration for npm
 * proxy configuration for Yum
 * proxy configuration for PEAR
+* simple proxy configuration for Windows
 
 ## Quick start
 
