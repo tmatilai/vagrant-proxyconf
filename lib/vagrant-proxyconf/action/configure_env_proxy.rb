@@ -29,13 +29,6 @@ module VagrantPlugins
           set_windows_proxy('no_proxy', config.no_proxy)
         end
 
-        def sudo_config
-          <<-CONFIG.gsub(/^\s+/, '')
-            Defaults env_keep += "HTTP_PROXY HTTPS_PROXY FTP_PROXY NO_PROXY"
-            Defaults env_keep += "http_proxy https_proxy ftp_proxy no_proxy"
-          CONFIG
-        end
-
         def set_windows_proxy(key, value)
           if value
             command = "cmd.exe /c SETX #{key} #{value.inspect} /M"
@@ -50,6 +43,12 @@ module VagrantPlugins
           @machine.config.vm.guest.eql?(:windows)
         end
 
+        def sudo_config
+          <<-CONFIG.gsub(/^\s+/, '')
+            Defaults env_keep += "HTTP_PROXY HTTPS_PROXY FTP_PROXY NO_PROXY"
+            Defaults env_keep += "http_proxy https_proxy ftp_proxy no_proxy"
+          CONFIG
+        end
       end
     end
   end
