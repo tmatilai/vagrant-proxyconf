@@ -1,10 +1,8 @@
 source 'https://rubygems.org'
 
-gemspec
-
 gem 'vagrant',
   git: 'https://github.com/mitchellh/vagrant.git',
-  ref: ENV.fetch('VAGRANT_VERSION', 'v1.4.3')
+  ref: ENV.fetch('VAGRANT_VERSION', 'v1.5.4')
 
 gem 'cane', '~> 2.6'
 gem 'coveralls', require: false
@@ -16,4 +14,8 @@ group :development do
   gem 'guard-rspec'
   gem 'redcarpet'
   gem 'yard', '~> 0.8'
+end
+
+group :plugins do
+  gem 'vagrant-proxyconf', path: '.'
 end
