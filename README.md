@@ -75,7 +75,7 @@ It is a good practise to wrap plugin specific configuration with `Vagrant.has_pl
 
 It's a common case that you want all possible connections to pass through the same proxy. This will set the default values for all other proxy configuration keys. It also sets default proxy configuration for all Chef Solo and Chef Client provisioners.
 
-Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ on the guest.
+Many programs (wget, curl, yum, etc.) can be configured to use proxies with `http_proxy` or `HTTP_PROXY` etc. environment variables. This configuration will be written to _/etc/profile.d/proxy.sh_ and _/etc/environment_ on the guest.
 
 Also sudo will be configured to preserve the variables. This requires that sudo in the VM is configured to support "sudoers.d", i.e. _/etc/sudoers_ contains line `#includedir /etc/sudoers.d`.
 
