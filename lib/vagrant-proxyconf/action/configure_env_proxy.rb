@@ -55,12 +55,7 @@ module VagrantPlugins
           tmp = "/tmp/vagrant-proxyconf"
           path = "/etc/environment"
 
-          sed_script = <<-SED.gsub(/^\s+/, '')
-            /^HTTP_PROXY=/I d
-            /^HTTPS_PROXY=/I d
-            /^FTP_PROXY=/I d
-            /^NO_PROXY=/I d
-          SED
+          sed_script = environment_sed_script
           local_tmp = tempfile(environment_config)
 
           @machine.communicate.tap do |comm|
@@ -74,6 +69,19 @@ module VagrantPlugins
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
           end
+        end
+
+        def environment_sed_script
+          <<-SED.gsub(/^\s+/, '')
+            /^HTTP_PROXY=/ d
+            /^HTTPS_PROXY=/ d
+            /^FTP_PROXY=/ d
+            /^NO_PROXY=/ d
+            /^http_proxy=/ d
+            /^https_proxy=/ d
+            /^ftp_proxy=/ d
+            /^no_proxy=/ d
+          SED
         end
 
         def environment_config
