@@ -1,5 +1,8 @@
 # 1.3.1 / _Unreleased_
 
+Improvements:
+
+  - Write environment variable configuration also to /etc/environment on Linux ([GH-58][], [GH-67][])
 
 # 1.3.0 / 2014-05-02
 
@@ -154,7 +157,9 @@ Bug fixes:
 [GH-50]: https://github.com/tmatilai/vagrant-proxyconf/issues/50 "Issue 50"
 [GH-51]: https://github.com/tmatilai/vagrant-proxyconf/issues/51 "Issue 51"
 [GH-57]: https://github.com/tmatilai/vagrant-proxyconf/issues/57 "Issue 57"
+[GH-58]: https://github.com/tmatilai/vagrant-proxyconf/issues/58 "Issue 58"
 [GH-59]: https://github.com/tmatilai/vagrant-proxyconf/issues/59 "Issue 59"
 [GH-60]: https://github.com/tmatilai/vagrant-proxyconf/issues/60 "Issue 60"
 [GH-62]: https://github.com/tmatilai/vagrant-proxyconf/issues/62 "Issue 62"
 [GH-63]: https://github.com/tmatilai/vagrant-proxyconf/issues/63 "Issue 63"
+[GH-67]: https://github.com/tmatilai/vagrant-proxyconf/issues/67 "Issue 67"
