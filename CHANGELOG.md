@@ -1,8 +1,9 @@
-# 1.3.1 / _Unreleased_
+# 1.3.1 / 2014-05-09
 
 Improvements:
 
   - Write environment variable configuration also to /etc/environment on Linux ([GH-58][], [GH-67][])
+    * Fixes compatibility with vagrant-omnibus and non-login shells
 
 # 1.3.0 / 2014-05-02
 
