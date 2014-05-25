@@ -1,6 +1,7 @@
 require 'vagrant/action/builtin/call'
 require_relative 'action/configure_apt_proxy'
 require_relative 'action/configure_chef_proxy'
+require_relative 'action/configure_docker_proxy'
 require_relative 'action/configure_env_proxy'
 require_relative 'action/configure_git_proxy'
 require_relative 'action/configure_npm_proxy'
@@ -32,6 +33,7 @@ module VagrantPlugins
           b.use Builtin::Call, IsEnabled do |env, b2|
             next if !env[:result]
 
+            b2.use ConfigureDockerProxy
             b2.use ConfigureGitProxy
             b2.use ConfigureNpmProxy
             b2.use ConfigurePearProxy
@@ -51,6 +53,7 @@ module VagrantPlugins
 
             b2.use ConfigureAptProxy
             b2.use ConfigureChefProxy
+            b2.use ConfigureDockerProxy
             b2.use ConfigureEnvProxy
             b2.use ConfigureGitProxy
             b2.use ConfigureNpmProxy
