@@ -14,7 +14,13 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::DockerProxyConf do
           false
         end
       end
-      machine.stub_chain(:communicate, :test).and_return(true)
+      machine.stub_chain(:communicate, :test) do |c|
+        if c == 'cat /etc/redhat-release'
+          true
+        else
+          false
+        end
+      end
 
       expect(described_class.docker_proxy_conf(machine)).to eq '/etc/sysconfig/docker'
     end
@@ -43,6 +49,25 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::DockerProxyConf do
       machine.stub_chain(:communicate, :test).and_return(false)
 
       expect(described_class.docker_proxy_conf(machine)).to eq '/etc/default/docker.io'
+    end
+
+    it "returns the path when docker is installed on boot2docker" do
+      VagrantPlugins::ProxyConf::Cap::Util.stub(:which) do |_m, c|
+        if c == 'docker'
+          '/path/to/docker'
+        else
+          false
+        end
+      end
+      machine.stub_chain(:communicate, :test) do |c|
+        if c == 'ls /var/lib/boot2docker'
+          true
+        else
+          false
+        end
+      end
+
+      expect(described_class.docker_proxy_conf(machine)).to eq '/etc/default/docker'
     end
 
     it "returns false when docker is not installed" do

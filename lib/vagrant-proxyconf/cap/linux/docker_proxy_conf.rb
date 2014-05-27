@@ -15,6 +15,8 @@ module VagrantPlugins
 
             if machine.communicate.test('cat /etc/redhat-release')
               "/etc/sysconfig/#{docker_command}"
+            elsif machine.communicate.test('ls /var/lib/boot2docker/')
+              "/var/lib/boot2docker/profile"
             else
               "/etc/default/#{docker_command}"
             end
