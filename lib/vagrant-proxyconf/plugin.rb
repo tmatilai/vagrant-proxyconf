@@ -44,7 +44,7 @@ module VagrantPlugins
 
       # Ensures a dependent plugin is loaded before us if it is installed.
       # Ignores Errors while loading, as Vagrant itself anyway shows them to
-      # used when *it* tries to load the plugin.
+      # user when *it* tries to load the plugin.
       #
       # @param plugin [String] the plugin name
       def self.load_optional_dependency(plugin)
