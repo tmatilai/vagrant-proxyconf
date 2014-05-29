@@ -28,6 +28,10 @@ module VagrantPlugins
             command << "set #{key} #{escape(value)}"
           else
             command << "delete #{key}"
+
+            # ensure that the .npmrc file exists to work around
+            # https://github.com/npm/npm/issues/5065
+            @machine.communicate.sudo("touch ~/.npmrc")
           end
           @machine.communicate.sudo(command)
         end

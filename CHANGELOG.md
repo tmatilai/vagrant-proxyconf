@@ -1,5 +1,8 @@
 # 1.3.2 / _Unreleased_
 
+Improvements:
+
+  - Ensure that the .npmrc file exists to work around [NPM-5065](https://github.com/npm/npm/issues/5065)
 
 # 1.3.1 / 2014-05-09
 
