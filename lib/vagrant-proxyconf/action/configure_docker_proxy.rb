@@ -58,14 +58,14 @@ module VagrantPlugins
 
         def docker_config
           <<-CONFIG.gsub(/^\s+/, '')
-            export HTTP_PROXY=#{config.http}
-            export HTTPS_PROXY=#{config.https}
-            export FTP_PROXY=#{config.ftp}
-            export NO_PROXY=#{config.no_proxy}
-            export http_proxy=#{config.http}
-            export https_proxy=#{config.https}
-            export ftp_proxy=#{config.ftp}
-            export no_proxy=#{config.no_proxy}
+            export HTTP_PROXY=#{config.http || ''}
+            export HTTPS_PROXY=#{config.https || ''}
+            export FTP_PROXY=#{config.ftp || ''}
+            export NO_PROXY=#{config.no_proxy || ''}
+            export http_proxy=#{config.http || ''}
+            export https_proxy=#{config.https || ''}
+            export ftp_proxy=#{config.ftp || ''}
+            export no_proxy=#{config.no_proxy || ''}
           CONFIG
         end
       end
