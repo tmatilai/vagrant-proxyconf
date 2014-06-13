@@ -23,6 +23,14 @@ module VagrantPlugins
           write_docker_config
         end
 
+        def docker
+          if config_path && config_path.include?('docker.io')
+            'docker.io'
+          else
+            'docker'
+          end
+        end
+
         def write_docker_config
           tmp = "/tmp/vagrant-proxyconf"
           path = config_path
@@ -40,6 +48,7 @@ module VagrantPlugins
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
+            comm.sudo("service #{docker} restart || /etc/init.d/#{docker} restart")
           end
         end
 
