@@ -8,6 +8,11 @@ module VagrantPlugins
         Cap::Debian::AptProxyConf
       end
 
+      guest_capability 'linux', 'docker_proxy_conf' do
+        require_relative 'cap/linux/docker_proxy_conf'
+        Cap::Linux::DockerProxyConf
+      end
+
       guest_capability 'linux', 'env_proxy_conf' do
         require_relative 'cap/linux/env_proxy_conf'
         Cap::Linux::EnvProxyConf

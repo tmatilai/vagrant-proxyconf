@@ -8,6 +8,14 @@ en:
       configuring: |-
         Configuring proxy for Apt...
 
+    docker_proxy:
+      not_enabled: |-
+        docker_proxy not enabled or configured
+      not_supported: |-
+        Skipping Docker proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Docker...
+
     chef_proxy:
       no_provisioners: |-
         No Chef provisioners configured
