@@ -1,5 +1,8 @@
 # 1.4.0 / _Unreleased_
 
+Features:
+
+  - Support for configuring Docker ([GH-69][])
 
 # 1.3.2 / 2014-05-30
 
@@ -177,3 +180,4 @@ Bug fixes:
 [GH-62]: https://github.com/tmatilai/vagrant-proxyconf/issues/62 "Issue 62"
 [GH-63]: https://github.com/tmatilai/vagrant-proxyconf/issues/63 "Issue 63"
 [GH-67]: https://github.com/tmatilai/vagrant-proxyconf/issues/67 "Issue 67"
+[GH-69]: https://github.com/tmatilai/vagrant-proxyconf/issues/69 "Issue 69"
