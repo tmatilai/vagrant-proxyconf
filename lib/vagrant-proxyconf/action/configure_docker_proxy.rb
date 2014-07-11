@@ -35,10 +35,11 @@ module VagrantPlugins
           tmp = "/tmp/vagrant-proxyconf"
           path = config_path
 
-          sed_script = docker_sed_script
-          local_tmp = tempfile(docker_config)
-
           @machine.communicate.tap do |comm|
+            comm.test('which systemctl') ? @export = '' : @export = 'export '
+            sed_script = docker_sed_script
+            local_tmp = tempfile(docker_config)
+
             comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
             comm.sudo("touch #{path}")
@@ -54,19 +55,19 @@ module VagrantPlugins
 
         def docker_sed_script
           <<-SED.gsub(/^\s+/, '')
-            /^export HTTP_PROXY=/ d
-            /^export NO_PROXY=/ d
-            /^export http_proxy=/ d
-            /^export no_proxy=/ d
+            /^#{@export}HTTP_PROXY=/ d
+            /^#{@export}NO_PROXY=/ d
+            /^#{@export}http_proxy=/ d
+            /^#{@export}no_proxy=/ d
           SED
         end
 
         def docker_config
           <<-CONFIG.gsub(/^\s+/, '')
-            export HTTP_PROXY=#{config.http || ''}
-            export NO_PROXY=#{config.no_proxy || ''}
-            export http_proxy=#{config.http || ''}
-            export no_proxy=#{config.no_proxy || ''}
+            #{@export}HTTP_PROXY=#{config.http || ''}
+            #{@export}NO_PROXY=#{config.no_proxy || ''}
+            #{@export}http_proxy=#{config.http || ''}
+            #{@export}no_proxy=#{config.no_proxy || ''}
           CONFIG
         end
       end
