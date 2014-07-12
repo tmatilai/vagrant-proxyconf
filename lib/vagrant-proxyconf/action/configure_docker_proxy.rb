@@ -20,6 +20,7 @@ module VagrantPlugins
 
         def configure_machine
           logger.info('Writing the proxy configuration to docker config')
+          detect_export
           write_docker_config
         end
 
@@ -36,7 +37,6 @@ module VagrantPlugins
           path = config_path
 
           @machine.communicate.tap do |comm|
-            comm.test('which systemctl') ? @export = '' : @export = 'export '
             sed_script = docker_sed_script
             local_tmp = tempfile(docker_config)
 
@@ -50,6 +50,12 @@ module VagrantPlugins
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
             comm.sudo("service #{docker} restart || /etc/init.d/#{docker} restart")
+          end
+        end
+
+        def detect_export
+          @machine.communicate.tap do |comm|
+            comm.test('which systemctl') ? @export = '' : @export = 'export '
           end
         end
 
