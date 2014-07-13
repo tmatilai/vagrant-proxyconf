@@ -49,7 +49,7 @@ module VagrantPlugins
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
-            comm.sudo("service #{docker} restart || /etc/init.d/#{docker} restart")
+            comm.sudo(service_restart_command)
           end
         end
 
@@ -57,6 +57,12 @@ module VagrantPlugins
           @machine.communicate.tap do |comm|
             comm.test('which systemctl') ? @export = '' : @export = 'export '
           end
+        end
+
+        def service_restart_command
+          ["systemctl restart #{docker}",
+            "service #{docker} restart",
+            "/etc/init.d/#{docker} restart"].join(' || ')
         end
 
         def docker_sed_script
