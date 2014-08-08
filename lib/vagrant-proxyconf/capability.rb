@@ -18,6 +18,11 @@ module VagrantPlugins
         Cap::Linux::EnvProxyConf
       end
 
+      guest_capability 'openbsd', 'env_proxy_conf' do
+        require_relative 'cap/openbsd/env_proxy_conf'
+        Cap::OpenBSD::EnvProxyConf
+      end
+
       guest_capability 'windows', 'env_proxy_conf' do
         require_relative 'cap/windows/env_proxy_conf'
         Cap::Windows::EnvProxyConf
