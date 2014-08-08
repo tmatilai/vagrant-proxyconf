@@ -65,7 +65,7 @@ module VagrantPlugins
             comm.sudo("sed -e '#{sed_script}' #{path} > #{path}.new")
             comm.sudo("cat #{tmp} >> #{path}.new")
             comm.sudo("chmod 0644 #{path}.new")
-            comm.sudo("chown root:root #{path}.new")
+            comm.sudo("chown root #{path}.new")
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
           end
