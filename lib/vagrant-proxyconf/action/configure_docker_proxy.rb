@@ -20,6 +20,7 @@ module VagrantPlugins
 
         def configure_machine
           logger.info('Writing the proxy configuration to docker config')
+          detect_export
           write_docker_config
         end
 
@@ -35,10 +36,10 @@ module VagrantPlugins
           tmp = "/tmp/vagrant-proxyconf"
           path = config_path
 
-          sed_script = docker_sed_script
-          local_tmp = tempfile(docker_config)
-
           @machine.communicate.tap do |comm|
+            sed_script = docker_sed_script
+            local_tmp = tempfile(docker_config)
+
             comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
             comm.sudo("touch #{path}")
@@ -48,25 +49,37 @@ module VagrantPlugins
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv #{path}.new #{path}")
             comm.sudo("rm #{tmp}")
-            comm.sudo("service #{docker} restart || /etc/init.d/#{docker} restart")
+            comm.sudo(service_restart_command)
           end
+        end
+
+        def detect_export
+          @machine.communicate.tap do |comm|
+            comm.test('which systemctl') ? @export = '' : @export = 'export '
+          end
+        end
+
+        def service_restart_command
+          ["systemctl restart #{docker}",
+            "service #{docker} restart",
+            "/etc/init.d/#{docker} restart"].join(' || ')
         end
 
         def docker_sed_script
           <<-SED.gsub(/^\s+/, '')
-            /^export HTTP_PROXY=/ d
-            /^export NO_PROXY=/ d
-            /^export http_proxy=/ d
-            /^export no_proxy=/ d
+            /^#{@export}HTTP_PROXY=/ d
+            /^#{@export}NO_PROXY=/ d
+            /^#{@export}http_proxy=/ d
+            /^#{@export}no_proxy=/ d
           SED
         end
 
         def docker_config
           <<-CONFIG.gsub(/^\s+/, '')
-            export HTTP_PROXY=#{config.http || ''}
-            export NO_PROXY=#{config.no_proxy || ''}
-            export http_proxy=#{config.http || ''}
-            export no_proxy=#{config.no_proxy || ''}
+            #{@export}HTTP_PROXY=#{config.http || ''}
+            #{@export}NO_PROXY=#{config.no_proxy || ''}
+            #{@export}http_proxy=#{config.http || ''}
+            #{@export}no_proxy=#{config.no_proxy || ''}
           CONFIG
         end
       end
