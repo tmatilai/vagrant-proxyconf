@@ -26,14 +26,14 @@ describe VagrantPlugins::ProxyConf::Config::EnvProxy do
 
   context "defaults" do
     subject        { config_with({}) }
-    its(:enabled?) { should be_false }
+    its(:enabled?) { should be_falsey }
     its(:to_s)     { should eq "" }
   end
 
   context "with http config" do
     let(:proxy)    { 'http://proxy.example.com:8888' }
     subject        { config_with({ http: proxy }) }
-    its(:enabled?) { should be_true }
+    its(:enabled?) { should be_truthy }
     its(:to_s)     { should match_lines [
       %Q{export HTTP_PROXY=#{proxy}\n},
       %Q{export http_proxy=#{proxy}\n},
@@ -44,7 +44,7 @@ describe VagrantPlugins::ProxyConf::Config::EnvProxy do
     let(:proxy)    { 'http://proxy.example.com:8888' }
     let(:no_proxy) { 'localhost, 127.0.0.1' }
     subject        { config_with({ http: proxy, no_proxy: no_proxy }) }
-    its(:enabled?) { should be_true }
+    its(:enabled?) { should be_truthy }
     its(:to_s)     { should match_lines [
       %Q{export HTTP_PROXY=#{proxy}\n},
       %Q{export http_proxy=#{proxy}\n},
@@ -57,7 +57,7 @@ describe VagrantPlugins::ProxyConf::Config::EnvProxy do
     let(:proxy)    { 'http://proxy.example.com:8888' }
     before(:each)  { ENV['VAGRANT_ENV_HTTP_PROXY'] = proxy }
     subject        { config_with({ http: 'http://default:3128' }) }
-    its(:enabled?) { should be_true }
+    its(:enabled?) { should be_truthy }
     its(:to_s)     { should match_lines [
       %Q{export HTTP_PROXY=#{proxy}\n},
       %Q{export http_proxy=#{proxy}\n},

@@ -8,13 +8,13 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::SvnProxyConf do
     let(:machine) { double }
 
     it "returns true when svn is installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: '/path/to/svn')
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { '/path/to/svn' }
       expect(described_class.svn_proxy_conf(machine)).to eq '/path/to/svn'
     end
 
     it "returns false when pear is not installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: false)
-      expect(described_class.svn_proxy_conf(machine)).to be_false
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { false }
+      expect(described_class.svn_proxy_conf(machine)).to be_falsey
     end
   end
 

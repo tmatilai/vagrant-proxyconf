@@ -8,7 +8,7 @@ describe VagrantPlugins::ProxyConf::Cap::Util do
     let(:communicator) { double }
 
     before do
-      machine.stub(:communicate => communicator)
+      allow(machine).to receive(:communicate) { communicator }
     end
 
     it "returns the path when the command is installed" do
@@ -25,7 +25,7 @@ describe VagrantPlugins::ProxyConf::Cap::Util do
       expect(communicator).to receive(:execute).
         with('which bar', error_check: false).
         and_return(1)
-      expect(described_class.which(machine, 'bar')).to be_false
+      expect(described_class.which(machine, 'bar')).to be_falsey
     end
   end
 

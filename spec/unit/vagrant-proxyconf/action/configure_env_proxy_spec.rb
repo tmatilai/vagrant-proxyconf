@@ -5,7 +5,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
-    it      { should eq 'env_proxy' }
+    it      { is_expected.to eq 'env_proxy' }
   end
 
 end

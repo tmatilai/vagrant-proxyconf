@@ -5,7 +5,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureAptProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
-    it      { should eq 'apt_proxy' }
+    it      { is_expected.to eq 'apt_proxy' }
   end
 
 end

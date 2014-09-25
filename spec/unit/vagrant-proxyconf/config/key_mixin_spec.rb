@@ -7,6 +7,12 @@ describe VagrantPlugins::ProxyConf::Config::KeyMixin do
     include VagrantPlugins::ProxyConf::Config::KeyMixin
     key :foo
     key :bar
+
+    # Hack to keep rspec 3 description generation happy
+    def respond_to?(method)
+      return false if method == :to_ary
+      super
+    end
   end
 
   class TestDefaultConfig < Vagrant.plugin('2', :config)
@@ -38,8 +44,8 @@ describe VagrantPlugins::ProxyConf::Config::KeyMixin do
     subject { config.merge_defaults(default) }
 
     context 'with no configuration' do
-      it { should be_kind_of config.class }
-      it { should_not be config }
+      it { is_expected.to be_kind_of config.class }
+      it { is_expected.not_to be config }
 
       its(:foo) { should be_nil }
       its(:bar) { should be_nil }

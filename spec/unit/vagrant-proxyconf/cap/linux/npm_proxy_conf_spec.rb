@@ -8,13 +8,13 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::NpmProxyConf do
     let(:machine) { double }
 
     it "returns the path when npm is installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: '/path/to/npm')
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { '/path/to/npm' }
       expect(described_class.npm_proxy_conf(machine)).to eq '/path/to/npm'
     end
 
     it "returns false when npm is not installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: false)
-      expect(described_class.npm_proxy_conf(machine)).to be_false
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { false }
+      expect(described_class.npm_proxy_conf(machine)).to be_falsey
     end
   end
 

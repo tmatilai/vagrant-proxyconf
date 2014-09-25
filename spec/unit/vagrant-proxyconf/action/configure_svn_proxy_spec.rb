@@ -5,7 +5,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureSvnProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
-    it      { should eq 'svn_proxy' }
+    it      { is_expected.to eq 'svn_proxy' }
   end
 
 end

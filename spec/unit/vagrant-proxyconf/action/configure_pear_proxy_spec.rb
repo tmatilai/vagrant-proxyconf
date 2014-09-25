@@ -5,6 +5,6 @@ describe VagrantPlugins::ProxyConf::Action::ConfigurePearProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
-    it      { should eq 'pear_proxy' }
+    it      { is_expected.to eq 'pear_proxy' }
   end
 end
