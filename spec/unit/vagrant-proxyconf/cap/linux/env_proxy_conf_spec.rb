@@ -5,7 +5,7 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::EnvProxyConf do
 
   describe '.env_proxy_conf' do
     let(:subject) { described_class.env_proxy_conf(double) }
-    it { should eq '/etc/profile.d/proxy.sh' }
+    it { is_expected.to eq '/etc/profile.d/proxy.sh' }
   end
 
 end

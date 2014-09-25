@@ -5,13 +5,19 @@ describe VagrantPlugins::ProxyConf::Action::IsEnabled do
   let(:app) { lambda { |env| } }
   let(:env) { { :machine => machine } }
   let(:machine) do
-    double('machine').tap { |machine| machine.stub(:config).and_return(config) }
+    double('machine').tap do |machine|
+      allow(machine).to receive(:config) { config }
+    end
   end
   let(:config) do
-    double('config').tap { |config| config.stub(:proxy => proxy_config) }
+    double('config').tap do |config|
+      allow(config).to receive(:proxy) { proxy_config }
+    end
   end
   let(:proxy_config) do
-    double('proxy_config').tap { |config| config.stub(:enabled => enabled) }
+    double('proxy_config').tap do |config|
+      allow(config).to receive(:enabled) { enabled }
+    end
   end
 
   [false, ''].each do |value|
@@ -20,7 +26,7 @@ describe VagrantPlugins::ProxyConf::Action::IsEnabled do
 
       it "results to falsy" do
         described_class.new(app, {}).call(env)
-        expect(env[:result]).to be_false
+        expect(env[:result]).to be_falsey
       end
     end
   end
@@ -31,7 +37,7 @@ describe VagrantPlugins::ProxyConf::Action::IsEnabled do
 
       it "results to truthy" do
         described_class.new(app, {}).call(env)
-        expect(env[:result]).to be_true
+        expect(env[:result]).to be_truthy
       end
     end
   end

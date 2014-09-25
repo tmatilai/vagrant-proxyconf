@@ -5,6 +5,6 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureNpmProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
-    it      { should eq 'npm_proxy' }
+    it      { is_expected.to eq 'npm_proxy' }
   end
 end

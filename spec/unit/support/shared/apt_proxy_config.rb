@@ -23,44 +23,44 @@ shared_examples "apt proxy config" do |proto|
 
     context "with ip" do
       subject        { config_with(proto => "10.1.2.3") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "10.1.2.3") }
     end
 
     context "with name" do
       subject        { config_with(proto => "proxy.example.com") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "proxy.example.com") }
     end
 
     context "with name and port" do
       subject        { config_with(proto => "acng:8080") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "acng", 8080) }
     end
 
     context "with protocol and name" do
       subject        { config_with(proto => "#{proto}://proxy.foo.tld") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "proxy.foo.tld", nil) }
     end
 
     context "with trailing slash" do
       subject        { config_with(proto => "#{proto}://proxy.foo.tld/") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "proxy.foo.tld/", nil) }
     end
 
     context "with protocol and name and port" do
       subject        { config_with(proto => "#{proto}://prism.nsa.gov:666") }
-      its(:enabled?) { should be_true }
+      its(:enabled?) { should be_truthy }
       its(:to_s)     { should eq conf_line(proto, "prism.nsa.gov", 666) }
     end
 
     ["DIRECT", "direct"].each do |direct|
       context "with #{direct.inspect}" do
         subject        { config_with(proto => direct) }
-        its(:enabled?) { should be_true }
+        its(:enabled?) { should be_truthy }
         its(:to_s)     { should eq conf_line(proto, :direct) }
       end
     end
@@ -68,14 +68,14 @@ shared_examples "apt proxy config" do |proto|
     [false, ""].each do |unset|
       context "with #{unset.inspect}" do
         subject        { config_with(proto => unset) }
-        its(:enabled?) { should be_true }
+        its(:enabled?) { should be_truthy }
         its(:to_s)     { should eq "" }
       end
     end
 
     context "with nil" do
       subject        { config_with(proto => nil) }
-      its(:enabled?) { should be_false }
+      its(:enabled?) { should be_falsey }
       its(:to_s)     { should eq "" }
     end
 

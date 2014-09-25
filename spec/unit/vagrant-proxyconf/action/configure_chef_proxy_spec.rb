@@ -10,7 +10,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
 
     def configure_chef
       action = described_class.new(nil, nil)
-      action.stub(:config => config)
+      allow(action).to receive(:config) { config }
       action.send(:configure_chef, chef)
     end
 

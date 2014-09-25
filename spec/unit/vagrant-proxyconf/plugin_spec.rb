@@ -9,18 +9,18 @@ describe VagrantPlugins::ProxyConf::Plugin do
     end
 
     it "accepts single String argument" do
-      expect(described_class.check_vagrant_version('~> 1.1')).to be_true
-      expect(described_class.check_vagrant_version('1.2')).to be_false
+      expect(described_class.check_vagrant_version('~> 1.1')).to be_truthy
+      expect(described_class.check_vagrant_version('1.2')).to be_falsey
     end
 
     it "accepts an Array argument" do
-      expect(described_class.check_vagrant_version(['>= 1.1', '< 1.3.0.beta'])).to be_true
-      expect(described_class.check_vagrant_version(['>= 1.3'])).to be_false
+      expect(described_class.check_vagrant_version(['>= 1.1', '< 1.3.0.beta'])).to be_truthy
+      expect(described_class.check_vagrant_version(['>= 1.3'])).to be_falsey
     end
 
     it "accepts multiple arguments" do
-      expect(described_class.check_vagrant_version('>= 1.0', '<= 1.3')).to be_true
-      expect(described_class.check_vagrant_version('~> 1.2', '>= 1.2.5')).to be_false
+      expect(described_class.check_vagrant_version('>= 1.0', '<= 1.3')).to be_truthy
+      expect(described_class.check_vagrant_version('~> 1.2', '>= 1.2.5')).to be_falsey
     end
   end
 
@@ -34,7 +34,7 @@ describe VagrantPlugins::ProxyConf::Plugin do
         'VagrantPlugins::ProxyConf::Plugin::VAGRANT_VERSION_REQUIREMENT',
         requirement)
       stub_const('Vagrant::VERSION', vagrant_version)
-      $stderr.stub(:puts)
+      allow($stderr).to receive(:puts)
     end
 
     context "on too old Vagrant version" do
@@ -43,7 +43,7 @@ describe VagrantPlugins::ProxyConf::Plugin do
         expect { subject }.to raise_error(err_msg)
       end
       it "warns" do
-        $stderr.should_receive(:puts).with(err_msg)
+        expect($stderr).to receive(:puts).with(err_msg)
         subject rescue nil
       end
     end

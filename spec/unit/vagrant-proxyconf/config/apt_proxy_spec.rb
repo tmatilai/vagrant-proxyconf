@@ -12,7 +12,7 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
 
   context "defaults" do
     subject        { config_with({}) }
-    its(:enabled?) { should be_false }
+    its(:enabled?) { should be_falsey }
     its(:to_s)     { should eq "" }
   end
 
@@ -22,7 +22,7 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
 
   context "with both http and https proxies" do
     subject        { config_with(http: "10.2.3.4", https: "ssl-proxy:8443") }
-    its(:enabled?) { should be_true }
+    its(:enabled?) { should be_truthy }
     its(:to_s)     { should match conf_line_pattern("http", "10.2.3.4") }
     its(:to_s)     { should match conf_line_pattern("https", "ssl-proxy", 8443) }
   end

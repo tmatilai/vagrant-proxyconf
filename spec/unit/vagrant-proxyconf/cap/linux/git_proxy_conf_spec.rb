@@ -8,13 +8,13 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::GitProxyConf do
     let(:machine) { double }
 
     it "returns the path when git is installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: '/path/to/git')
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { '/path/to/git' }
       expect(described_class.git_proxy_conf(machine)).to eq '/path/to/git'
     end
 
     it "returns false when git is not installed" do
-      VagrantPlugins::ProxyConf::Cap::Util.stub(which: false)
-      expect(described_class.git_proxy_conf(machine)).to be_false
+      allow(VagrantPlugins::ProxyConf::Cap::Util).to receive(:which) { false }
+      expect(described_class.git_proxy_conf(machine)).to be_falsey
     end
   end
 
