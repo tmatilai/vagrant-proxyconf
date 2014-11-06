@@ -21,12 +21,12 @@ The plugin can set:
 * generic `http_proxy` etc. environment variables that many programs support
 * default proxy configuration for all Chef provisioners
 * proxy configuration for Apt
-* proxy configuration for docker
+* proxy configuration for Docker
 * proxy configuration for Git
 * proxy configuration for npm
-* proxy configuration for Yum
 * proxy configuration for PEAR
 * proxy configuration for Subversion
+* proxy configuration for Yum
 * simple proxy configuration for Windows
 
 ## Quick start
