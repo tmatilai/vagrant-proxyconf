@@ -22,9 +22,11 @@ The plugin can set:
 * default proxy configuration for all Chef provisioners
 * proxy configuration for Apt
 * proxy configuration for docker
+* proxy configuration for Git
 * proxy configuration for npm
 * proxy configuration for Yum
 * proxy configuration for PEAR
+* proxy configuration for Subversion
 * simple proxy configuration for Windows
 
 ## Quick start
@@ -183,6 +185,76 @@ VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 #### Running apt-cacher-ng on a Vagrant box
 
 [apt-cacher-box](https://github.com/tmatilai/apt-cacher-box) gives an example for setting up apt-cacher proxy server in a Vagrant VM.
+
+### Git
+
+Configures Git to use the specified proxy settings.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.git_proxy.http  = "http://192.168.33.1:3142"
+  # ... other stuff
+end
+```
+
+#### Configuration keys
+
+* `config.git_proxy.http` - The proxy for Git
+
+#### Possible values
+
+* If the keys is unset or `nil`, the current configuration is not modified.
+* A proxy can be specified in the form of _http://[user:pass@]host:port_.
+* Empty string (`""`) or `false` disables the proxy from the configuration.
+
+#### Environment variables
+
+* `VAGRANT_GIT_HTTP_PROXY`
+
+This also overrides the Vagrantfile configuration. To disable or remove the proxy use an empty value.
+
+For example to spin up a VM, run:
+
+```sh
+VAGRANT_GIT_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
+```
+
+### Subversion
+
+Configures Subversion to use the specified proxy settings.
+
+#### Example Vagrantfile
+
+```ruby
+Vagrant.configure("2") do |config|
+  config.svn_proxy.http  = "http://192.168.33.1:3142"
+  # ... other stuff
+end
+```
+
+#### Configuration keys
+
+* `config.svn_proxy.http` - The proxy for Subversion
+
+#### Possible values
+
+* If the keys is unset or `nil`, the current configuration is not modified.
+* A proxy can be specified in the form of _http://[user:pass@]host:port_.
+* Empty string (`""`) or `false` disables the proxy from the configuration.
+
+#### Environment variables
+
+* `VAGRANT_SVN_HTTP_PROXY`
+
+This also overrides the Vagrantfile configuration. To disable or remove the proxy use an empty value.
+
+For example to spin up a VM, run:
+
+```sh
+VAGRANT_SVN_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
+```
 
 ### Yum
 
