@@ -59,15 +59,15 @@ module VagrantPlugins
           local_tmp = tempfile(environment_config)
 
           @machine.communicate.tap do |comm|
-            comm.sudo("\\rm #{tmp}", error_check: false)
+            comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
-            comm.sudo("\\touch #{path}")
-            comm.sudo("\\sed -e '#{sed_script}' #{path} > #{path}.new")
-            comm.sudo("\\cat #{tmp} >> #{path}.new")
-            comm.sudo("\\chmod 0644 #{path}.new")
-            comm.sudo("\\chown root:root #{path}.new")
-            comm.sudo("\\mv #{path}.new #{path}")
-            comm.sudo("\\rm #{tmp}")
+            comm.sudo("touch #{path}")
+            comm.sudo("sed -e '#{sed_script}' #{path} > #{path}.new")
+            comm.sudo("cat #{tmp} >> #{path}.new")
+            comm.sudo("chmod 0644 #{path}.new")
+            comm.sudo("chown root:root #{path}.new")
+            comm.sudo("mv #{path}.new #{path}")
+            comm.sudo("rm #{tmp}")
           end
         end
 

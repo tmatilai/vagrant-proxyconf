@@ -79,12 +79,12 @@ module VagrantPlugins
 
           logger.debug "Configuration (#{path}):\n#{config}"
           @machine.communicate.tap do |comm|
-            comm.sudo("\\rm #{tmp}", error_check: false)
+            comm.sudo("rm #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
-            comm.sudo("\\chmod #{opts[:mode] || '0644'} #{tmp}")
-            comm.sudo("\\chown #{opts[:owner] || 'root:root'} #{tmp}")
-            comm.sudo("\\mkdir -p #{File.dirname(path)}")
-            comm.sudo("\\mv #{tmp} #{path}")
+            comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
+            comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
+            comm.sudo("mkdir -p #{File.dirname(path)}")
+            comm.sudo("mv #{tmp} #{path}")
           end
         end
 

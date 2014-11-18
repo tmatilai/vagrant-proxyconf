@@ -14,10 +14,10 @@ module VagrantPlugins
               src_file='/usr/lib/systemd/system/docker.service'
               tmp_file='/tmp/docker.service'
               env_file='EnvironmentFile=-\/etc\/default\/docker'
-              comm.sudo("\\sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
+              comm.sudo("sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
 
-              comm.sudo('\\mv /tmp/docker.service /etc/systemd/system/')
-              comm.sudo('\\systemctl daemon-reload')
+              comm.sudo('mv /tmp/docker.service /etc/systemd/system/')
+              comm.sudo('systemctl daemon-reload')
             end
             '/etc/default/docker'
           end
