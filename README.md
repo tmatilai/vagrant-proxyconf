@@ -140,40 +140,36 @@ Vagrant.configure("2") do |config|
 end
 ```
 
-### Apt
+### Configuration for applications
+Configures applications to use proxy settings. The configurations will be written to
+configuration files for each application.
 
-Configures Apt to use the specified proxy settings. The configuration will be written to _/etc/apt/apt.conf.d/01proxy_ on the guest.
+#### Configurable applications
+Following applications can be configured.
+Configurations are based on default configuration(`config.proxy.*`) and
+can be overridden except SVN.
+SVN configuration is not set if no SVN specific configuration.
+
+|  Application           | Base conf.     | Specific conf.      | Env. var.     |
+| -----------------------|----------------|---------------------|---------------|
+| configure_apt_proxy    | config.proxy.* | config.apt_proxy.*  | VAGRANT_APT_* |
+| configure_git_proxy    | config.proxy.* | config.git_proxy.*  | VAGRANT_GIT_* |
+| configure_svn_proxy    | N/A            | config.svn_proxy.*  | VAGRANT_SVN_* |
+| configure_yum_proxy    | config.proxy.* | config.yum_proxy.*  | VAGRANT_YUM_* |
 
 #### Example Vagrantfile
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.apt_proxy.http  = "http://192.168.33.1:3142"
+  config.proxy.http     = "http://192.168.0.2:3128/"
+  config.proxy.https    = "http://192.168.0.2:3128/"
+  config.proxy.no_proxy = "localhost,127.0.0.1,.example.com"
+  config.apt_proxy.http = "http://192.168.33.1:3142"
   config.apt_proxy.https = "DIRECT"
   # ... other stuff
 end
 ```
-
-#### Configuration keys
-
-* `config.apt_proxy.http`  - The proxy for HTTP URIs
-* `config.apt_proxy.https` - The proxy for HTTPS URIs
-* `config.apt_proxy.ftp`   - The proxy for FTP URIs
-
-#### Possible values
-
-* If all keys are unset or `nil`, no configuration is written or modified.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* Empty string (`""`) or `false` in any key also force the configuration file to be written, but without configuration for that scheme. Can be used to clear the old configuration and/or override a global setting.
-* `"DIRECT"` can be used to specify that no proxy should be used. This is mostly useful for disabling proxy for HTTPS URIs when HTTP proxy is set (as Apt defaults to the latter).
-* Please refer to [apt.conf(5)](http://manpages.debian.net/man/5/apt.conf) manual for more information.
-
 #### Environment variables
-
-* `VAGRANT_APT_HTTP_PROXY`
-* `VAGRANT_APT_HTTPS_PROXY`
-* `VAGRANT_APT_FTP_PROXY`
-
 These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
 
 For example to spin up a VM, run:
@@ -182,114 +178,6 @@ For example to spin up a VM, run:
 VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
-#### Running apt-cacher-ng on a Vagrant box
-
-[apt-cacher-box](https://github.com/tmatilai/apt-cacher-box) gives an example for setting up apt-cacher proxy server in a Vagrant VM.
-
-### Git
-
-Configures Git to use the specified proxy settings.
-
-#### Example Vagrantfile
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.git_proxy.http  = "http://192.168.33.1:3142"
-  # ... other stuff
-end
-```
-
-#### Configuration keys
-
-* `config.git_proxy.http` - The proxy for Git
-
-#### Possible values
-
-* If the keys is unset or `nil`, the current configuration is not modified.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* Empty string (`""`) or `false` disables the proxy from the configuration.
-
-#### Environment variables
-
-* `VAGRANT_GIT_HTTP_PROXY`
-
-This also overrides the Vagrantfile configuration. To disable or remove the proxy use an empty value.
-
-For example to spin up a VM, run:
-
-```sh
-VAGRANT_GIT_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
-```
-
-### Subversion
-
-Configures Subversion to use the specified proxy settings.
-
-#### Example Vagrantfile
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.svn_proxy.http  = "http://192.168.33.1:3142"
-  # ... other stuff
-end
-```
-
-#### Configuration keys
-
-* `config.svn_proxy.http` - The proxy for Subversion
-
-#### Possible values
-
-* If the keys is unset or `nil`, the current configuration is not modified.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* Empty string (`""`) or `false` disables the proxy from the configuration.
-
-#### Environment variables
-
-* `VAGRANT_SVN_HTTP_PROXY`
-
-This also overrides the Vagrantfile configuration. To disable or remove the proxy use an empty value.
-
-For example to spin up a VM, run:
-
-```sh
-VAGRANT_SVN_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
-```
-
-### Yum
-
-Configures Yum to use the specified proxy settings. The configuration will be inserted to _/etc/yum.conf_ on the guest.
-
-#### Example Vagrantfile
-
-```ruby
-Vagrant.configure("2") do |config|
-  config.yum_proxy.http  = "http://192.168.33.1:3142"
-  # ... other stuff
-end
-```
-
-#### Configuration keys
-
-* `config.yum_proxy.http` - The proxy for yum
-
-#### Possible values
-
-* If the keys is unset or `nil`, the current configuration is not modified.
-* A proxy can be specified in the form of _http://[user:pass@]host:port_.
-* Empty string (`""`) or `false` disables the proxy from the configuration.
-
-#### Environment variables
-
-* `VAGRANT_YUM_HTTP_PROXY`
-
-This also overrides the Vagrantfile configuration. To disable or remove the proxy use an empty value.
-
-For example to spin up a VM, run:
-
-```sh
-VAGRANT_YUM_HTTP_PROXY="http://proxy.example.com:8123" vagrant up
-```
 
 ## Related plugins and projects
 
