@@ -12,12 +12,16 @@ module VagrantPlugins
 
             machine.communicate.tap do |comm|
               src_file='/usr/lib/systemd/system/docker.service'
+              dst_file='/etc/systemd/system/docker.service'
               tmp_file='/tmp/docker.service'
               env_file='EnvironmentFile=-\/etc\/default\/docker'
               comm.sudo("sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
-
-              comm.sudo('mv /tmp/docker.service /etc/systemd/system/')
-              comm.sudo('systemctl daemon-reload')
+              unless comm.test("diff #{tmp_file} #{dst_file}")
+                # update config and restart docker when config changed
+                comm.sudo("mv #{tmp_file} #{dst_file}")
+                comm.sudo('systemctl daemon-reload')
+              end
+              comm.sudo("rm -f #{tmp}")
             end
             '/etc/default/docker'
           end
