@@ -124,6 +124,8 @@ VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ### Disabling the plugin
 
 The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`). This can be useful to for example disable it for some provider.
+This disabling keeps proxy configurations for applications on the guest.
+The configurations must be cleared before disabling if needed.
 
 #### Example Vagrantfile
 
