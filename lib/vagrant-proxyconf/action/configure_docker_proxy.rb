@@ -45,15 +45,19 @@ module VagrantPlugins
             comm.sudo("touch #{path}")
             comm.sudo("sed -e '#{sed_script}' #{path} > #{path}.new")
             comm.sudo("cat #{tmp} >> #{path}.new")
-            unless comm.test("diff #{path}.new #{path}")
-              # update config and restart docker when config changed
-              comm.sudo("chmod 0644 #{path}.new")
-              comm.sudo("chown root:root #{path}.new")
-              comm.sudo("mv #{path}.new #{path}")
-              comm.sudo(service_restart_command)
-            end
+            update_config(path)
             comm.sudo("rm -f #{tmp} #{path}.new")
           end
+        end
+
+        def update_config(path)
+          return if comm.test("diff #{path}.new #{path}")
+
+          # update config and restart docker when config changed
+          comm.sudo("chmod 0644 #{path}.new")
+          comm.sudo("chown root:root #{path}.new")
+          comm.sudo("mv #{path}.new #{path}")
+          comm.sudo(service_restart_command)
         end
 
         def detect_export
