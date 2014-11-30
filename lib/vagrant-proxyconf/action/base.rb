@@ -14,7 +14,7 @@ module VagrantPlugins
         def call(env)
           @machine = env[:machine]
 
-          if !config.enabled?
+          if disabled?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
           elsif !supported?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
@@ -104,6 +104,16 @@ module VagrantPlugins
 
         def cap_name
           "#{config_name}_conf".to_sym
+        end
+
+        def disabled?
+          enabled = @machine.config.proxy.enabled
+          return true if enabled == false || enabled == ''
+
+          app_name = config_name.gsub(/_proxy/, '').to_sym
+          return enabled[app_name] == false if enabled.respond_to?(:key)
+
+          !config.enabled?
         end
 
         def supported?
