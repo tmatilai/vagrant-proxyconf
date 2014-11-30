@@ -23,15 +23,15 @@ module VagrantPlugins
         end
 
         def set_or_delete_proxy(key, value)
-          command = "#{npm_path} config "
+          command = "#{npm_path} config --global "
           if value
             command << "set #{key} #{escape(value)}"
           else
             command << "delete #{key}"
 
-            # ensure that the .npmrc file exists to work around
+            # ensure that the npmrc file exists to work around
             # https://github.com/npm/npm/issues/5065
-            @machine.communicate.sudo("touch ~/.npmrc")
+            @machine.communicate.sudo("#{npm_path} config --global set #{key} foo")
           end
           @machine.communicate.sudo(command)
         end
