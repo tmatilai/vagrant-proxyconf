@@ -21,13 +21,14 @@ module VagrantPlugins
         end
 
         def configure_machine
-          command = "#{git_path} config --system "
           if config.http
-            command << "http.proxy #{config.http}"
+            @machine.communicate.sudo(
+              "#{git_path} config --system http.proxy #{config.http}")
           else
-            command << "--unset-all http.proxy"
+            @machine.communicate.sudo(
+              "#{git_path} config --system --unset-all http.proxy",
+              error_check: false)
           end
-          @machine.communicate.sudo(command)
         end
 
         def git_path
