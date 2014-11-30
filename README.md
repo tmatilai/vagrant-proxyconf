@@ -125,7 +125,21 @@ VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 
 ### Disabling the plugin
 
-The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`). This can be useful to for example disable it for some provider.
+The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`).
+This can be useful to for example disable it for some provider.
+Specific applications can be skipped by setting `config.proxy.enabled` to
+a hash( like `{ svn: false }`).
+This disabling keeps proxy configurations for applications on the guest.
+The configurations must be cleared before disabling if needed.
+
+```ruby
+config.proxy.enabled         # => all applications enabled(default)
+config.proxy.enabled = true  # => all applications enabled
+config.proxy.enabled = { svn: false, docker: false }
+                             # => specific applications disabled
+config.proxy.enabled = ""    # => all applications disabled
+config.proxy.enabled = false # => all applications disabled
+```
 
 #### Example Vagrantfile
 

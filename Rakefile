@@ -28,6 +28,7 @@ Tailor::RakeTask.new do |task|
     style.max_line_length 120, level: :warn
     # allow vertical alignment of `let(:foo) { block }` blocks
     style.spaces_before_lbrace 1, level: :off
+    style.indentation_spaces 2, level: :off
   end
 end
 
