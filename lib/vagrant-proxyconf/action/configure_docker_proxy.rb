@@ -45,12 +45,12 @@ module VagrantPlugins
             comm.sudo("touch #{path}")
             comm.sudo("sed -e '#{sed_script}' #{path} > #{path}.new")
             comm.sudo("cat #{tmp} >> #{path}.new")
-            update_config(path)
+            update_config(comm, path)
             comm.sudo("rm -f #{tmp} #{path}.new")
           end
         end
 
-        def update_config(path)
+        def update_config(comm, path)
           return if comm.test("diff #{path}.new #{path}")
 
           # update config and restart docker when config changed
