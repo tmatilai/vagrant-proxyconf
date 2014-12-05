@@ -11,8 +11,6 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
   describe '#disabled?' do
     subject do
       conf = described_class.new(double, double)
-      allow(conf).to receive_message_chain(:config, :enabled?)
-        .and_return(@config_enabled)
       machine = double('machine')
       allow(machine).to receive_message_chain(:config, :proxy, :enabled)
         .and_return(@config_proxy_enabled)
@@ -20,52 +18,39 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
       conf.send(:disabled?)
     end
 
-    context 'when both config and proxy are enabled' do
+    context 'when config proxy is enabled' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = true
         is_expected.to eq false
       end
     end
-    context 'when config is enabled and config proxy is not enabled' do
+    context 'when config proxy is not enabled' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = false
         is_expected.to eq true
       end
     end
-    context 'when config is enabled and config proxy is empty string' do
+    context 'when config proxy is empty string' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = ''
         is_expected.to eq true
       end
     end
-    context 'when config is not enabled and proxy is enabled' do
-      it do
-        @config_enabled = false
-        @config_proxy_enabled = true
-        is_expected.to eq true
-      end
-    end
 
-    context 'when both config and target proxy are enabled' do
+    context 'when target config proxy is enabled' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = { env: true }
         is_expected.to eq false
       end
     end
-    context 'when config is enabled and target proxy target is not enabled' do
+    context 'when target config proxy target is not enabled' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = { env: false }
         is_expected.to eq true
       end
     end
-    context 'when config is enabled and other proxy are not enabled' do
+    context 'when other config proxy are not enabled' do
       it do
-        @config_enabled = true
         @config_proxy_enabled = {
           svn: false,
           apt: false,
