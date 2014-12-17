@@ -33,6 +33,7 @@ module VagrantPlugins
           b.use Builtin::Call, IsEnabled do |env, b2|
             next if !env[:result]
 
+            b2.use ConfigureDockerProxy
             b2.use ConfigureGitProxy
             b2.use ConfigureNpmProxy
             b2.use ConfigurePearProxy
