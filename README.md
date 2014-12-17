@@ -167,7 +167,7 @@ SVN configuration is not set if no SVN specific configuration.
 |  Application           | Base conf.     | Specific conf.      | Env. var.     |
 | -----------------------|----------------|---------------------|---------------|
 | configure_apt_proxy    | config.proxy.* | config.apt_proxy.*  | VAGRANT_APT_* |
-| configure_git_proxy    | config.proxy.* | config.git_proxy.*  | VAGRANT_GIT_* |
+| configure_git_proxy    | N/A            | config.git_proxy.*  | VAGRANT_GIT_* |
 | configure_svn_proxy    | N/A            | config.svn_proxy.*  | VAGRANT_SVN_* |
 | configure_yum_proxy    | config.proxy.* | config.yum_proxy.*  | VAGRANT_YUM_* |
 
