@@ -44,7 +44,7 @@ module VagrantPlugins
         # @return [Array] all Chef provisioners
         def chef_provisioners
           @machine.config.vm.provisioners.select do |prov|
-            [:chef_solo, :chef_client].include?(prov.name)
+            [:chef_solo, :chef_client].include?(prov.type)
           end
         end
 
