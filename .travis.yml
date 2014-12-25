@@ -1,4 +1,6 @@
 language: ruby
+cache: bundler
+sudo: false
 
 before_install:
   - rvm @global do gem uninstall bundler --all --executables
