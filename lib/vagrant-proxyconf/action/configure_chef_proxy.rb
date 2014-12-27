@@ -44,7 +44,12 @@ module VagrantPlugins
         # @return [Array] all Chef provisioners
         def chef_provisioners
           @machine.config.vm.provisioners.select do |prov|
-            [:chef_solo, :chef_client].include?(prov.type)
+            # Since Vagrant > 1.7 the provisioner type is returned by the prov#type method
+            # (it used to be prov#name in older versions). Vagrant 1.7.0 broke prov#name
+            # so we rely on prov#type when possible and fallback to prov#name when not.
+            # See github issues #101 and mitchellh/vagrant#5069.
+            prov_type_method = [:type, :name].detect { |meth| prov.respond_to?(meth) }
+            [:chef_solo, :chef_client].include?(prov.public_send(prov_type_method))
           end
         end
 
