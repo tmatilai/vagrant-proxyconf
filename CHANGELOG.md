@@ -1,5 +1,19 @@
 # 1.4.1 / _Unreleased_
 
+Features:
+
+  - Ignore specific applications by passing a hash to `config.proxy.enabled` ([GH-93][])
+
+Improvements:
+
+  - Add -f option for mv and rm commands to overrides any -i or -n options in shell aliases ([GH-90][])
+  - Use system-wide configuration for NPM ([GH-91][])
+  - Avoid restarting docker when configuration doesn't change ([GH-92][])
+  - Fix Chef provisioner detection compatibility with Vagrant 1.7+ ([GH-103][])
+
+Bug fixes:
+
+  - Don't error if removing non-existing git proxy configuration ([GH-94][])
 
 # 1.4.0 / 2014-09-28
 
@@ -184,3 +198,9 @@ Bug fixes:
 [GH-63]: https://github.com/tmatilai/vagrant-proxyconf/issues/63 "Issue 63"
 [GH-67]: https://github.com/tmatilai/vagrant-proxyconf/issues/67 "Issue 67"
 [GH-69]: https://github.com/tmatilai/vagrant-proxyconf/issues/69 "Issue 69"
+[GH-90]: https://github.com/tmatilai/vagrant-proxyconf/issues/90 "Issue 90"
+[GH-91]: https://github.com/tmatilai/vagrant-proxyconf/issues/91 "Issue 91"
+[GH-92]: https://github.com/tmatilai/vagrant-proxyconf/issues/92 "Issue 92"
+[GH-93]: https://github.com/tmatilai/vagrant-proxyconf/issues/93 "Issue 93"
+[GH-94]: https://github.com/tmatilai/vagrant-proxyconf/issues/94 "Issue 94"
+[GH-103]: https://github.com/tmatilai/vagrant-proxyconf/issues/103 "Issue 103"
