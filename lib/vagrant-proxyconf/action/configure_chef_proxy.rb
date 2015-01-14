@@ -6,6 +6,10 @@ module VagrantPlugins
     class Action
       # Action for configuring Chef provisioners
       class ConfigureChefProxy
+
+        # Array of Chef provisioner types which include proxy configuration
+        CHEF_PROVISIONER_TYPES = [:chef_client, :chef_solo, :chef_zero]
+
         def initialize(app, env)
           @app = app
         end
@@ -44,12 +48,13 @@ module VagrantPlugins
         # @return [Array] all Chef provisioners
         def chef_provisioners
           @machine.config.vm.provisioners.select do |prov|
-            # Since Vagrant > 1.7 the provisioner type is returned by the prov#type method
-            # (it used to be prov#name in older versions). Vagrant 1.7.0 broke prov#name
-            # so we rely on prov#type when possible and fallback to prov#name when not.
-            # See github issues #101 and mitchellh/vagrant#5069.
-            prov_type_method = [:type, :name].detect { |meth| prov.respond_to?(meth) }
-            [:chef_solo, :chef_client].include?(prov.public_send(prov_type_method))
+            # Vagrant 1.7+ uses #type, earlier versions #name
+            if prov.respond_to?(:type)
+              type = prov.type
+            else
+              type = prov.name
+            end
+            CHEF_PROVISIONER_TYPES.include?(type)
           end
         end
 
