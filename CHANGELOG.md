@@ -3,6 +3,7 @@
 Features:
 
   - Ignore specific applications by passing a hash to `config.proxy.enabled` ([GH-93][])
+  - Support the `chef_zero` provisioner in Vagrant 1.7+ ([GH-105][])
 
 Improvements:
 
@@ -204,3 +205,4 @@ Bug fixes:
 [GH-93]: https://github.com/tmatilai/vagrant-proxyconf/issues/93 "Issue 93"
 [GH-94]: https://github.com/tmatilai/vagrant-proxyconf/issues/94 "Issue 94"
 [GH-103]: https://github.com/tmatilai/vagrant-proxyconf/issues/103 "Issue 103"
+[GH-105]: https://github.com/tmatilai/vagrant-proxyconf/issues/105 "Issue 105"
