@@ -21,7 +21,7 @@ module VagrantPlugins
                 comm.sudo("mv -f #{tmp_file} #{dst_file}")
                 comm.sudo('systemctl daemon-reload')
               end
-              comm.sudo("rm -f #{tmp}")
+              comm.sudo("rm -f #{tmp_file}")
             end
             '/etc/default/docker'
           end
