@@ -32,8 +32,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureYumProxy do
     end
 
     context "with special characters" do
-      let(:http) { %q{http://x*y:a(b@proxy.com:8080} }
-      it { is_expected.to eq %q{-v proxy=http://proxy.com:8080 -v user=x\\*y -v pass=a\\(b} }
+      let(:http) { %q{http://x*y:a(%28b@proxy.com:8080} }
+      it { is_expected.to eq %q{-v proxy=http://proxy.com:8080 -v user=x\\*y -v pass=a\\(\\(b} }
     end
   end
 end
