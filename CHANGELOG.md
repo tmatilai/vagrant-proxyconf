@@ -1,4 +1,8 @@
-# 1.5.1 / _Unreleased_
+# 1.5.1 / 2015-07-25
+
+Bug fixes:
+
+  - Fix docker configuration ([GH-106][])
 
 
 # 1.5.0 / 2015-01-15
@@ -209,3 +213,4 @@ Bug fixes:
 [GH-94]: https://github.com/tmatilai/vagrant-proxyconf/issues/94 "Issue 94"
 [GH-103]: https://github.com/tmatilai/vagrant-proxyconf/issues/103 "Issue 103"
 [GH-105]: https://github.com/tmatilai/vagrant-proxyconf/issues/105 "Issue 105"
+[GH-106]: https://github.com/tmatilai/vagrant-proxyconf/issues/106 "Issue 106"
