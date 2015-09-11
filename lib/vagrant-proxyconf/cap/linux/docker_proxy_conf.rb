@@ -17,6 +17,21 @@ module VagrantPlugins
               "/etc/sysconfig/#{docker_command}"
             elsif machine.communicate.test('ls /var/lib/boot2docker/')
               "/var/lib/boot2docker/profile"
+            elsif machine.communicate.test('ps -p1 | grep systemd')
+              machine.communicate.tap do |comm|
+                src_file = "/lib/systemd/system/#{docker_command}.service"
+                dst_file = "/etc/systemd/system/#{docker_command}.service"
+                tmp_file = "/tmp/#{docker_command}.service"
+                env_file = "EnvironmentFile=-\\/etc\\/default\\/#{docker_command}"
+                comm.sudo("sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
+                unless comm.test("diff #{tmp_file} #{dst_file}")
+                  # update config and restart docker when config changed
+                  comm.sudo("mv -f #{tmp_file} #{dst_file}")
+                  comm.sudo('systemctl daemon-reload')
+                end
+                comm.sudo("rm -f #{tmp_file}")
+              end
+              "/etc/default/#{docker_command}"
             else
               "/etc/default/#{docker_command}"
             end
