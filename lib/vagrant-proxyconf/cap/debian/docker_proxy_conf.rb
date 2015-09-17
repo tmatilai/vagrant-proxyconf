@@ -17,7 +17,11 @@ module VagrantPlugins
               dst_file = '/etc/systemd/system/docker.service'
               tmp_file = '/tmp/docker.service'
               env_file = 'EnvironmentFile=-\/etc\/default\/docker'
-              comm.sudo("sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
+              if comm.test("grep -q -e '#{env_file}' #{src_file}")
+                comm.sudo("cp -p #{src_file} #{tmp_file}")
+              else
+                comm.sudo("sed -e 's/\\[Service\\]/[Service]\\n#{env_file}/g' #{src_file} > #{tmp_file}")
+              end
               unless comm.test("diff #{tmp_file} #{dst_file}")
                 # update config and restart docker when config changed
                 comm.sudo("mv -f #{tmp_file} #{dst_file}")
