@@ -6,11 +6,17 @@ module VagrantPlugins
       module Debian
         # Capability for docker proxy configuration
         module DockerProxyConf
-          CONFIG_PATH = '/etc/default/docker'
+          CONFIG_DIR = '/etc/default/'
+
           # @return [String, false] the path to docker or `false` if not found
           def self.docker_proxy_conf(machine)
-            return false unless Util.which(machine, 'docker')
-            return CONFIG_PATH unless Util.which(machine, 'systemctl')
+            docker_command = 'docker'    if Util.which(machine, 'docker')
+            docker_command = 'docker.io' if Util.which(machine, 'docker.io')
+
+            return false if docker_command.nil?
+
+            config_path = CONFIG_DIR + docker_command
+            return config_path unless Util.which(machine, 'systemctl')
 
             machine.communicate.tap do |comm|
               src_file = '/lib/systemd/system/docker.service'
@@ -29,7 +35,7 @@ module VagrantPlugins
               end
               comm.sudo("rm -f #{tmp_file}")
             end
-            CONFIG_PATH
+            config_path
           end
         end
       end
