@@ -17,10 +17,10 @@ module VagrantPlugins
             return config_path unless Util.which(machine, 'systemctl')
 
             machine.communicate.tap do |comm|
-              src_file = '/lib/systemd/system/docker.service'
-              dst_file = '/etc/systemd/system/docker.service'
-              tmp_file = '/tmp/docker.service'
-              env_file = 'EnvironmentFile=-\/etc\/default\/docker'
+              src_file = "/lib/systemd/system/#{docker_command}.service"
+              dst_file = "/etc/systemd/system/#{docker_command}.service"
+              tmp_file = "/tmp/#{docker_command}.service"
+              env_file = "EnvironmentFile=-\\/etc\\/default\\/#{docker_command}"
               if comm.test("grep -q -e '#{env_file}' #{src_file}")
                 comm.sudo("cp -p #{src_file} #{tmp_file}")
               else
