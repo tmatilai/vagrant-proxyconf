@@ -10,9 +10,7 @@ module VagrantPlugins
 
           # @return [String, false] the path to docker or `false` if not found
           def self.docker_proxy_conf(machine)
-            docker_command = 'docker'    if Util.which(machine, 'docker')
-            docker_command = 'docker.io' if Util.which(machine, 'docker.io')
-
+            docker_command = find_docker_command(machine)
             return false if docker_command.nil?
 
             config_path = CONFIG_DIR + docker_command
@@ -36,6 +34,14 @@ module VagrantPlugins
               comm.sudo("rm -f #{tmp_file}")
             end
             config_path
+          end
+
+          private
+
+          def self.find_docker_command(machine)
+            return 'docker'    if Util.which(machine, 'docker')
+            return 'docker.io' if Util.which(machine, 'docker.io')
+            nil
           end
         end
       end
