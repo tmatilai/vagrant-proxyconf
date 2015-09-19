@@ -18,6 +18,11 @@ module VagrantPlugins
         Cap::CoreOS::DockerProxyConf
       end
 
+      guest_capability 'debian', 'docker_proxy_conf' do
+        require_relative 'cap/debian/docker_proxy_conf'
+        Cap::Debian::DockerProxyConf
+      end
+
       guest_capability 'linux', 'env_proxy_conf' do
         require_relative 'cap/linux/env_proxy_conf'
         Cap::Linux::EnvProxyConf
