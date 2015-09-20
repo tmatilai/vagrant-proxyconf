@@ -11,13 +11,7 @@ module VagrantPlugins
       #   @return [String] the host
       # @!attribute [r] port
       #   @return [String] the port
-      # @!attribute [r] user
-      #   @return [String] the username
-      def_delegators :@uri, :host, :port, :user
-
-      # @!attribute [r] pass
-      #   @return [String] the password
-      def_delegator :@uri, :password, :pass
+      def_delegators :@uri, :host, :port
 
       # @param uri [String] the URI including optional userinfo
       def initialize(uri)
@@ -34,6 +28,18 @@ module VagrantPlugins
         else
           "#{@uri.scheme}://#{host}:#{port}"
         end
+      end
+
+      # @return [String] the username
+      def user
+        return URI.decode(@uri.user) if @uri.user
+        @uri.user
+      end
+
+      # @return [String] the password
+      def pass
+        return URI.decode(@uri.password) if @uri.password
+        @uri.password
       end
 
       alias_method :to_s, :uri
