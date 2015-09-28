@@ -45,6 +45,24 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureChefProxy do
       end
     end
 
+    context "with specified default configurations in URI encoded" do
+      before :each do
+        config.http  = 'http://bar%23:baz%25@foo:1234'
+        config.https = false
+
+        configure_chef
+      end
+
+      it "configures chef" do
+        expect(chef.http_proxy).to  eq 'http://foo:1234'
+        expect(chef.http_proxy_user).to eq 'bar#'
+        expect(chef.http_proxy_pass).to eq 'baz%'
+        expect(chef.https_proxy).to be_nil
+        expect(chef.https_proxy_user).to be_nil
+        expect(chef.https_proxy_pass).to be_nil
+      end
+    end
+
     context "with specified chef configurations" do
       before :each do
         chef.http_proxy = 'http://proxy:8080/'

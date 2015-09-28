@@ -95,4 +95,13 @@ describe VagrantPlugins::ProxyConf::UserinfoURI do
     its(:pass) { should be_nil }
   end
 
+  context "with uri_encoded" do
+    let(:uri)          { 'http://foo%25:bar%23123@proxy.example.com:8123/' }
+    its(:to_s)         { should eq 'http://proxy.example.com:8123' }
+    its(:uri)          { should eq 'http://proxy.example.com:8123' }
+    its(:host)         { should eq 'proxy.example.com' }
+    its(:port)         { should eq 8123 }
+    its(:user)         { should eq 'foo%' }
+    its(:pass)         { should eq 'bar#123' }
+  end
 end
