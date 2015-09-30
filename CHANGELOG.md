@@ -1,3 +1,11 @@
+# 1.5.2
+
+Improvements:
+
+  - Support URI-encorded UserInfo for Chef, SVN, Yum ([GH-130][])
+  - Support docker on Debian/Ubuntu wiht systemd ([GH-133][])
+
+
 # 1.5.1 / 2015-07-25
 
 Bug fixes:
