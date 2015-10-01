@@ -1,17 +1,15 @@
-# 1.5.2
+# 1.5.2 / 2015-10-01
 
 Improvements:
 
   - Support URI-encorded UserInfo for Chef, SVN, Yum ([GH-130][])
-  - Support docker on Debian/Ubuntu wiht systemd ([GH-133][])
-
+  - Support docker on Debian/Ubuntu with systemd ([GH-133][])
 
 # 1.5.1 / 2015-07-25
 
 Bug fixes:
 
   - Fix docker configuration ([GH-106][])
-
 
 # 1.5.0 / 2015-01-15
 
@@ -222,3 +220,5 @@ Bug fixes:
 [GH-103]: https://github.com/tmatilai/vagrant-proxyconf/issues/103 "Issue 103"
 [GH-105]: https://github.com/tmatilai/vagrant-proxyconf/issues/105 "Issue 105"
 [GH-106]: https://github.com/tmatilai/vagrant-proxyconf/issues/106 "Issue 106"
+[GH-130]: https://github.com/tmatilai/vagrant-proxyconf/issues/106 "Issue 130"
+[GH-133]: https://github.com/tmatilai/vagrant-proxyconf/issues/106 "Issue 133"
