@@ -20,7 +20,6 @@ module VagrantPlugins
 
         def configure_machine
           logger.info('Writing the proxy configuration to systemd config')
-          detect_export
           write_systemd_config
         end
 
@@ -33,12 +32,6 @@ module VagrantPlugins
               comm.sudo(service_restart_command_low)
               comm.sudo(service_restart_command_up)
             end
-          end
-        end
-
-        def detect_export
-          @machine.communicate.tap do |comm|
-            comm.test('which systemctl') ? @export = '' : @export = 'export '
           end
         end
 
