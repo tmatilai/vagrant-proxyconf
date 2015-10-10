@@ -15,6 +15,10 @@ en:
         Skipping Systemd proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Systemd...
+      restarting_guest_start: |-
+        Restarting Guest VM to reflect Systemd proxy settings...
+      restarting_guest_done: |-
+        DONE: Restarting Guest VM
 
     docker_proxy:
       not_enabled: |-
