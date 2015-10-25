@@ -44,7 +44,10 @@ module VagrantPlugins
         def reflect_config
           return unless @restart_needed
           @machine.ui.info(I18n.t("#{I18N_PREFIX}restarting_guest_start"))
-          @machine.communicate.sudo('shutdown -r now')
+          begin timeout(10) { @machine.communicate.sudo('shutdown -r now') }
+          rescue Timeout::Error
+            logger.info('shutdown -r now was called but timeout')
+          end
 
           sleep 5 until @machine.communicate.ready?
           @machine.ui.info(I18n.t("#{I18N_PREFIX}restarting_guest_done"))
