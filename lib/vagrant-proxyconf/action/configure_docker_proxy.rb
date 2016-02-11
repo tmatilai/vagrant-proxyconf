@@ -83,10 +83,10 @@ module VagrantPlugins
 
         def docker_config
           <<-CONFIG.gsub(/^\s+/, '')
-            #{@export}HTTP_PROXY=#{config.http || ''}
-            #{@export}NO_PROXY=#{config.no_proxy || ''}
-            #{@export}http_proxy=#{config.http || ''}
-            #{@export}no_proxy=#{config.no_proxy || ''}
+            #{@export}HTTP_PROXY=\"#{config.http || ''}\"
+            #{@export}NO_PROXY=\"#{config.no_proxy || ''}\"
+            #{@export}http_proxy=\"#{config.http || ''}\"
+            #{@export}no_proxy=\"#{config.no_proxy || ''}\"
           CONFIG
         end
       end
