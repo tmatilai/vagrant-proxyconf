@@ -28,6 +28,7 @@ module VagrantPlugins
           set_windows_proxy('https_proxy', config.https)
           set_windows_proxy('ftp_proxy', config.ftp)
           set_windows_proxy('no_proxy', config.no_proxy)
+          set_windows_system_proxy(config.http)
         end
 
         def set_windows_proxy(key, value)
@@ -37,6 +38,26 @@ module VagrantPlugins
             @machine.communicate.sudo(command)
           else
             logger.info("Not setting #{key}")
+          end
+        end
+
+        def set_windows_system_proxy(proxy)
+          if proxy
+            path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
+
+            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                          /f"
+            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}     /f"
+            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect} /f"
+            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                          /f"
+
+            logger.info('Setting system proxy settings')
+
+            @machine.communicate.sudo(proxy1)
+            @machine.communicate.sudo(proxy2)
+            @machine.communicate.sudo(proxy3)
+            @machine.communicate.sudo(proxy4)
+          else
+            logger.info("Not setting system proxy settings")
           end
         end
 
