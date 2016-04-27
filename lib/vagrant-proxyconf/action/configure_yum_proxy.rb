@@ -26,6 +26,7 @@ module VagrantPlugins
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv -f #{path}.new #{path}")
             comm.sudo("rm -f #{tmp}")
+            comm.sudo("sed -i 's/.*enabled=.*/enabled=0/g' /etc/yum/pluginconf.d/fastestmirror.conf", error_check: false)
           end
         end
 
