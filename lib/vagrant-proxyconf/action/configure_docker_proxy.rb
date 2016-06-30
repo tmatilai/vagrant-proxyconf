@@ -21,6 +21,7 @@ module VagrantPlugins
         def configure_machine
           logger.info('Writing the proxy configuration to docker config')
           detect_export
+          create_sysytemd_config
           write_docker_config
         end
 
@@ -66,8 +67,21 @@ module VagrantPlugins
           end
         end
 
+        def create_sysytemd_config
+          dir = '/etc/systemd/system/docker.service.d/'
+          file_name = 'http-proxy.conf'
+          path = dir + file_name
+
+          @machine.communicate.tap do |comm|
+            comm.sudo("mkdir -m 755 -p #{dir}")
+            local_tmp = tempfile(systemd_config)
+            comm.upload(local_tmp.path, path)
+            comm.sudo("chmod 0644 #{path}")
+          end
+        end
+
         def service_restart_command
-          ["systemctl restart #{docker}",
+          ["(systemctl daemon-reload ; systemctl restart #{docker})",
             "service #{docker} restart",
             "/etc/init.d/#{docker} restart"].join(' || ')
         end
@@ -87,6 +101,13 @@ module VagrantPlugins
             #{@export}NO_PROXY=\"#{config.no_proxy || ''}\"
             #{@export}http_proxy=\"#{config.http || ''}\"
             #{@export}no_proxy=\"#{config.no_proxy || ''}\"
+          CONFIG
+        end
+
+        def systemd_config
+          <<-CONFIG
+            [Service]
+            EnvironmentFile=-/etc/sysconfig/docker
           CONFIG
         end
       end
