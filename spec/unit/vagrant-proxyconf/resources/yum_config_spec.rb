@@ -69,6 +69,20 @@ describe 'resources/yum_config.awk' do
       end
     end
 
+    context "with old proxy conf containing special characters" do
+      let(:old_conf) { 'yum_with_repository_and_proxy_containing_special_chars.conf' }
+
+      it "replaces existing proxy and userinfo" do
+        conf = { proxy: 'http://proxy.example.com:3128/', user: 'foo', pass: 'bar' }
+        expect(configure(conf)).to eq fixture('yum_with_repository_and_proxy.conf')
+      end
+
+      it "disables existing proxy" do
+        conf = { proxy: '', user: 'baz', pass: 'bar' }
+        expect(configure(conf)).to eq fixture('yum_with_repository_and_disabled_proxy.conf')
+      end
+    end
+
     context "without userinfo" do
       let(:old_conf) { 'yum_with_repository_and_proxy_without_userinfo.conf' }
 
