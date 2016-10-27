@@ -71,12 +71,15 @@ module VagrantPlugins
           dir = '/etc/systemd/system/docker.service.d/'
           file_name = 'http-proxy.conf'
           path = dir + file_name
+          tmp = '/tmp/vagrant-proxyconf-dockerproxy'
 
           @machine.communicate.tap do |comm|
             comm.sudo("mkdir -m 755 -p #{dir}")
             local_tmp = tempfile(systemd_config)
-            comm.upload(local_tmp.path, path)
-            comm.sudo("chmod 0644 #{path}")
+            comm.upload(local_tmp.path, tmp)
+            comm.sudo("chmod 0644 #{tmp}")
+            comm.sudo("chown root:root #{tmp}")
+            comm.sudo("mv -f #{tmp} #{path}")
           end
         end
 
