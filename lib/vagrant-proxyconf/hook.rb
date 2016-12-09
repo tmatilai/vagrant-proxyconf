@@ -22,7 +22,7 @@ module VagrantPlugins
 
         # configure the proxies before vagrant-omnibus
         if defined?(VagrantPlugins::Omnibus::Action::InstallChef)
-          hook.after VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
+          hook.before VagrantPlugins::Omnibus::Action::InstallChef, Action.configure
         end
 
         # configure the proxies before vagrant-vbguest
