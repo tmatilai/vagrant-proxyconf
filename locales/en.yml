@@ -8,6 +8,14 @@ en:
       configuring: |-
         Configuring proxy for Apt...
 
+    systemd_proxy:
+      not_enabled: |-
+        systemd_proxy not enabled or configured
+      not_supported: |-
+        Skipping Systemd proxy config as the machine does not support it
+      configuring: |-
+        Configuring proxy for Systemd...
+
     docker_proxy:
       not_enabled: |-
         docker_proxy not enabled or configured
