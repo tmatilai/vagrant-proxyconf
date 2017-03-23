@@ -1,6 +1,7 @@
 require_relative 'base'
 require_relative '../resource'
 require_relative '../userinfo_uri'
+require 'uri'
 
 module VagrantPlugins
   module ProxyConf
@@ -31,7 +32,13 @@ module VagrantPlugins
 
         def proxy_params
           u = UserinfoURI.new(config.http)
-          "-v proxy=#{escape(u.uri)} -v user=#{escape(u.user)} -v pass=#{escape(u.pass)}"
+          if !u.pass.nil?
+            pdecode = URI.decode(u.pass)
+          else
+            pdecode = u.pass
+          end
+
+          "-v proxy=#{escape(u.uri)} -v user=#{escape(u.user)} -v pass=#{escape(pdecode)}"
         end
       end
     end
