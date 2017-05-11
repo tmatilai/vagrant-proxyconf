@@ -23,6 +23,9 @@ module VagrantPlugins
         # @return [String] a comma separated list of hosts or domains which do not use proxies
         key :no_proxy, env_var: 'VAGRANT_ENV_NO_PROXY'
 
+        # @return [String] the AutoConfigURL
+        key :autoconfig, env_var: 'VAGRANT_ENV_AUTO_CONFIG_URL'
+
         def validate(machine)
           if enabled?
             puts 'DEPRECATION: `config.env_proxy.*` and `VAGRANT_ENV_*_PROXY`'
@@ -46,12 +49,22 @@ module VagrantPlugins
             # still in v1.0.x.
             value = value.inspect if key.name == :no_proxy
 
+            # Quoting `autoconfig` value as its a url
+            value = value.inspect if key.name == :autoconfig
+
             [var.upcase, var.downcase].map { |v| "export #{v}=#{value}\n" }.join
           end
         end
 
         def env_variable_name(key)
-          key.name == :no_proxy ? "no_proxy" : "#{key.name}_proxy"
+          #key.name == :no_proxy ? "no_proxy" : "#{key.name}_proxy"
+          if key.name == :no_proxy
+            return "no_proxy"
+          elseif key.name == :autoconfig
+            return "auto_config_url"
+          else
+            return "#{key.name}_proxy"
+          end
         end
       end
     end

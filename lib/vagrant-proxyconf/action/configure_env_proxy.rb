@@ -28,7 +28,8 @@ module VagrantPlugins
           set_windows_proxy('https_proxy', config.https)
           set_windows_proxy('ftp_proxy', config.ftp)
           set_windows_proxy('no_proxy', config.no_proxy)
-          set_windows_system_proxy(config.http)
+          set_windows_proxy('auto_config_url', config.autoconfig)
+          set_windows_system_proxy(config.http, config.autoconfig)
         end
 
         def set_windows_proxy(key, value)
@@ -41,14 +42,16 @@ module VagrantPlugins
           end
         end
 
-        def set_windows_system_proxy(proxy)
-          if proxy
+        def set_windows_system_proxy(proxy, autoconfig)
+          if proxy || autoconfig
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
 
-            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                          /f"
-            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}     /f"
-            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect} /f"
-            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                          /f"
+            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                            /f"
+            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}       /f"
+            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect}   /f"
+            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                            /f"
+            proxy5  = "cmd.exe /C reg add \"#{path}\" /v AutoConfigURL /t REG_SZ    /d #{config.autoconfig.inspect} /f"
+
 
             logger.info('Setting system proxy settings')
 
@@ -56,6 +59,7 @@ module VagrantPlugins
             @machine.communicate.sudo(proxy2)
             @machine.communicate.sudo(proxy3)
             @machine.communicate.sudo(proxy4)
+            @machine.communicate.sudo(proxy5)
           else
             logger.info("Not setting system proxy settings")
           end
