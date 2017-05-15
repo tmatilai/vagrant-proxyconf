@@ -6,7 +6,7 @@ gem 'vagrant',
 
 gem 'cane', '~> 2.6'
 gem 'coveralls', require: false
-gem 'rake'
+gem 'rake', '10.5.0'
 gem 'rspec', '~> 3.1'
 gem 'rspec-its', '~> 1.0'
 gem 'tailor', '~> 1.4'
