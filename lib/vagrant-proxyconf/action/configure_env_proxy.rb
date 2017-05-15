@@ -28,7 +28,8 @@ module VagrantPlugins
           set_windows_proxy('https_proxy', config.https)
           set_windows_proxy('ftp_proxy', config.ftp)
           set_windows_proxy('no_proxy', config.no_proxy)
-          set_windows_system_proxy(config.http)
+          set_windows_proxy('auto_config_url', config.autoconfig)
+          set_windows_system_proxy(config.http, config.autoconfig)
         end
 
         def set_windows_proxy(key, value)
@@ -41,14 +42,14 @@ module VagrantPlugins
           end
         end
 
-        def set_windows_system_proxy(proxy)
+        def set_windows_system_proxy(proxy, autoconfig)
           if proxy
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
 
-            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                          /f"
-            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}     /f"
-            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect} /f"
-            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                          /f"
+            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                            /f"
+            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}       /f"
+            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect}   /f"
+            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                            /f"
 
             logger.info('Setting system proxy settings')
 
@@ -58,6 +59,33 @@ module VagrantPlugins
             @machine.communicate.sudo(proxy4)
           else
             logger.info("Not setting system proxy settings")
+          end
+          if autoconfig
+            path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
+            proxy1  = "cmd.exe /C reg add \"#{path}\" /v AutoConfigURL /t REG_SZ    /d #{config.autoconfig.inspect} /f"
+
+            logger.info('Setting system auto config settings')
+
+            @machine.communicate.sudo(proxy1)
+
+            path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"
+            keys = ["DefaultConnectionSettings", "SavedLegacySettings"]
+
+            keys.each {
+              |key| connectionHex1 = "cmd.exe /C reg query \"#{path}\" /v #{key} /t REG_BINARY"
+              @machine.communicate.sudo(connectionHex1) do |type, data|
+                if type == :stdout
+                  if data.include? key
+                    print "#{data}"
+                    hex = update_hex(data.split()[2], 8, "05")
+                    connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
+                    @machine.communicate.sudo(connectionHex2)
+                  end
+                end
+              end
+            }
+          else
+            logger.info("Not setting auto config settings")
           end
         end
 
@@ -116,6 +144,12 @@ module VagrantPlugins
             ftp_proxy=#{config.ftp || ''}
             no_proxy=#{config.no_proxy || ''}
           CONFIG
+        end
+
+        def update_hex(hex, index, newValue)
+          hexSplit = hex.chars.each_slice(2).map(&:join)
+          hexSplit[index] = newValue
+          return hexSplit.join("")
         end
       end
     end
