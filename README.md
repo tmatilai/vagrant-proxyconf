@@ -27,7 +27,7 @@ The plugin can set:
 * proxy configuration for PEAR
 * proxy configuration for Subversion
 * proxy configuration for Yum
-* simple proxy configuration for Windows
+* simple proxy configuration and auto configuration url for Windows
 
 ## Quick start
 
@@ -101,6 +101,7 @@ end
 * `config.proxy.https` - The proxy for HTTPS URIs
 * `config.proxy.ftp` - The proxy for FTP URIs
 * `config.proxy.no_proxy` - A comma separated list of hosts or domains which do not use proxies.
+* `config.proxy.autoconfig` - The fulll url to pull down an autoconfiguration script
 
 #### Possible values
 
