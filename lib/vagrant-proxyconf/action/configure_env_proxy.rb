@@ -29,7 +29,8 @@ module VagrantPlugins
           set_windows_proxy('ftp_proxy', config.ftp)
           set_windows_proxy('no_proxy', config.no_proxy)
           set_windows_proxy('auto_config_url', config.autoconfig)
-          set_windows_system_proxy(config.http, config.autoconfig)
+          set_windows_system_proxy(config.http)
+          set_windows_auto_config(config.autoconfig)
         end
 
         def set_windows_proxy(key, value)
@@ -42,7 +43,7 @@ module VagrantPlugins
           end
         end
 
-        def set_windows_system_proxy(proxy, autoconfig)
+        def set_windows_system_proxy(proxy)
           if proxy
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
 
@@ -60,6 +61,9 @@ module VagrantPlugins
           else
             logger.info("Not setting system proxy settings")
           end
+        end
+
+        def set_windows_auto_config(autoconfig)
           if autoconfig
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
             proxy1  = "cmd.exe /C reg add \"#{path}\" /v AutoConfigURL /t REG_SZ    /d #{config.autoconfig.inspect} /f"
@@ -74,13 +78,10 @@ module VagrantPlugins
             keys.each {
               |key| connectionHex1 = "cmd.exe /C reg query \"#{path}\" /v #{key} /t REG_BINARY"
               @machine.communicate.sudo(connectionHex1) do |type, data|
-                if type == :stdout
-                  if data.include? key
-                    print "#{data}"
-                    hex = update_hex(data.split()[2], 8, "05")
-                    connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
-                    @machine.communicate.sudo(connectionHex2)
-                  end
+                if type == :stdout && data.include? key
+                  hex = update_hex(data.split()[2], 8, "05")
+                  connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
+                  @machine.communicate.sudo(connectionHex2)
                 end
               end
             }
