@@ -78,10 +78,12 @@ module VagrantPlugins
             keys.each {
               |key| connectionHex1 = "cmd.exe /C reg query \"#{path}\" /v #{key} /t REG_BINARY"
               @machine.communicate.sudo(connectionHex1) do |type, data|
-                if type == :stdout && data.include? key
-                  hex = update_hex(data.split()[2], 8, "05")
-                  connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
-                  @machine.communicate.sudo(connectionHex2)
+                if type == :stdout
+                  if data.include? key
+                    hex = update_hex(data.split()[2], 8, "05")
+                    connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
+                    @machine.communicate.sudo(connectionHex2)
+                  end
                 end
               end
             }
