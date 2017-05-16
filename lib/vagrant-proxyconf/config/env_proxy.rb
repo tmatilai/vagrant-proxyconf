@@ -60,7 +60,7 @@ module VagrantPlugins
           #key.name == :no_proxy ? "no_proxy" : "#{key.name}_proxy"
           if key.name == :no_proxy
             return "no_proxy"
-          elseif key.name == :autoconfig
+          elsif key.name == :autoconfig
             return "auto_config_url"
           else
             return "#{key.name}_proxy"
