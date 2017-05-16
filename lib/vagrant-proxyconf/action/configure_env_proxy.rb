@@ -154,9 +154,9 @@ module VagrantPlugins
           CONFIG
         end
 
-        def update_hex(hex, index, newValue)
+        def update_hex(hex, index, value)
           hexSplit = hex.chars.each_slice(2).map(&:join)
-          hexSplit[index] = newValue
+          hexSplit[index] = value
           return hexSplit.join("")
         end
       end
