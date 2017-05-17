@@ -161,7 +161,7 @@ module VagrantPlugins
           # Split the hex value into pairs
           hexValueSplit = oldHexValue.chars.each_slice(2).map(&:join)
           # Update and return the joined array
-          hexSplit[8] = "05
+          hexSplit[8] = "05"
           return hexSplit.join("")
         end
       end
