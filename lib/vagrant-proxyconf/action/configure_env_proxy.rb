@@ -47,10 +47,10 @@ module VagrantPlugins
           if proxy
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
 
-            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                            /f"
-            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}       /f"
-            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect}   /f"
-            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                            /f"
+            proxy1  = "cmd.exe /C reg add \"#{path}\" /v ProxyEnable   /t REG_DWORD /d 1                           /f"
+            proxy2  = "cmd.exe /C reg add \"#{path}\" /v ProxyServer   /t REG_SZ    /d #{config.http.inspect}      /f"
+            proxy3  = "cmd.exe /C reg add \"#{path}\" /v ProxyOverride /t REG_SZ    /d #{config.no_proxy.inspect}  /f"
+            proxy4  = "cmd.exe /C reg add \"#{path}\" /v AutoDetect    /t REG_DWORD /d 0                           /f"
 
             logger.info('Setting system proxy settings')
 
@@ -66,14 +66,13 @@ module VagrantPlugins
         def set_windows_auto_config(autoconfig)
           if autoconfig
             path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"
-            proxy1  = "cmd.exe /C reg add \"#{path}\" /v AutoConfigURL /t REG_SZ    /d #{config.autoconfig.inspect} /f"
+            command  = "cmd.exe /C reg add \"#{path}\" /v AutoConfigURL /t REG_SZ    /d #{config.autoconfig.inspect} /f"
 
             logger.info('Setting system auto config settings')
 
-            @machine.communicate.sudo(proxy1)
+            @machine.communicate.sudo(command)
 
             set_windows_ie_settings
-
           else
             logger.info("Not setting auto config settings")
           end
@@ -83,12 +82,12 @@ module VagrantPlugins
           path    = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Connections"
           keys = ["DefaultConnectionSettings", "SavedLegacySettings"]
 
-          keys.each {
-            |key| connectionHex1 = "cmd.exe /C reg query \"#{path}\" /v #{key} /t REG_BINARY"
-            @machine.communicate.sudo(connectionHex1) do |type, data|
+          keys.each do |key|
+            command = "cmd.exe /C reg query \"#{path}\" /v #{key} /t REG_BINARY"
+            @machine.communicate.sudo(command) do |type, data|
               if type == :stdout
                 if data.include? key
-                  hex = update_hex(data.split()[2], 8, "05")
+                  hex = enable_auto_config_script(data)
                   connectionHex2 = "cmd.exe /C reg add \"#{path}\" /v #{key} /t REG_BINARY /d #{hex} /f"
                   @machine.communicate.sudo(connectionHex2)
                 end
@@ -154,9 +153,15 @@ module VagrantPlugins
           CONFIG
         end
 
-        def update_hex(hex, index, value)
-          hexSplit = hex.chars.each_slice(2).map(&:join)
-          hexSplit[index] = value
+        # Enables the automatic configuration script on the internet options->connections->LAN settings
+        # by updating the 9th value within the hex string passed in data
+        def enable_auto_config_script(data)
+          # Hex value is the 3rd entry in the data array
+          oldHexValue = data.split()[2]
+          # Split the hex value into pairs
+          hexValueSplit = oldHexValue.chars.each_slice(2).map(&:join)
+          # Update and return the joined array
+          hexSplit[8] = "05
           return hexSplit.join("")
         end
       end

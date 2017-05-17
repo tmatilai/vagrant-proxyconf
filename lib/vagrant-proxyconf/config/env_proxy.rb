@@ -57,13 +57,13 @@ module VagrantPlugins
         end
 
         def env_variable_name(key)
-          #key.name == :no_proxy ? "no_proxy" : "#{key.name}_proxy"
-          if key.name == :no_proxy
-            return "no_proxy"
-          elsif key.name == :autoconfig
-            return "auto_config_url"
+          case key.name
+          when :no_proxy
+            "no_proxy"
+          when :autoconfig
+            "auto_config_url"
           else
-            return "#{key.name}_proxy"
+            "#{key.name}_proxy"
           end
         end
       end
