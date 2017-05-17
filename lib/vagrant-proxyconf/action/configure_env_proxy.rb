@@ -93,7 +93,7 @@ module VagrantPlugins
                 end
               end
             end
-          }
+          end
         end
 
         def windows_guest?
