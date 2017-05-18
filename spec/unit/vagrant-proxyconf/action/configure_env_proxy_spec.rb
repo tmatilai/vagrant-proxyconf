@@ -68,20 +68,20 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
     end
   end
 
-   describe '#enable_auto_config_script' do
-     subject do
-       action = described_class.new(nil, nil)
-       allow(action).to receive(:data) { data }
-       action.send(:enable_auto_config_script, data)
-     end
+  describe '#enable_auto_config_script' do
+    subject do
+      action = described_class.new(nil, nil)
+      allow(action).to receive(:data) { data }
+      action.send(:enable_auto_config_script, data)
+    end
 
-     context 'with data' do
-       let(:data)   { 'DefaultConnectionSettings    REG_BINARY    4600000023000000090000000000000011000' +
+    context 'with data' do
+      let(:data)   { 'DefaultConnectionSettings    REG_BINARY    4600000023000000090000000000000011000' +
          '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
          '0000000000000000000000000000000000000000000000000000000000000000000000000' }
-       it { is_expected.to eq '460000002300000005000000000000001100000000000000000000000000000000000000' +
+      it { is_expected.to eq '460000002300000005000000000000001100000000000000000000000000000000000000' +
          '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000' +
-         '00000000000000000000000000000000000000'}
-     end
-   end
+         '00000000000000000000000000000000000000' }
+    end
+  end
 end
