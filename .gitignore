@@ -5,3 +5,6 @@
 /tmp
 vagrant-proxyconf-*.gem
 /vendor
+/ruby
+/.gitignore
+/Gemfile
