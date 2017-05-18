@@ -52,7 +52,6 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
     context 'when other config proxy are not enabled' do
       it do
         @config_proxy_enabled = {
-          svn: false,
           apt: false,
           chef: false,
           docker: false,
