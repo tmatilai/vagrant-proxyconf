@@ -2,11 +2,11 @@ source 'https://rubygems.org'
 
 gem 'vagrant',
   git: 'https://github.com/mitchellh/vagrant.git',
-  ref: ENV.fetch('VAGRANT_VERSION', 'v1.7.2')
+  ref: ENV.fetch('VAGRANT_VERSION', 'v1.9.4')
 
 gem 'cane', '~> 2.6'
 gem 'coveralls', require: false
-gem 'rake'
+gem 'rake', '< 11.0'
 gem 'rspec', '~> 3.1'
 gem 'rspec-its', '~> 1.0'
 gem 'tailor', '~> 1.4'

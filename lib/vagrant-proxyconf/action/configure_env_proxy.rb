@@ -107,14 +107,14 @@ module VagrantPlugins
 
         def environment_config
           <<-CONFIG.gsub(/^\s+/, '')
-            HTTP_PROXY=#{config.http || ''}
-            HTTPS_PROXY=#{config.https || ''}
-            FTP_PROXY=#{config.ftp || ''}
-            NO_PROXY=#{config.no_proxy || ''}
-            http_proxy=#{config.http || ''}
-            https_proxy=#{config.https || ''}
-            ftp_proxy=#{config.ftp || ''}
-            no_proxy=#{config.no_proxy || ''}
+            HTTP_PROXY='#{config.http}'
+            HTTPS_PROXY='#{config.https}'
+            FTP_PROXY='#{config.ftp}'
+            NO_PROXY='#{config.no_proxy}'
+            http_proxy='#{config.http}'
+            https_proxy='#{config.https}'
+            ftp_proxy='#{config.ftp}'
+            no_proxy='#{config.no_proxy}'
           CONFIG
         end
       end

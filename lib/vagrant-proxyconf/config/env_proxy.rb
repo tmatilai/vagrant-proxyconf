@@ -46,7 +46,7 @@ module VagrantPlugins
             # still in v1.0.x.
             value = value.inspect if key.name == :no_proxy
 
-            [var.upcase, var.downcase].map { |v| "export #{v}=#{value}\n" }.join
+            [var.upcase, var.downcase].map { |v| "export #{v}='#{value}'\n" }.join
           end
         end
 
