@@ -9,7 +9,7 @@ describe VagrantPlugins::ProxyConf::Config::KeyMixin do
     key :bar
 
     # Hack to keep rspec 3 description generation happy
-    def respond_to?(method)
+    def respond_to?(method, include_all = false)
       return false if method == :to_ary
       super
     end

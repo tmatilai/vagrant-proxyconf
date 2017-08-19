@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eu -o pipefail
+
+install_bundler() {
+    echo "Uninstalling current Bundler versions"
+    rvm @global do gem uninstall bundler --all --executables
+    gem uninstall bundler --all --executables
+    echo "Installing Bundler '$BUNDLER_VERSION'"
+    gem install bundler --version "$BUNDLER_VERSION"
+}
+
+if [ -n "${BUNDLER_VERSION:-}" ]; then
+    install_bundler
+fi
