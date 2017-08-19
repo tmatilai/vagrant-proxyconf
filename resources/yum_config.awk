@@ -39,6 +39,7 @@ BEGIN {
 $1 ~ /^proxy(_username|_password)?$/ {
   if (main == 1) {
     $2 = conf[$1]
+    NF = 2
     seen[$1] = 1
   }
 }
