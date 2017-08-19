@@ -1,18 +1,11 @@
 # Proxy Configuration Plugin for Vagrant
 
 <span class="badges">
-[![Gem Version](https://badge.fury.io/rb/vagrant-proxyconf.png)][gem]
-[![Build Status](https://travis-ci.org/tmatilai/vagrant-proxyconf.png?branch=master)][travis]
-[![Dependency Status](https://gemnasium.com/tmatilai/vagrant-proxyconf.png)][gemnasium]
-[![Code Climate](https://codeclimate.com/github/tmatilai/vagrant-proxyconf.png)][codeclimate]
-[![Coverage Status](https://coveralls.io/repos/tmatilai/vagrant-proxyconf/badge.png)][coveralls]
-</span>
 
-[gem]: https://rubygems.org/gems/vagrant-proxyconf
-[travis]: https://travis-ci.org/tmatilai/vagrant-proxyconf
-[gemnasium]: https://gemnasium.com/tmatilai/vagrant-proxyconf
-[codeclimate]: https://codeclimate.com/github/tmatilai/vagrant-proxyconf
-[coveralls]: https://coveralls.io/r/tmatilai/vagrant-proxyconf
+[![Gem Version](https://badge.fury.io/rb/vagrant-proxyconf.png)](https://rubygems.org/gems/vagrant-proxyconf)
+[![Build Status](https://travis-ci.org/tmatilai/vagrant-proxyconf.svg?branch=master)](https://travis-ci.org/tmatilai/vagrant-proxyconf)
+
+</span>
 
 A [Vagrant](http://www.vagrantup.com/) plugin that configures the virtual machine to use specified proxies. This is useful for example in case you are behind a corporate proxy server, or you have a caching proxy (for example [polipo](https://github.com/tmatilai/polipo-box)).
 
