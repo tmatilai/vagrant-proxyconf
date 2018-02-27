@@ -11,7 +11,7 @@ module VagrantPlugins
             return false unless Util.which(machine, 'docker')
 
             machine.communicate.tap do |comm|
-              src_file = '/usr/lib/systemd/system/docker.service'
+              src_file = '/run/systemd/system/docker.service'
               dst_file = '/etc/systemd/system/docker.service'
               tmp_file = '/tmp/docker.service'
               env_file = 'EnvironmentFile=-\/etc\/default\/docker'
