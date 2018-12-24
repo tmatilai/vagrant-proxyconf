@@ -8,6 +8,8 @@ bundler_args: --without=development
 rvm: 2.3.4
 matrix:
   include:
+    - env: VAGRANT_VERSION=v2.2.2
+      rvm: 2.4.4
     - env: VAGRANT_VERSION=v1.9.7
     - env:
         - VAGRANT_VERSION=v1.8.7
