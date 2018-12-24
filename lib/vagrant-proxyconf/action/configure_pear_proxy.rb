@@ -11,17 +11,24 @@ module VagrantPlugins
 
         private
 
-        # @return [Vagrant::Plugin::V2::Config] the configuration
-        def config
-          # Use global proxy config
-          @config ||= finalize_config(@machine.config.proxy)
-        end
-
         def configure_machine
+          return if !supported?
+
+          config.http = nil if disabled?
           proxy = config.http || ''
 
-          @machine.communicate.sudo(
-            "#{pear_path} config-set http_proxy #{escape(proxy)} system")
+          @machine.communicate.sudo("#{pear_path} config-set http_proxy #{escape(proxy)} system")
+
+          true
+        end
+
+        def unconfigure_machine
+          return if !supported?
+
+          config.http = nil
+          configure_machine
+
+          true
         end
 
         def pear_path

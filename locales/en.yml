@@ -7,6 +7,8 @@ en:
         Skipping Apt proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Apt...
+      unconfiguring: |-
+        Unconfiguring proxy for Apt...
 
     docker_proxy:
       not_enabled: |-
@@ -15,6 +17,8 @@ en:
         Skipping Docker proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Docker...
+      unconfiguring: |-
+        Unconfiguring proxy for Docker...
 
     chef_proxy:
       no_provisioners: |-
@@ -23,6 +27,8 @@ en:
         Default proxy not enabled or configured. Skipping Chef provisioner configuration.
       configuring: |-
         Configuring proxy for Chef provisioners...
+      unconfiguring: |-
+        Unconfiguring proxy for Chef provisioners...
 
     env_proxy:
       not_enabled: |-
@@ -31,6 +37,8 @@ en:
         Skipping environment variable based proxy config as the machine does not support it
       configuring: |-
         Configuring proxy environment variables...
+      unconfiguring: |-
+        Unconfiguring proxy environment variables...
 
     git_proxy:
       not_enabled: |-
@@ -39,6 +47,8 @@ en:
         Skipping Git proxy config as `git` is not found
       configuring: |-
         Configuring proxy for Git...
+      unconfiguring: |-
+        Unconfiguring proxy for Git...
 
     npm_proxy:
       not_enabled: |-
@@ -47,6 +57,8 @@ en:
         Skipping npm proxy config as `npm` is not found
       configuring: |-
         Configuring proxy for npm...
+      unconfiguring: |-
+        Unconfiguring proxy for npm...
 
     pear_proxy:
       not_enabled: |-
@@ -55,6 +67,8 @@ en:
         Skipping PEAR proxy config as `pear` is not found
       configuring: |-
         Configuring proxy for PEAR...
+      unconfiguring: |-
+        Unconfiguring proxy for PEAR...
 
     svn_proxy:
       not_enabled: |-
@@ -63,6 +77,8 @@ en:
         Skipping Subversion proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Subversion...
+      unconfiguring: |-
+        Unconfiguring proxy for Subversion...
 
     yum_proxy:
       not_enabled: |-
@@ -71,6 +87,10 @@ en:
         Skipping Yum proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Yum...
+      unconfiguring: |-
+        Unconfiguring proxy for Yum...
+
+    errors:
 
     errors:
       vagrant_version: |-

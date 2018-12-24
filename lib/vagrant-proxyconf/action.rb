@@ -31,7 +31,7 @@ module VagrantPlugins
       def self.configure_after_provisoner
         Vagrant::Action::Builder.new.tap do |b|
           b.use Builtin::Call, IsEnabled do |env, b2|
-            next if !env[:result]
+            # next if !env[:result]
 
             b2.use ConfigureDockerProxy
             b2.use ConfigureGitProxy
@@ -49,7 +49,7 @@ module VagrantPlugins
       def self.config_actions
         @config_actions ||= Proc.new do |b|
           b.use Builtin::Call, IsEnabled do |env, b2|
-            next if !env[:result]
+            # next if !env[:result]
 
             b2.use ConfigureAptProxy
             b2.use ConfigureChefProxy

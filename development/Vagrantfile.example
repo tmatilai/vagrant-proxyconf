@@ -1,20 +1,72 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-BOX = ENV.fetch('BOX', 'ubuntu-12.04')
+require 'pry'
 
-Vagrant.require_plugin 'vagrant-proxyconf'
+BOX = ENV.fetch('BOX', 'ubuntu/bionic64')
+DISABLE_SHARE = false
+ENABLE_PROXY = false
+
+DOCKER_SOCKET="/var/run/docker.sock"
+SUPPORTS_DOCKER_IN_DOCKER = File.exists?(DOCKER_SOCKET)
+
+PROXY_HOST = ENV['PROXY_HOST'] || '127.0.0.1'
+PROXY_HOST = '127.0.0.1'
+PROXY_PORT = ENV['PROXY_PORT'] || '8888'
+NO_PROXY   = ENV['NO_PROXY']   || "localhost,*.localdomain"
 
 Vagrant.configure('2') do |config|
-  # Apt proxy
-  config.apt_proxy.http  = '192.168.33.200'
-  config.apt_proxy.https = 'DIRECT'
+  config.vm.box = BOX
+
+  # config.proxy.enabled   = true
+  config.proxy.http      = "http://#{PROXY_HOST}:#{PROXY_PORT}"
+  config.proxy.https     = "http://#{PROXY_HOST}:#{PROXY_PORT}"
+  config.proxy.no_proxy  = "#{NO_PROXY}"
+
+  # APT proxy
+  # config.apt_proxy.http  = 'http://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.apt_proxy.https = 'https://#{PROXY_HOST}:#{PROXY_PORT}'
+
+  # CHEF proxy
+  # config.chef_proxy.http     = 'http://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.chef_proxy.https    = 'https://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.chef_proxy.no_proxy = "#{NO_PROXY}"
+
+  # DOCKER proxy
+  # config.docker_proxy.http  = config.proxy.http
+  # config.docker_proxy.https = config.proxy.https
+  # config.docker_proxy.no_proxy = config.proxy.no_proxy
+
+  # GIT proxy
+  # config.git_proxy.http = config.proxy.http
+  # config.git_proxy.https = config.proxy.https
+
+  # NPM proxy
+  # config.npm_proxy.http = config.proxy.http
+  # config.npm_proxy.https = config.proxy.https
+  # config.npm_proxy.no_proxy = config.proxy.no_proxy
+
+  # PEAR proxy
+  # config.pear_proxy.http     = config.proxy.http
+
+  # SVN proxy
+  config.svn_proxy.http     = config.proxy.http
+  config.svn_proxy.no_proxy = config.proxy.no_proxy
 
   # Disable the default share
-  config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: true
+  config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: DISABLE_SHARE
 
-  config.vm.box = BOX
-  if BOX == 'ubuntu-12.04'
-    config.vm.box_url = 'https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box'
+  config.vm.provision :shell, path: 'install.sh'
+
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.cookbooks_path = "."
+  #   chef.install = true
+  # end
+
+  config.vm.provider :virtualbox do |vb, override|
+    override.proxy.enabled = ENABLE_PROXY
+    vb.cpus = 1
+    vb.memory = 768
   end
+
 end

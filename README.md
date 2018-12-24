@@ -194,3 +194,38 @@ VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
   a Vagrant setup for [polipo](http://www.pps.univ-paris-diderot.fr/~jch/software/polipo/) caching web proxy.
 * [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)<br/>
   An excellent Vagrant plugin that shares various cache directories among similar VM instances. Should work fine together with vagrant-proxyconf.
+
+
+## Development Known Issues
+
+
+### When running `bundle exec vagrant status` I get `Encoded files can't be read outside of the Vagrant installer.`
+
+```
+$ bundle exec vagrant status
+Vagrant failed to initialize at a very early stage:
+
+The plugins failed to load properly. The error message given is
+shown below.
+
+Encoded files can't be read outside of the Vagrant installer.
+```
+
+The solution is to add this to the Gemfile
+
+```
+embedded_locations = %w(/Applications/Vagrant/embedded /opt/vagrant/embedded)
+
+embedded_locations.each do |p|
+    ENV['VAGRANT_INSTALLER_EMBEDDED_DIR'] = p if File.directory?(p)
+end
+
+unless ENV.key?('VAGRANT_INSTALLER_EMBEDDED_DIR')
+    $stderr.puts "Couldn't find a packaged install of vagrant, and we need this"
+    $stderr.puts 'in order to make use of the RubyEncoder libraries.'
+    $stderr.puts 'I looked in:'
+    embedded_locations.each do |p|
+        $stderr.puts "  #{p}"
+    end
+end
+```

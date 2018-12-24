@@ -14,6 +14,8 @@ module VagrantPlugins
         private
 
         def configure_machine
+          return if !supported?
+
           tmp = "/tmp/vagrant-proxyconf"
           path = config_path
 
@@ -27,6 +29,20 @@ module VagrantPlugins
             comm.sudo("mv -f #{path}.new #{path}")
             comm.sudo("rm -f #{tmp}")
           end
+
+          true
+        end
+
+        def unconfigure_machine
+          return if !supported?
+
+          @machine.communicate.tap do |comm|
+            if comm.test("grep '^proxy' #{config_path}")
+              comm.sudo("sed -i.bak -e '/^proxy/d' #{config_path}")
+            end
+          end
+
+          true
         end
 
         def proxy_params

@@ -13,7 +13,7 @@ describe VagrantPlugins::ProxyConf::Cap::Util do
 
     it "returns the path when the command is installed" do
       expect(communicator).to receive(:execute).
-        with('which foo', error_check: false).
+        with('command -v foo', error_check: false).
         and_yield(:stdout, "/path/to/foo\n").
         and_yield(:stdout, "PROMPT\n").
         and_yield(:stderr, "not foo\n").
@@ -23,7 +23,7 @@ describe VagrantPlugins::ProxyConf::Cap::Util do
 
     it "returns false when the command is not installed" do
       expect(communicator).to receive(:execute).
-        with('which bar', error_check: false).
+        with('command -v bar', error_check: false).
         and_return(1)
       expect(described_class.which(machine, 'bar')).to be_falsey
     end

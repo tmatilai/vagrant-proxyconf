@@ -16,6 +16,8 @@ module VagrantPlugins
 
           if disabled? || !config.enabled?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
+            env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.unconfiguring") if supported?
+            unconfigure_machine
           elsif !supported?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
           else
@@ -64,6 +66,10 @@ module VagrantPlugins
         # Configures the VM based on the config
         def configure_machine
           write_config(config)
+        end
+
+        # Unconfigures the VM, expected to be added to overriden
+        def unconfigure_machine
         end
 
         # Writes the config to the VM
@@ -117,8 +123,7 @@ module VagrantPlugins
         end
 
         def supported?
-          @machine.guest.capability?(cap_name) &&
-            @machine.guest.capability(cap_name)
+          @machine.guest.capability?(cap_name) && @machine.guest.capability(cap_name)
         end
 
         def config_path
