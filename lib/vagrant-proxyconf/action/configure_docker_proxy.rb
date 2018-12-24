@@ -109,7 +109,7 @@ module VagrantPlugins
 
           @version = nil
           @machine.communicate.execute('docker --version') do |type, data|
-            version = data.sub(',', '').split(' ').select {|i| i.match? /^\d+\.\d+/}
+            version = data.sub(',', '').split(' ').select {|i| i.match /^\d+\.\d+/}
             @version = version[0].split(".").map {|i| i.to_i} unless version.empty?
           end
 
