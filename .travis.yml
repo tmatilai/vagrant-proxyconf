@@ -3,7 +3,7 @@ cache: bundler
 sudo: false
 
 before_install: ./travis/before_install
-bundler_args: --without=development
+bundler_args: --with=development
 
 rvm: 2.3.4
 matrix:
