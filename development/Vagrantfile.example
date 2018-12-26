@@ -1,19 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-require 'pry'
-
 BOX = ENV.fetch('BOX', 'ubuntu/bionic64')
 DISABLE_SHARE = false
-ENABLE_PROXY = false
+ENABLE_PROXY = true
 
-DOCKER_SOCKET="/var/run/docker.sock"
+DOCKER_SOCKET = "/var/run/docker.sock"
 SUPPORTS_DOCKER_IN_DOCKER = File.exists?(DOCKER_SOCKET)
 
-PROXY_HOST = ENV['PROXY_HOST'] || '127.0.0.1'
-PROXY_HOST = '127.0.0.1'
-PROXY_PORT = ENV['PROXY_PORT'] || '8888'
-NO_PROXY   = ENV['NO_PROXY']   || "localhost,*.localdomain"
+PROXY_HOST = ENV.fetch('PROXY_HOST', '127.0.0.1')
+PROXY_PORT = ENV.fetch('PROXY_PORT', '8888')
+NO_PROXY   = ENV.fetch('NO_PROXY', "localhost,*.localdomain")
 
 Vagrant.configure('2') do |config|
   config.vm.box = BOX
