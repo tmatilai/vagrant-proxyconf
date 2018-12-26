@@ -18,8 +18,8 @@ end
 #### End Added due to https://groups.google.com/forum/#!topic/vagrant-up/J8J6LmhzBqM/discussion
 
 gem 'vagrant',
-  git: 'https://github.com/mitchellh/vagrant.git',
-  ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.2')
+    git: 'https://github.com/mitchellh/vagrant.git',
+    ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.2')
 
 gem 'rake'
 gem 'rspec', '~> 3.1'
@@ -38,6 +38,4 @@ end
 # https://stackoverflow.com/questions/19492738/demand-a-vagrant-plugin-within-the-vagrantfile
 group :plugins do
   gem 'vagrant-proxyconf', path: __dir__
-  gem 'vagrant-vbguest', '~> 0.17'
-  gem 'vagrant-omnibus', '1.5.0'
 end

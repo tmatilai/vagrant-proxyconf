@@ -5,29 +5,22 @@ sudo: false
 before_install: ./travis/before_install
 bundler_args: --without=development
 
-rvm: 2.3.4
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+rvm: 2.4.4
 matrix:
   include:
     - env: VAGRANT_VERSION=v2.2.2
-      rvm: 2.4.4
-    - env: VAGRANT_VERSION=v1.9.7
+    - env: VAGRANT_VERSION=v2.1.5
+    - env: VAGRANT_VERSION=v2.0.4
+    - env: VAGRANT_VERSION=v1.9.8
+      rvm: 2.3.4
     - env:
         - VAGRANT_VERSION=v1.8.7
         - BUNDLER_VERSION=1.12.5
       rvm: 2.2.5
-    - env: VAGRANT_VERSION=v1.7.4
-      rvm: 2.0.0
-    - env:
-        - VAGRANT_VERSION=v1.6.5
-        - BUNDLER_VERSION="< 1.7.0, >= 1.5.2"
-      rvm: 2.0.0
-      gemfile: travis/Gemfile_1.6.5
-    - env:
-        - VAGRANT_VERSION=v1.5.4
-        - BUNDLER_VERSION="~> 1.5.2"
-      rvm: 2.0.0
-    - env: VAGRANT_VERSION=v1.4.3
-      rvm: 2.0.0
     - env: VAGRANT_VERSION=master
   allow_failures:
     - env: VAGRANT_VERSION=master
