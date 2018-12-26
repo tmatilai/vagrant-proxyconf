@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'vagrant',
-  git: 'https://github.com/mitchellh/vagrant.git',
-  ref: ENV.fetch('VAGRANT_VERSION', 'v1.9.7')
+    git: 'https://github.com/mitchellh/vagrant.git',
+    ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.2')
 
 gem 'rake'
 gem 'rspec', '~> 3.1'
@@ -15,5 +15,5 @@ group :development do
 end
 
 group :plugins do
-  gem 'vagrant-proxyconf', path: File.dirname(__FILE__)
+  gem 'vagrant-proxyconf', path: __dir__
 end
