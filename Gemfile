@@ -31,6 +31,10 @@ group :development do
   gem 'yard', '~> 0.8'
 end
 
+# when testing our plugin we need to make sure some vagrant plugins are installed
+# however, the syntax `Vagrant.require_plugin 'vagrant-proxyconf' was deprecated
+# and this is the future for using testing vagrant behind bundler.
+# https://stackoverflow.com/questions/19492738/demand-a-vagrant-plugin-within-the-vagrantfile
 group :plugins do
   gem 'vagrant-proxyconf', path: '.'
   gem 'vagrant-vbguest', '~> 0.17'
