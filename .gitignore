@@ -1,6 +1,5 @@
 /.bundle
 /.yardoc
-.ruby-version
 /Gemfile.lock
 /doc
 /tmp
