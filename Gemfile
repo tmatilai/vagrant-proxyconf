@@ -29,7 +29,7 @@ group :development do
   gem 'guard-rspec'
   gem 'redcarpet'
   gem 'serverspec'
-  gem 'yard', '~> 0.8'
+  gem 'yard', '~> 0.9.11'
 end
 
 # when testing our plugin we need to make sure some vagrant plugins are installed
