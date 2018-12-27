@@ -70,7 +70,7 @@ module VagrantPlugins
         # @param scheme [String] the http protocol (http or https)
         # @param uri [String] the URI with optional userinfo
         def configure_chef_proxy(chef, scheme, uri)
-          if uri && !chef.public_send("#{scheme}_proxy") and !disabled?
+          if uri && !chef.public_send("#{scheme}_proxy") && !disabled?
             u = UserinfoURI.new(uri)
             chef.public_send("#{scheme}_proxy_user=", u.user)
             chef.public_send("#{scheme}_proxy_pass=", u.pass)
