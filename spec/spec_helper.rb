@@ -1,7 +1,7 @@
 require 'rspec/its'
 require 'vagrant-proxyconf/config/proxy'
 
-PROJECT_DIR = File.absolute_path(File.dirname(__FILE__))
+PROJECT_DIR = File.absolute_path(__dir__)
 
 def fixture_file(filename)
   File.join([PROJECT_DIR, "unit", "fixtures", filename])
