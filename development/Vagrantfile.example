@@ -19,9 +19,9 @@ GLOBAL_PROXY_PORT = URI.parse(
 
 GLOBAL_NO_PROXY = ENV.fetch('NO_PROXY', '')
 
-PROXY_HOST = ENV.fetch('PROXY_HOST', GLOBAL_PROXY_HOST || '70.70.70.10')
-PROXY_PORT = ENV.fetch('PROXY_PORT', GLOBAL_PROXY_PORT || '8888')
-NO_PROXY   = ENV.fetch('NO_PROXY', GLOBAL_NO_PROXY || "localhost,*.localdomain")
+PROXY_HOST = GLOBAL_PROXY_HOST || '70.70.70.10'
+PROXY_PORT = GLOBAL_PROXY_PORT || '8888'
+NO_PROXY   = GLOBAL_NO_PROXY   || "localhost,*.localdomain"
 
 Vagrant.configure('2') do |config|
   # config.proxy.enabled   = true
