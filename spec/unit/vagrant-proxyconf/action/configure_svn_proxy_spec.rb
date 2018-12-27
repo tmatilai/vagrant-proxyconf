@@ -66,7 +66,10 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureSvnProxy do
       allow(machine).to receive_message_chain(:guest, :capability?).with(:svn_proxy_conf).and_return(@supported)
       allow(machine).to receive_message_chain(:guest, :capability).with(:svn_proxy_conf).and_return(@supported)
 
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("touch /etc/subversion/servers")
       allow(machine).to receive_message_chain(:communicate, :sudo).with("sed -i.bak -e '/^http-proxy-/d' /etc/subversion/servers")
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/subversion/servers")
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/subversion/servers")
 
       svn_proxy.send(:unconfigure_machine)
     end

@@ -43,3 +43,13 @@ if [ $? -ne 0 ]; then
   apt-get update
   apt-get -y install docker-ce
 fi
+
+if [ -f /tmp/tinyproxy.conf ]; then
+  cp /tmp/tinyproxy.conf /etc/tinyproxy/tinyproxy.conf
+  chown root:root /etc/tinyproxy/tinyproxy.conf
+  chmod 0644 /etc/tinyproxy/tinyproxy.conf
+  systemctl restart tinyproxy
+fi
+
+[ "$(systemctl is-enabled tinyproxy)" == "enabled" ] || systemctl enable tinyproxy
+[ "$(systemctl is-active tinyproxy)" == "active" ] || systemctl start tinyproxy
