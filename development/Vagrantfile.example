@@ -3,7 +3,7 @@
 require 'uri'
 
 BOX = ENV.fetch('BOX', 'ubuntu/bionic64')
-DISABLE_SHARE = false
+DISABLE_SHARE = true
 ENABLE_PROXY = true
 
 DOCKER_SOCKET = "/var/run/docker.sock"
