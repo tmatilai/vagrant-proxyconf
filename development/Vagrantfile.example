@@ -1,5 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'uri'
 
 BOX = ENV.fetch('BOX', 'ubuntu/bionic64')
 DISABLE_SHARE = false
@@ -8,13 +9,21 @@ ENABLE_PROXY = true
 DOCKER_SOCKET = "/var/run/docker.sock"
 SUPPORTS_DOCKER_IN_DOCKER = File.exists?(DOCKER_SOCKET)
 
-PROXY_HOST = ENV.fetch('PROXY_HOST', '127.0.0.1')
-PROXY_PORT = ENV.fetch('PROXY_PORT', '8888')
-NO_PROXY   = ENV.fetch('NO_PROXY', "localhost,*.localdomain")
+GLOBAL_PROXY_HOST = URI.parse(
+  ENV.fetch('HTTP_PROXY', '')
+).hostname
+
+GLOBAL_PROXY_PORT = URI.parse(
+  ENV.fetch('HTTP_PROXY', '')
+).port
+
+GLOBAL_NO_PROXY = ENV.fetch('NO_PROXY', '')
+
+PROXY_HOST = ENV.fetch('PROXY_HOST', GLOBAL_PROXY_HOST || '127.0.0.1')
+PROXY_PORT = ENV.fetch('PROXY_PORT', GLOBAL_PROXY_PORT || '8888')
+NO_PROXY   = ENV.fetch('NO_PROXY', GLOBAL_NO_PROXY || "localhost,*.localdomain")
 
 Vagrant.configure('2') do |config|
-  config.vm.box = BOX
-
   # config.proxy.enabled   = true
   config.proxy.http      = "http://#{PROXY_HOST}:#{PROXY_PORT}"
   config.proxy.https     = "http://#{PROXY_HOST}:#{PROXY_PORT}"
@@ -53,17 +62,31 @@ Vagrant.configure('2') do |config|
   # Disable the default share
   config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: DISABLE_SHARE
 
-  config.vm.provision :shell, path: 'install.sh'
 
   # config.vm.provision :chef_solo do |chef|
   #   chef.cookbooks_path = "."
   #   chef.install = true
   # end
 
+  config.vm.define "default" do |default|
+    # set this to true, if you want to use a global proxy
+    default.proxy.enabled = false if !GLOBAL_PROXY_HOST
+
+    default.vm.box = BOX
+    default.vm.provision :shell, path: 'install-debian.sh'
+  end
+
+  config.vm.define "centos7-client" do |centos7|
+    # set this to true, if you want to use a global proxy
+    centos7.proxy.enabled = false
+
+    centos7.vm.box = "centos/7"
+    centos7.vm.provision :shell, path: 'install-c7.sh'
+  end
+
   config.vm.provider :virtualbox do |vb, override|
-    override.proxy.enabled = ENABLE_PROXY
+    # override.proxy.enabled = ENABLE_PROXY
     vb.cpus = 1
     vb.memory = 768
   end
-
 end

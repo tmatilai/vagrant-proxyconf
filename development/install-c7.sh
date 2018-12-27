@@ -1,47 +1,42 @@
 #!/bin/bash
 
-INSTALL_APT_PKGS=
-APT_PKGS="tinyproxy
-apt-transport-https
-ca-certificates
+INSTALL_YUM_PKGS=
+YUM_PKGS="tinyproxy
 curl
 git
 gnupg2
 php-pear
 npm
-software-properties-common
 subversion
-yum
 "
 
-is_apt_pkg_installed() {
-  dpkg -l ${1} >>/dev/null 2>&1
+is_yum_pkg_installed() {
+  rpm -q ${1} >>/dev/null 2>&1
 }
 
-for PKG in $APT_PKGS
+is_yum_pkg_installed "epel-release" || yum -y install epel-release
+
+for PKG in $YUM_PKGS
 do
-  is_apt_pkg_installed ${PKG}
+  is_yum_pkg_installed ${PKG}
   if [ $? -ne 0 ]; then
-    [ -z "${INSTALL_APT_PKGS}" ] && INSTALL_APT_PKGS="${PKG}" || INSTALL_APT_PKGS="${INSTALL_APT_PKGS} ${PKG}"
+    [ -z "${INSTALL_YUM_PKGS}" ] && INSTALL_YUM_PKGS="${PKG}" || INSTALL_YUM_PKGS="${INSTALL_YUM_PKGS} ${PKG}"
   fi
 done
 
-if [ -n "${INSTALL_APT_PKGS}" ]; then
-  apt-get update
-  apt-get install -y ${INSTALL_APT_PKGS}
+if [ -n "${INSTALL_YUM_PKGS}" ]; then
+  yum clean expire-cache
+  yum install -y ${INSTALL_YUM_PKGS}
 fi
 
 command -v docker >>/dev/null
 if [ $? -ne 0 ]; then
-  curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+  cd /etc/yum.repos.d/
+  curl -LO https://download.docker.com/linux/centos/docker-ce.repo
+  cd - >>/dev/null
 
-  add-apt-repository \
-     "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-     $(lsb_release -cs) \
-     stable"
-
-  apt-get update
-  apt-get -y install docker-ce
+  yum clean expire-cache
+  yum -y install docker-ce
 fi
 
 cat > /etc/tinyproxy/tinyproxy.conf <<EOF
