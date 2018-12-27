@@ -36,7 +36,7 @@ end
 # and this is the future for using testing vagrant behind bundler.
 # https://stackoverflow.com/questions/19492738/demand-a-vagrant-plugin-within-the-vagrantfile
 group :plugins do
-  gem 'vagrant-proxyconf', path: '.'
+  gem 'vagrant-proxyconf', path: __dir__
   gem 'vagrant-vbguest', '~> 0.17'
   gem 'vagrant-omnibus', '1.5.0'
 end
