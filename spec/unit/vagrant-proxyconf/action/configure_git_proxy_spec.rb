@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'vagrant-proxyconf/action/configure_git_proxy'
-require 'pry'
 
 describe VagrantPlugins::ProxyConf::Action::ConfigureGitProxy do
 

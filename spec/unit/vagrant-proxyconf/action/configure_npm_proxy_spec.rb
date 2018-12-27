@@ -1,4 +1,3 @@
-require 'pry'
 require 'spec_helper'
 require 'vagrant-proxyconf/action/configure_npm_proxy'
 

@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'vagrant-proxyconf/config/proxy'
 require 'vagrant-proxyconf/action/configure_docker_proxy'
-require 'pry'
 
 def mock_write_docker_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf", error_check: false)

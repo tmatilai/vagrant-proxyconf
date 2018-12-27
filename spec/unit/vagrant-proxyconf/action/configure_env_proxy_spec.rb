@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'vagrant-proxyconf/action/configure_env_proxy'
 require 'vagrant-proxyconf/config/proxy'
-require 'pry'
 
 describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
 
