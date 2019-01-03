@@ -14,12 +14,15 @@ module VagrantPlugins
         def call(env)
           @machine = env[:machine]
 
-          if disabled? || !config.enabled?
+          if skip?
+            logger.info I18n.t("vagrant_proxyconf.#{config_name}.skip")
+            env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.skip")
+          elsif !supported?
+            logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
+          elsif disabled?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.unconfiguring") if supported?
             unconfigure_machine
-          elsif !supported?
-            logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
           else
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.configuring")
             configure_machine
@@ -115,9 +118,35 @@ module VagrantPlugins
         def disabled?
           enabled = @machine.config.proxy.enabled
           return true if enabled == false || enabled == ''
+          return false if enabled == true
 
           app_name = config_name.gsub(/_proxy/, '').to_sym
-          return enabled[app_name] == false if enabled.respond_to?(:key)
+
+          if enabled.respond_to?(:key)
+            # if boolean value, return original behavior as mentioned in Readme
+            return enabled[app_name] == false if [true, false].include?(enabled[app_name])
+
+            # otherwise assume new behavior using :enabled as a new hash key
+            return enabled[app_name][:enabled] == false
+          end
+
+          false
+        end
+
+        def skip?
+          enabled = @machine.config.proxy.enabled
+          return true if enabled == false || enabled == ''
+          return false if enabled == true
+
+          app_name = config_name.gsub(/_proxy/, '').to_sym
+
+          if enabled.respond_to?(:key)
+            # if boolean value, return original behavior as mentioned in Readme
+            return enabled[app_name] == false if [true, false].include?(enabled[app_name])
+
+            # otherwise assume new behavior using :enabled as a new hash key
+            return enabled[app_name][:skip] == true
+          end
 
           false
         end

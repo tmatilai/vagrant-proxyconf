@@ -33,11 +33,14 @@ module VagrantPlugins
           b.use Builtin::Call, IsEnabled do |env, b2|
             # next if !env[:result]
 
-            b2.use ConfigureDockerProxy
-            b2.use ConfigureGitProxy
-            b2.use ConfigureNpmProxy
-            b2.use ConfigurePearProxy
-            b2.use ConfigureSvnProxy
+            # TODO: Do we really need to configure only specific proxies after the provisioner runs?
+            #       Shouldn't they already be configured by this point?
+            #       Cody Lane - Dec 2018
+            # b2.use ConfigureDockerProxy
+            # b2.use ConfigureGitProxy
+            # b2.use ConfigureNpmProxy
+            # b2.use ConfigurePearProxy
+            # b2.use ConfigureSvnProxy
           end
         end
       end
@@ -51,6 +54,11 @@ module VagrantPlugins
           b.use Builtin::Call, IsEnabled do |env, b2|
             # next if !env[:result]
 
+            # IsEnabled doesn't seem to be quiet right becuse it only seems to check if the proxy has been disabled
+            # globally which isn't always what we want. We don't want to skip configuring a service or services
+            # because of a disable toggle. Instead we defer to each action class because the implementation for
+            # skipping over a service or checking if it is disabled is implmeneted there. To be more clear the real
+            # implementation is actually in action/base.rb#call
             b2.use ConfigureAptProxy
             b2.use ConfigureChefProxy
             b2.use ConfigureDockerProxy
