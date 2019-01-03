@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SESTATUS=$(command -v sestatus)
+[ -n "${SESTATUS}" ] && setenforce 0 || true
+
 INSTALL_YUM_PKGS=
 YUM_PKGS="curl
 git
@@ -27,9 +30,6 @@ if [ -n "${INSTALL_YUM_PKGS}" ]; then
   yum clean expire-cache
   yum install -y ${INSTALL_YUM_PKGS}
 fi
-
-SESTATUS=$(command -v sestatus)
-[ -n "${SESTATUS}" ] && setenforce 0 || true
 
 command -v docker >>/dev/null
 if [ $? -ne 0 ]; then
