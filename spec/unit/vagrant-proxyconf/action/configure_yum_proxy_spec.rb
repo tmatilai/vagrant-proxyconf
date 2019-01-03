@@ -41,4 +41,104 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureYumProxy do
       it { is_expected.to eq %q{-v proxy=http://proxy.com:8080 -v user=foo\% -v pass=abc\#123} }
     end
   end
+
+  describe "#configure_machine" do
+    let(:machine) { double('machine') }
+    let(:config) { OpenStruct.new }
+
+    context "when not supported" do
+      subject do
+        yum_proxy = described_class.new(nil, nil)
+        yum_proxy.instance_variable_set(:@machine, machine)
+
+        allow(yum_proxy).to receive(:config) { config }
+        allow(machine).to receive_message_chain(:guest, :capability?).with(:yum_proxy_conf).and_return(false)
+        allow(machine).to receive_message_chain(:guest, :capability).with(:yum_proxy_conf).and_return(nil)
+
+        yum_proxy.send(:configure_machine)
+      end
+
+      it 'returns nil' do
+        is_expected.to eq nil
+      end
+    end
+
+    context "when supported" do
+      subject do
+        yum_proxy = described_class.new(nil, nil)
+        yum_proxy.instance_variable_set(:@machine, machine)
+
+        config.http = "http://username:pass@some-yum-proxy-server:8080"
+
+        allow(yum_proxy).to receive(:config) { config }
+        allow(machine).to receive_message_chain(:guest, :capability?).with(:yum_proxy_conf).and_return(true)
+        allow(machine).to receive_message_chain(:guest, :capability).with(:yum_proxy_conf).and_return("/etc/yum.conf")
+
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf", error_check: false)
+        allow(machine).to receive_message_chain(:communicate, :upload)
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("touch /etc/yum.conf")
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("gawk -f /tmp/vagrant-proxyconf -v proxy=http://some-yum-proxy-server:8080 -v user=username -v pass=pass /etc/yum.conf > /etc/yum.conf.new")
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/yum.conf.new")
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/yum.conf.new")
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("mv -f /etc/yum.conf.new /etc/yum.conf")
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf")
+
+        yum_proxy.send(:configure_machine)
+      end
+
+      it 'returns true' do
+        is_expected.to eq true
+      end
+
+    end
+  end
+
+  describe "#unconfigure_machine" do
+    let(:machine) { double('machine') }
+    let(:config) { OpenStruct.new }
+
+    context "when not supported" do
+      subject do
+        yum_proxy = described_class.new(nil, nil)
+        yum_proxy.instance_variable_set(:@machine, machine)
+
+        allow(yum_proxy).to receive(:config) { config }
+        allow(machine).to receive_message_chain(:guest, :capability?).with(:yum_proxy_conf).and_return(false)
+        allow(machine).to receive_message_chain(:guest, :capability).with(:yum_proxy_conf).and_return(nil)
+
+        yum_proxy.send(:unconfigure_machine)
+      end
+
+      it 'returns nil' do
+        is_expected.to eq nil
+      end
+    end
+
+    context "when supported" do
+      subject do
+        yum_proxy = described_class.new(nil, nil)
+        yum_proxy.instance_variable_set(:@machine, machine)
+
+        config.proxy = OpenStruct.new
+        config.proxy.enabled = false
+        config.http = "http://username:pass@some-yum-proxy-server:8080"
+
+        allow(yum_proxy).to receive(:config) { config }
+        allow(machine).to receive(:config) { config }
+
+        allow(machine).to receive_message_chain(:guest, :capability?).with(:yum_proxy_conf).and_return(true)
+        allow(machine).to receive_message_chain(:guest, :capability).with(:yum_proxy_conf).and_return("/etc/yum.conf")
+
+        allow(machine).to receive_message_chain(:communicate, :test).with("grep '^proxy' /etc/yum.conf").and_return(true)
+        allow(machine).to receive_message_chain(:communicate, :sudo).with("sed -i.bak -e '/^proxy/d' /etc/yum.conf")
+
+        yum_proxy.send(:unconfigure_machine)
+      end
+
+      it 'returns true' do
+        is_expected.to eq true
+      end
+    end
+  end
+
 end

@@ -1,11 +1,96 @@
 require 'spec_helper'
 require 'vagrant-proxyconf/action/configure_svn_proxy'
 
+def mock_write_config(machine)
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf", error_check: false)
+  allow(machine).to receive_message_chain(:communicate, :upload)
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /tmp/vagrant-proxyconf")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /tmp/vagrant-proxyconf")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/subversion")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mv -f /tmp/vagrant-proxyconf /etc/subversion/servers")
+end
+
 describe VagrantPlugins::ProxyConf::Action::ConfigureSvnProxy do
 
   describe '#config_name' do
     subject { described_class.new(double, double).config_name }
     it      { is_expected.to eq 'svn_proxy' }
+  end
+
+  describe "#configure_machine" do
+    let(:config) { OpenStruct.new }
+    let(:machine) { double('machine') }
+
+    subject do
+      svn_proxy = described_class.new(nil, nil)
+      svn_proxy.instance_variable_set(:@machine, machine)
+
+      allow(svn_proxy).to receive(:config) { config }
+      allow(machine).to receive_message_chain(:guest, :capability?).with(:svn_proxy_conf).and_return(@supported)
+      allow(machine).to receive_message_chain(:guest, :capability).with(:svn_proxy_conf).and_return(@supported)
+
+      mock_write_config(machine)
+
+      svn_proxy.send(:configure_machine)
+    end
+
+    it 'returns nil, when not supported' do
+      @supported = false
+
+      config.http = 'http://some-svn-proxy:8080'
+      config.no_proxy = 'localhost'
+
+      is_expected.to eq nil
+    end
+
+    it 'returns true, when supported' do
+      @supported = true
+
+      config.http = 'http://some-svn-proxy:8080'
+      config.no_proxy = 'localhost'
+
+      is_expected.to eq true
+    end
+
+  end
+
+  describe "#unconfigure_machine" do
+    let(:config) { OpenStruct.new }
+    let(:machine) { double('machine') }
+
+    subject do
+      svn_proxy = described_class.new(nil, nil)
+      svn_proxy.instance_variable_set(:@machine, machine)
+
+      allow(svn_proxy).to receive(:config) { config }
+      allow(machine).to receive_message_chain(:guest, :capability?).with(:svn_proxy_conf).and_return(@supported)
+      allow(machine).to receive_message_chain(:guest, :capability).with(:svn_proxy_conf).and_return(@supported)
+
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("touch /etc/subversion/servers")
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("sed -i.bak -e '/^http-proxy-/d' /etc/subversion/servers")
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/subversion/servers")
+      allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/subversion/servers")
+
+      svn_proxy.send(:unconfigure_machine)
+    end
+
+    it 'returns nil, when not supported' do
+      @supported = false
+
+      config.http = 'http://some-svn-proxy:8080'
+      config.no_proxy = 'localhost'
+
+      is_expected.to eq nil
+    end
+
+    it 'returns true, when supported' do
+      @supported = true
+
+      config.http = 'http://some-svn-proxy:8080'
+      config.no_proxy = 'localhost'
+
+      is_expected.to eq true
+    end
   end
 
   describe '#svn_config' do

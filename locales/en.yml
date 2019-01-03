@@ -7,6 +7,10 @@ en:
         Skipping Apt proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Apt...
+      skip: |-
+        Skipping configuration of apt_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Apt...
 
     docker_proxy:
       not_enabled: |-
@@ -15,6 +19,10 @@ en:
         Skipping Docker proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Docker...
+      skip: |-
+        Skipping configuration of docker_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Docker...
 
     chef_proxy:
       no_provisioners: |-
@@ -23,6 +31,10 @@ en:
         Default proxy not enabled or configured. Skipping Chef provisioner configuration.
       configuring: |-
         Configuring proxy for Chef provisioners...
+      skip: |-
+        Skipping configuration of chef_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Chef provisioners...
 
     env_proxy:
       not_enabled: |-
@@ -31,6 +43,10 @@ en:
         Skipping environment variable based proxy config as the machine does not support it
       configuring: |-
         Configuring proxy environment variables...
+      skip: |-
+        Skipping configuration of env_proxy
+      unconfiguring: |-
+        Unconfiguring proxy environment variables...
 
     git_proxy:
       not_enabled: |-
@@ -39,6 +55,10 @@ en:
         Skipping Git proxy config as `git` is not found
       configuring: |-
         Configuring proxy for Git...
+      skip: |-
+        Skipping configuration of git_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Git...
 
     npm_proxy:
       not_enabled: |-
@@ -47,6 +67,10 @@ en:
         Skipping npm proxy config as `npm` is not found
       configuring: |-
         Configuring proxy for npm...
+      skip: |-
+        Skipping configuration of npm_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for npm...
 
     pear_proxy:
       not_enabled: |-
@@ -55,6 +79,10 @@ en:
         Skipping PEAR proxy config as `pear` is not found
       configuring: |-
         Configuring proxy for PEAR...
+      skip: |-
+        Skipping configuration of pear_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for PEAR...
 
     svn_proxy:
       not_enabled: |-
@@ -63,6 +91,10 @@ en:
         Skipping Subversion proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Subversion...
+      skip: |-
+        Skipping configuration of svn_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Subversion...
 
     yum_proxy:
       not_enabled: |-
@@ -71,6 +103,12 @@ en:
         Skipping Yum proxy config as the machine does not support it
       configuring: |-
         Configuring proxy for Yum...
+      skip: |-
+        Skipping configuration of yum_proxy
+      unconfiguring: |-
+        Unconfiguring proxy for Yum...
+
+    errors:
 
     errors:
       vagrant_version: |-

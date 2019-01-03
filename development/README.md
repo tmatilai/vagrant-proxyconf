@@ -6,6 +6,8 @@
 
 2. Spin up the machine:
 
+   * If you don't have an external proxy set ENABLE_PROXY=false on the first run of the vm, then switch it to `true` after the VM has been built to avoid using the proxy before it is setup.
+
         bundle exec vagrant up
 
 3. Test, hack, edit _Vagrantfile_ and test again:

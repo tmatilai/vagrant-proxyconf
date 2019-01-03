@@ -13,6 +13,11 @@ module VagrantPlugins
         Cap::Linux::DockerProxyConf
       end
 
+      guest_capability 'linux', 'chef_proxy_conf' do
+        require_relative 'cap/linux/chef_proxy_conf'
+        Cap::Linux::ChefProxyConf
+      end
+
       guest_capability 'coreos', 'docker_proxy_conf' do
         require_relative 'cap/coreos/docker_proxy_conf'
         Cap::CoreOS::DockerProxyConf
@@ -56,6 +61,11 @@ module VagrantPlugins
       guest_capability 'redhat', 'yum_proxy_conf' do
         require_relative 'cap/redhat/yum_proxy_conf'
         Cap::Redhat::YumProxyConf
+      end
+
+      guest_capability 'linux', 'yum_proxy_conf' do
+        require_relative 'cap/linux/yum_proxy_conf'
+        Cap::Linux::YumProxyConf
       end
     end
   end

@@ -17,7 +17,7 @@ describe VagrantPlugins::ProxyConf::Cap::Linux::DockerProxyConf do
         (c == 'docker') ? '/path/to/docker' : false
       end
       allow(communicator).to receive(:test) do |c|
-        c == 'cat /etc/redhat-release'
+        c == '[ -f /etc/redhat-release ]'
       end
 
       expect(described_class.docker_proxy_conf(machine)).to eq '/etc/sysconfig/docker'

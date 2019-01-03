@@ -1,4 +1,20 @@
-# 1.5.3 / _Unreleased_
+# 2.0.0 / 2019-01-03
+
+Improvements:
+
+  - Significant refactor to support disabling a proxy. Now when `config.proxy.enabled = false` all supporting proxies will be uncofigured.
+  - Added new tests for new features.
+  - Updated README.md to reflect new behavior.
+  - Cleaned up travis builds to support newere versions of vagrant.
+
+Features:
+  - Added new configuration parameter for `skipping` configuring a disabled or enabled proxy.
+
+Bug Fixes:
+
+  - Disable proxy settings in provisioned box ([GH-167][])
+  - unable to disable proxy for chef provisioners ([GH-118][])
+  - Proxy remains enabled after updating config ([GH-87][])
 
 
 # 1.5.2 / 2015-10-01

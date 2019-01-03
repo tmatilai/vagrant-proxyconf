@@ -1,20 +1,167 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require 'uri'
 
-BOX = ENV.fetch('BOX', 'ubuntu-12.04')
+BOX = ENV.fetch('BOX', 'ubuntu/bionic64')
+DISABLE_SHARE = true
+ENABLE_PROXY = false
+ENABLE_APP_SPECIFIC_PROXIES = !ENABLE_PROXY
 
-Vagrant.require_plugin 'vagrant-proxyconf'
+APP_PROXIES = {
+  :apt    => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :chef => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :docker => {
+    :enabled => true,
+    :skip    => false
+  },
+  :env => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :git => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :npm => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :pear => {
+    :enabled => true,
+    :skip    => false
+  },
+  :svn => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :yum => {
+    :enabled => true,
+    :skip    => false,
+  },
+}
+
+
+DOCKER_SOCKET = "/var/run/docker.sock"
+SUPPORTS_DOCKER_IN_DOCKER = File.exists?(DOCKER_SOCKET)
+
+GLOBAL_PROXY_HOST = URI.parse(
+  ENV.fetch('HTTP_PROXY', '')
+).hostname
+
+GLOBAL_PROXY_PORT = URI.parse(
+  ENV.fetch('HTTP_PROXY', '')
+).port
+
+GLOBAL_NO_PROXY = ENV.fetch('NO_PROXY', '')
+
+PROXY_HOST = GLOBAL_PROXY_HOST || '70.70.70.10'
+PROXY_PORT = GLOBAL_PROXY_PORT || '8888'
+NO_PROXY   = GLOBAL_NO_PROXY   || "localhost,*.localdomain"
 
 Vagrant.configure('2') do |config|
-  # Apt proxy
-  config.apt_proxy.http  = '192.168.33.200'
-  config.apt_proxy.https = 'DIRECT'
+  raise Exception, "Please install vagrant-proxyconf" unless Vagrant.has_plugin?('vagrant-proxyconf')
+
+  # config.proxy.enabled   = true
+  config.proxy.http      = "http://#{PROXY_HOST}:#{PROXY_PORT}"
+  config.proxy.https     = "http://#{PROXY_HOST}:#{PROXY_PORT}"
+  config.proxy.no_proxy  = "#{NO_PROXY}"
+
+  # APT proxy
+  # config.apt_proxy.http  = 'http://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.apt_proxy.https = 'https://#{PROXY_HOST}:#{PROXY_PORT}'
+
+  # CHEF proxy
+  # config.chef_proxy.http     = 'http://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.chef_proxy.https    = 'https://#{PROXY_HOST}:#{PROXY_PORT}'
+  # config.chef_proxy.no_proxy = "#{NO_PROXY}"
+
+  # DOCKER proxy
+  # config.docker_proxy.http  = config.proxy.http
+  # config.docker_proxy.https = config.proxy.https
+  # config.docker_proxy.no_proxy = config.proxy.no_proxy
+
+  # GIT proxy
+  # config.git_proxy.http = config.proxy.http
+  # config.git_proxy.https = config.proxy.https
+
+  # NPM proxy
+  # config.npm_proxy.http = config.proxy.http
+  # config.npm_proxy.https = config.proxy.https
+  # config.npm_proxy.no_proxy = config.proxy.no_proxy
+
+  # PEAR proxy
+  # config.pear_proxy.http     = config.proxy.http
+
+  # SVN proxy
+  # config.svn_proxy.http     = config.proxy.http
+  # config.svn_proxy.no_proxy = config.proxy.no_proxy
+
+  # YUM proxy
+  # config.yum_proxy.http = config.proxy.http
+
+  # app specific proxies
+  if ENABLE_APP_SPECIFIC_PROXIES
+    config.proxy.enabled = {}
+
+    APP_PROXIES.each do |k, v|
+      config.proxy.enabled[k] = v
+    end
+  else
+    config.proxy.enabled = ENABLE_PROXY
+  end
 
   # Disable the default share
-  config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: true
+  config.vm.synced_folder '.', '/vagrant', id: 'vagrant-root', disabled: DISABLE_SHARE
 
-  config.vm.box = BOX
-  if BOX == 'ubuntu-12.04'
-    config.vm.box_url = 'https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box'
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.cookbooks_path = "."
+  #   chef.install = true
+  # end
+
+  # Vagrant >= 1.7 wants to replace the insecure_key with public boxes, but
+  # there is a bug in that implentation so we just allow the insecure_key
+  # anyway.
+  config.ssh.insert_key = false
+  config.vm.box_check_update = false
+
+  config.vm.define "default" do |default|
+    # set this to true, if you want to use a global proxy
+    default.proxy.enabled = false if !GLOBAL_PROXY_HOST
+    default.proxy.enabled = {
+      :apt => false
+    }
+
+    default.vm.box = BOX
+
+    default.vm.provision "file", source: "./tinyproxy.conf", destination: "/tmp/tinyproxy.conf"
+    default.vm.provision :shell, path: 'install-debian.sh'
+
+    default.vm.network "private_network", ip: "70.70.70.10"
+  end
+
+  config.vm.define "centos7-client" do |centos7|
+    centos7.proxy.enabled = config.proxy.enabled
+    centos7.vm.box = "centos/7"
+
+    centos7.vm.network "private_network", ip: "70.70.70.20"
+
+    centos7.vm.provision :shell, path: 'install-c7.sh'
+  end
+
+  config.vm.provider :virtualbox do |vb, override|
+    # override.proxy.enabled = ENABLE_PROXY
+    vb.cpus = 1
+    vb.memory = 1024
+
+    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ] if config.vm.box =~ /xenial|bionic/
+
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
   end
 end

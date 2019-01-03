@@ -1,0 +1,9 @@
+{
+  "proxies": {
+    "default": {
+      "httpProxy": "http://proxy-server-01.example.com:8080",
+      "httpsProxy": "https://proxy-server-01.example.com:8080",
+      "noProxy": "localhost,*.example.com,.example.com"
+    }
+  }
+}
