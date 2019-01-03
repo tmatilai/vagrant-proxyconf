@@ -118,12 +118,12 @@ VAGRANT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 
 ### Disabling the plugin
 
-The plugin can be totally skipped by setting `config.proxy.enabled` to `false` or empty string (`""`).
-This can be useful to for example disable it for some provider.
-Specific applications can be skipped by setting `config.proxy.enabled` to
-a hash( like `{ svn: false }`).
-This disabling keeps proxy configurations for applications on the guest.
-The configurations must be cleared before disabling if needed.
+New Behavior Warning: Setting the plugin to disabled now unconfigures all or specific proxies.
+
+The plugin can be disabled by setting `config.proxy.enabled` to `false` or empty string (`""`).
+This can be also be used to disable a proxy for some provider.
+Specific applications can be disabled by setting `config.proxy.enabled` to
+a hash( like `{ svn: false }` or `{ svn: {enabled: false} }`).
 
 ```ruby
 config.proxy.enabled         # => all applications enabled(default)
@@ -133,6 +133,53 @@ config.proxy.enabled = { svn: false, docker: false }
 config.proxy.enabled = ""    # => all applications disabled
 config.proxy.enabled = false # => all applications disabled
 ```
+
+### Skipping the plugin
+
+The plugin can also be skipped from applying/removing the proxy configuration for a specific provider.
+
+#### When the plugin is disabled as in the following example:
+
+```
+{
+  :apt => {
+    :enabled => false,
+    :skip    => true,
+  },
+  :svn => {
+    :enabled => false,
+    :skip    => true,
+  },
+}
+```
+
+The plugin is disabled, but `skip = true` means that no proxy configuration will be removed so the system
+will remain in it's most recent state. This can be useful if you just want to skip over specific provider
+being configured or unconfigured.
+
+
+#### When the plugin is enabled as in the following example:
+
+```
+{
+  :apt => {
+    :enabled => true,
+    :skip    => false,
+  },
+  :svn => {
+    :enabled => true,
+    :skip    => true,
+  },
+}
+```
+
+The plugin is enabled, but `skip = true` means that no proxy configuration will be applied so the system
+will remain in it's most recent state. This can be useful if you just want to skip over specific provider
+being configured or unconfigured.
+
+In the example above the `apt` proxy will be enabled and proxy configuration will be applied, but the
+`svn` proxy even though it's enabled will be skipped.
+
 
 #### Example Vagrantfile
 
@@ -179,12 +226,36 @@ end
 #### Environment variables
 These also override the Vagrantfile configuration. To disable or remove the proxy use "DIRECT" or an empty value.
 
-For example to spin up a VM, run:
+For example to spin up a VM and set the APT proxy to `http://proxy.example.com:8080, run:
 
 ```sh
 VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 ```
 
+|  Provider | Environment Variable         | Descrption                    | Precendence |
+|-----------|------------------------------|-------------------------------|-------------|
+| apt       | `VAGRANT_APT_HTTP_PROXY`     | Configures APT http proxy     | Highest     |
+|           | `VAGRANT_APT_HTTPS_PROXY`    | Configures APT https proxy    | Highest     |
+|           | `VAGRANT_APT_FTP_PROXY`      | Configures APT ftp proxy      | Highest     |
+| chef      | `VAGRANT_CHEF_HTTP_PROXY`    | Configures CHEF http proxy    | Highest     |
+|           | `VAGRANT_CHEF_HTTPS_PROXY`   | Configures CHEF https proxy   | Highest     |
+|           | `VAGRANT_CHEF_NO_PROXY`      | Configures CHEF no proxy      | Highest     |
+| docker    | `VAGRANT_DOCKER_HTTP_PROXY`  | Configuers DOCKER http proxy  | Highest     |
+|           | `VAGRANT_DOCKER_HTTPS_PROXY` | Configures DOCKER https proxy | Highest     |
+|           | `VAGRANT_DOCKER_NO_PROXY`    | Configures DOCKER no proxy    | Highest     |
+| env       | `VAGRANT_ENV_HTTP_PROXY`     | Configures ENV http proxy     | Highest     |
+|           | `VAGRANT_ENV_HTTPS_PROXY`    | Configures ENV https proxy    | Highest     |
+|           | `VAGRANT_ENV_FTP_PROXY`      | Configures ENV FTP proxy      | Highest     |
+|           | `VAGRANT_ENV_NO_PROXY`       | Configures ENV no proxy       | Highest     |
+| git       | `VAGRANT_GIT_HTTP_PROXY`     | Configures GIT http proxy     | Highest     |
+|           | `VAGRANT_GIT_HTTPS_PROXY`    | Configures GIT https proxy    | Highest     |
+| npm       | `VAGRANT_NPM_HTTP_PROXY`     | Configures NPM http proxy     | Highest     |
+|           | `VAGRANT_NPM_HTTPS_PROXY`    | Configures NPM https proxy    | Highest     |
+|           | `VAGRANT_NPM_NO_PROXY`       | Configures NPM no proxy       | Highest     |
+| pear      | `VAGRANT_PEAR_HTTP_PROXY`    | Configures PEAR http proxy    | Highest     |
+| svn       | `VAGRANT_SVN_HTTP_PROXY`     | Configures SVN http proxy     | Highest     |
+|           | `VAGRANT_SVN_NO_PROXY`       | Configures SVN no proxy       | Highest     |
+| yum       | `VAGRANT_YUM_HTTP_PROXY`     | Configures YUM http proxy     | Highest     |
 
 ## Related plugins and projects
 
