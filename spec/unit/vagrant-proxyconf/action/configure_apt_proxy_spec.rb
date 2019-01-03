@@ -45,8 +45,129 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureAptProxy do
       end
 
     end
+  end
 
+  describe "#skip?" do
+    let(:machine) { double('machine') }
 
+    let(:config) { OpenStruct.new }
+
+    subject do
+      apt_proxy = described_class.new(nil, nil)
+      apt_proxy.instance_variable_set(:@machine, machine)
+
+      allow(machine).to receive_message_chain(:config, :proxy) { config }
+
+      apt_proxy.send(:skip?)
+    end
+
+    context "when config.proxy.enabled[:apt] = false" do
+      before(:each) do
+        config.enabled = {:apt => false}
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq true }
+    end
+
+    context "when config.proxy.enabled[:apt] = true" do
+      before(:each) do
+        config.enabled = {:apt => true}
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq false }
+    end
+
+    context "when config.proxy.enabled[:apt] = {:enabled => false, :skip => false}" do
+      before(:each) do
+        config.enabled = {
+          :apt => {
+            :enabled => false,
+            :skip    => false,
+          }
+        }
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq false }
+    end
+
+    context "when config.proxy.enabled[:apt] = {:enabled => true, :skip => false}" do
+      before(:each) do
+        config.enabled = {
+          :apt => {
+            :enabled => true,
+            :skip    => false,
+          }
+        }
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq false }
+    end
+
+    context "when config.proxy.enabled[:apt] = {:enabled => true, :skip => true}" do
+      before(:each) do
+        config.enabled = {
+          :apt => {
+            :enabled => true,
+            :skip    => true,
+          }
+        }
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq true }
+    end
+
+    context "when config.proxy.enabled[:apt] = {:enabled => false, :skip => true}" do
+      before(:each) do
+        config.enabled = {
+          :apt => {
+            :enabled => false,
+            :skip    => true,
+          }
+        }
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq true }
+    end
+
+    context "when config.proxy.enabled = false" do
+      before(:each) do
+        config.enabled = false
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq true }
+    end
+
+    context "when config.proxy.enabled = true " do
+      before(:each) do
+        config.enabled = true
+        config.http    = 'http://foo-proxy-server:8080'
+        config.https   = 'http://foo-prxoy-server:8080'
+        config.ftp     = 'ftp://foo-proxy-server:8080'
+      end
+
+      it { is_expected.to eq false }
+    end
   end
 
 end

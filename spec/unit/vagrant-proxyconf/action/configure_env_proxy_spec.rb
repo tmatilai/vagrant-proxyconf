@@ -41,9 +41,43 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
     end
 
     context 'when target config proxy is enabled' do
-      it do
-        @config_proxy_enabled = { env: true }
-        is_expected.to eq false
+      context 'given config.proxy.enabled is a Hash' do
+        it 'when has key :enabled => true and not skipped, #disabled? should return false' do
+          @config_proxy_enabled = {
+            :env => {
+              :enabled => true,
+              :skip    => false,
+            }
+          }
+          is_expected.to eq false
+        end
+
+        it 'when key :enabled => true and skipped => true, #disabled should return false' do
+          @config_proxy_enabled = {
+            :env => {
+              :enabled => true,
+              :skip    => true,
+            }
+          }
+          is_expected.to eq false
+        end
+
+        it 'when config.proxy.enabled[:env] = true, return false' do
+          @config_proxy_enabled = { :env => true }
+          is_expected.to eq false
+        end
+      end
+
+      context 'given config.proxy.enabled is a Boolean' do
+        it 'when true, #disabled? should return false' do
+          @config_proxy_enabled = true
+          is_expected.to eq false
+        end
+
+        it 'when false, #disabled? should return true' do
+          @config_proxy_enabled = false
+          is_expected.to eq true
+        end
       end
     end
 
@@ -60,6 +94,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureEnvProxy do
           apt: false,
           chef: false,
           docker: false,
+          env: true,
           git: false,
           npm: false,
           pear: false,
