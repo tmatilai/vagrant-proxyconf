@@ -11,16 +11,9 @@ module VagrantPlugins
 
         private
 
-        # @return [Vagrant::Plugin::V2::Config] the configuration
-        def config
-          return @config if @config
-
-          # Use only `config.git_proxy`, don't merge with the default config
-          @config = @machine.config.git_proxy
-          finalize_config(@config)
-        end
-
         def configure_machine
+          return if !supported?
+
           if config.http
             @machine.communicate.sudo(
               "#{git_path} config --system http.proxy #{config.http}")
@@ -29,6 +22,29 @@ module VagrantPlugins
               "#{git_path} config --system --unset-all http.proxy",
               error_check: false)
           end
+
+          if config.https
+            @machine.communicate.sudo(
+              "#{git_path} config --system https.proxy #{config.https}")
+          else
+            @machine.communicate.sudo(
+              "#{git_path} config --system --unset-all https.proxy",
+              error_check: false)
+          end
+
+          true
+        end
+
+        def unconfigure_machine
+          return if !supported?
+
+          # zero out the configuration
+          config.http = nil
+          config.https = nil
+
+          configure_machine
+
+          true
         end
 
         def git_path

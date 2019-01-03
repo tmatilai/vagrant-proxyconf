@@ -23,6 +23,24 @@ module VagrantPlugins
           end
         end
 
+        def unconfigure_machine
+          if windows_guest?
+            raise NotImplementedError, 'Sorry but I do not know how to disable a windows proxy yet, please open a feature request'
+          end
+
+          logger.info('Unconfiguring and or removing proxy configuration files')
+          unconfigure_linux
+        end
+
+        def unconfigure_linux
+          @machine.communicate.tap do |comm|
+            comm.sudo("rm -f /etc/sudoers.d/proxy")
+            comm.sudo("rm -f #{config_path}")
+          end
+
+          write_environment_config
+        end
+
         def configure_machine_windows
           set_windows_proxy('http_proxy', config.http)
           set_windows_proxy('https_proxy', config.https)
@@ -83,13 +101,15 @@ module VagrantPlugins
             comm.sudo("rm -f #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
             comm.sudo("touch #{path}")
-            comm.sudo("sed -e '#{sed_script}' #{path} > #{path}.new")
+            comm.sudo("sed -e '#{sed_script}' -e '/^$/d' #{path} > #{path}.new")
             comm.sudo("cat #{tmp} >> #{path}.new")
             comm.sudo("chmod 0644 #{path}.new")
             comm.sudo("chown root:root #{path}.new")
             comm.sudo("mv -f #{path}.new #{path}")
             comm.sudo("rm -f #{tmp}")
           end
+
+          true
         end
 
         def environment_sed_script
@@ -106,16 +126,22 @@ module VagrantPlugins
         end
 
         def environment_config
-          <<-CONFIG.gsub(/^\s+/, '')
-            HTTP_PROXY=#{config.http || ''}
-            HTTPS_PROXY=#{config.https || ''}
-            FTP_PROXY=#{config.ftp || ''}
-            NO_PROXY=#{config.no_proxy || ''}
-            http_proxy=#{config.http || ''}
-            https_proxy=#{config.https || ''}
-            ftp_proxy=#{config.ftp || ''}
-            no_proxy=#{config.no_proxy || ''}
-          CONFIG
+          return "" if disabled?
+
+          env_config = Hash.new
+          env_config["FTP_PROXY"]   = config.ftp if config.ftp
+          env_config["HTTP_PROXY"]  = config.http if config.http
+          env_config["HTTPS_PROXY"] = config.https if config.https
+          env_config["NO_PROXY"]    = config.no_proxy if config.no_proxy
+
+          config_items = env_config.map do |k,v|
+            <<-CONFIG.gsub(/^\s+/, '')
+              #{k.upcase}="#{v}"
+              #{k.downcase}="#{v}"
+            CONFIG
+          end
+
+          config_items.join("\n")
         end
       end
     end

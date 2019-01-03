@@ -1,5 +1,5 @@
 module VagrantPlugins
   module ProxyConf
-    VERSION = '1.5.3.dev'
+    VERSION = '2.0.0'
   end
 end

@@ -14,10 +14,15 @@ module VagrantPlugins
         def call(env)
           @machine = env[:machine]
 
-          if disabled? || !config.enabled?
-            logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
+          if skip?
+            logger.info I18n.t("vagrant_proxyconf.#{config_name}.skip")
+            env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.skip")
           elsif !supported?
             logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_supported")
+          elsif disabled?
+            logger.info I18n.t("vagrant_proxyconf.#{config_name}.not_enabled")
+            env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.unconfiguring") if supported?
+            unconfigure_machine
           else
             env[:ui].info I18n.t("vagrant_proxyconf.#{config_name}.configuring")
             configure_machine
@@ -66,6 +71,10 @@ module VagrantPlugins
           write_config(config)
         end
 
+        # Unconfigures the VM, expected to be added to overriden
+        def unconfigure_machine
+        end
+
         # Writes the config to the VM
         #
         # @param opts [Hash] optional file options
@@ -109,16 +118,41 @@ module VagrantPlugins
         def disabled?
           enabled = @machine.config.proxy.enabled
           return true if enabled == false || enabled == ''
+          return false if enabled == true
 
           app_name = config_name.gsub(/_proxy/, '').to_sym
-          return enabled[app_name] == false if enabled.respond_to?(:key)
+
+          if enabled.respond_to?(:key)
+            # if boolean value, return original behavior as mentioned in Readme
+            return enabled[app_name] == false if [true, false].include?(enabled[app_name])
+
+            # otherwise assume new behavior using :enabled as a new hash key
+            return enabled[app_name][:enabled] == false
+          end
+
+          false
+        end
+
+        def skip?
+          enabled = @machine.config.proxy.enabled
+          return true if enabled == false || enabled == ''
+          return false if enabled == true
+
+          app_name = config_name.gsub(/_proxy/, '').to_sym
+
+          if enabled.respond_to?(:key)
+            # if boolean value, return original behavior as mentioned in Readme
+            return enabled[app_name] == false if [true, false].include?(enabled[app_name])
+
+            # otherwise assume new behavior using :enabled as a new hash key
+            return enabled[app_name][:skip] == true
+          end
 
           false
         end
 
         def supported?
-          @machine.guest.capability?(cap_name) &&
-            @machine.guest.capability(cap_name)
+          @machine.guest.capability?(cap_name) && @machine.guest.capability(cap_name)
         end
 
         def config_path

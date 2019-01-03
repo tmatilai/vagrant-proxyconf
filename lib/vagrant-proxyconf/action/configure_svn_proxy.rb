@@ -12,17 +12,24 @@ module VagrantPlugins
 
         private
 
-        # @return [Vagrant::Plugin::V2::Config] the configuration
-        def config
-          return @config if @config
+        def configure_machine
+          return if !supported?
 
-          # Use only `config.svn_proxy`, don't merge with the default config
-          @config = @machine.config.svn_proxy
-          finalize_config(@config)
+          write_config(svn_config, path: '/etc/subversion/servers')
+
+          true
         end
 
-        def configure_machine
-          write_config(svn_config, path: '/etc/subversion/servers')
+        def unconfigure_machine
+          return if !supported?
+
+          @machine.communicate.tap do |comm|
+            comm.sudo("touch /etc/subversion/servers")
+            comm.sudo("sed -i.bak -e '/^http-proxy-/d' /etc/subversion/servers")
+            comm.sudo("chown root:root /etc/subversion/servers")
+            comm.sudo("chmod 0644 /etc/subversion/servers")
+          end
+          true
         end
 
         def svn_config

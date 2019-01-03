@@ -1,48 +1,34 @@
 require_relative '../logger'
 require_relative '../userinfo_uri'
+require_relative 'base'
 
 module VagrantPlugins
   module ProxyConf
     class Action
       # Action for configuring Chef provisioners
-      class ConfigureChefProxy
+      class ConfigureChefProxy < Base
 
         # Array of Chef provisioner types which include proxy configuration
         CHEF_PROVISIONER_TYPES = [:chef_client, :chef_solo, :chef_zero]
 
-        def initialize(app, env)
-          @app = app
-        end
-
-        def call(env)
-          @machine = env[:machine]
-
-          if chef_provisioners.empty?
-            logger.info I18n.t("vagrant_proxyconf.chef_proxy.no_provisioners")
-          elsif !config.enabled?
-            logger.info I18n.t("vagrant_proxyconf.chef_proxy.not_enabled")
-          else
-            env[:ui].info I18n.t("vagrant_proxyconf.chef_proxy.configuring")
-            configure_chef_provisioners
-          end
-
-          @app.call env
+        def config_name
+          'chef_proxy'
         end
 
         private
 
-        # @return [Log4r::Logger]
-        def logger
-          ProxyConf.logger
+        def configure_machine
+          configure_chef_provisioners
         end
 
-        # @return [Config::Proxy] the `config.proxy` configuration
-        def config
-          return @config if @config
+        def unconfigure_machine
+          configure_chef_provisioners
 
-          config = @machine.config.proxy
-          config.finalize! if Gem::Version.new(Vagrant::VERSION) < Gem::Version.new('1.2.5')
-          @config = config
+          true
+        end
+
+        def supported?
+          super && !chef_provisioners.empty?
         end
 
         # @return [Array] all Chef provisioners
@@ -67,6 +53,14 @@ module VagrantPlugins
         #
         # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
         def configure_chef(chef)
+          if disabled?
+            logger.info("chef_proxy is not enabled so we should unconfigure it")
+            unconfigure_chef_proxy(chef, 'http')
+            unconfigure_chef_proxy(chef, 'https')
+            return
+          end
+
+          logger.info("chef_proxy is enabled so we should configure it")
           configure_chef_proxy(chef, 'http', config.http)
           configure_chef_proxy(chef, 'https', config.https)
           chef.no_proxy ||= config.no_proxy if config.no_proxy
@@ -76,12 +70,23 @@ module VagrantPlugins
         # @param scheme [String] the http protocol (http or https)
         # @param uri [String] the URI with optional userinfo
         def configure_chef_proxy(chef, scheme, uri)
-          if uri && !chef.public_send("#{scheme}_proxy")
+          if uri && !chef.public_send("#{scheme}_proxy") && !disabled?
             u = UserinfoURI.new(uri)
             chef.public_send("#{scheme}_proxy_user=", u.user)
             chef.public_send("#{scheme}_proxy_pass=", u.pass)
             chef.public_send("#{scheme}_proxy=", u.uri)
+            logger.info("chef_proxy has been successfully configured")
           end
+        end
+
+        # @param chef [VagrantPlugins::Chef::Config::Base] the Chef provisioner configuration
+        # @param scheme [String] the http protocol (http or https)
+        def unconfigure_chef_proxy(chef, scheme)
+          chef.public_send("#{scheme}_proxy_user=", nil)
+          chef.public_send("#{scheme}_proxy_pass=", nil)
+          chef.public_send("#{scheme}_proxy=", nil)
+          chef.no_proxy = nil
+          logger.info("chef_proxy has been successfully unconfigured")
         end
       end
     end

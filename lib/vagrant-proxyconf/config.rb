@@ -8,6 +8,16 @@ module VagrantPlugins
         Config::AptProxy
       end
 
+      config 'chef_proxy' do
+        require_relative 'config/chef_proxy'
+        Config::ChefProxy
+      end
+
+      config 'docker_proxy' do
+        require_relative 'config/docker_proxy'
+        Config::DockerProxy
+      end
+
       config 'env_proxy' do
         require_relative 'config/env_proxy'
         Config::EnvProxy
@@ -16,6 +26,16 @@ module VagrantPlugins
       config 'git_proxy' do
         require_relative 'config/git_proxy'
         Config::GitProxy
+      end
+
+      config 'npm_proxy' do
+        require_relative 'config/npm_proxy'
+        Config::NpmProxy
+      end
+
+      config 'pear_proxy' do
+        require_relative 'config/pear_proxy'
+        Config::PearProxy
       end
 
       config 'proxy' do

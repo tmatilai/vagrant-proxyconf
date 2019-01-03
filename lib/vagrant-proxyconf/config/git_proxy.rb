@@ -13,6 +13,9 @@ module VagrantPlugins
 
         # @return [String] the HTTP proxy
         key :http, env_var: 'VAGRANT_GIT_HTTP_PROXY'
+
+        # @return [String] the HTTPS proxy
+        key :https, env_var: 'VAGRANT_GIT_HTTPS_PROXY'
       end
     end
   end
