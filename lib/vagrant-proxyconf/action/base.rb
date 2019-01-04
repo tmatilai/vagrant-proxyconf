@@ -123,8 +123,12 @@ module VagrantPlugins
           app_name = config_name.gsub(/_proxy/, '').to_sym
 
           if enabled.respond_to?(:key)
+            return false if enabled.has_key?(app_name) == false
+
             # if boolean value, return original behavior as mentioned in Readme
             return enabled[app_name] == false if [true, false].include?(enabled[app_name])
+
+            return false if enabled[app_name].has_key?(:skip) == false
 
             # otherwise assume new behavior using :enabled as a new hash key
             return enabled[app_name][:enabled] == false
