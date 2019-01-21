@@ -133,9 +133,6 @@ Vagrant.configure('2') do |config|
   config.vm.define "default" do |default|
     # set this to true, if you want to use a global proxy
     default.proxy.enabled = false if !GLOBAL_PROXY_HOST
-    default.proxy.enabled = {
-      :apt => false
-    }
 
     default.vm.box = BOX
 
@@ -143,6 +140,17 @@ Vagrant.configure('2') do |config|
     default.vm.provision :shell, path: 'install-debian.sh'
 
     default.vm.network "private_network", ip: "70.70.70.10"
+
+    default.vm.provider :virtualbox do |vb, override|
+      # override.proxy.enabled = ENABLE_PROXY
+      vb.cpus = 1
+      vb.memory = 1024
+
+      vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ] if config.vm.box =~ /xenial|bionic/
+
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    end
   end
 
   config.vm.define "centos7-client" do |centos7|
@@ -152,16 +160,37 @@ Vagrant.configure('2') do |config|
     centos7.vm.network "private_network", ip: "70.70.70.20"
 
     centos7.vm.provision :shell, path: 'install-c7.sh'
+
+    config.vm.provider :virtualbox do |vb, override|
+      # override.proxy.enabled = ENABLE_PROXY
+      vb.cpus = 1
+      vb.memory = 1024
+
+      vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ] if config.vm.box =~ /xenial|bionic/
+
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    end
   end
 
-  config.vm.provider :virtualbox do |vb, override|
-    # override.proxy.enabled = ENABLE_PROXY
-    vb.cpus = 1
-    vb.memory = 1024
+  # config.vm.define "centos7-client" do |centos7|
+  #   centos7.proxy.enabled = config.proxy.enabled
+  #
+  #   centos7.vm.provider :docker do |d|
+  #     d.build_dir = '.'
+  #     d.dockerfile = 'Dockerfile'
+  #     d.has_ssh = true
+  #     # d.pull = true
+  #
+  #     if SUPPORTS_DOCKER_IN_DOCKER
+  #       d.volumes = [
+  #         "#{DOCKER_SOCKET}:#{DOCKER_SOCKET}",
+  #       ]
+  #       d.create_args = [
+  #         '--privileged',
+  #       ]
+  #     end
+  #   end
+  # end
 
-    vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ] if config.vm.box =~ /xenial|bionic/
-
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
-  end
 end

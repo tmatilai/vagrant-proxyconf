@@ -16,13 +16,15 @@ def mock_write_docker_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf /etc/default/docker.new")
 end
 
-def mock_update_docker_client_config(machine, config_path)
-  allow(machine).to receive_message_chain(:communicate, :upload).with(config_path, config_path)
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("mv #{config_path} /etc/docker/config.json")
+def mock_update_docker_client_config(machine)
+  allow(machine).to receive_message_chain(:communicate, :upload)
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/docker/config.json")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f #{config_path}")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf-docker-config.json")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("echo DOCKER_CONFIG=/etc/docker >> /etc/environment")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/docker")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/docker")
 end
 
 
@@ -87,7 +89,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         allow(machine).to receive_message_chain(:config, :public_send).with(:docker_proxy).and_return(config)
 
         mock_write_docker_config(machine)
-        mock_update_docker_client_config(machine, fixture)
+        mock_update_docker_client_config(machine)
 
         # update_docker_client_config mock
         allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
@@ -95,7 +97,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         @docker_proxy = docker_proxy
       end
 
-      context 'when /etc/docker/config.json has proxy configuration' do
+      context 'and when /etc/docker/config.json has proxy configuration' do
         before :each do
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
           configure_docker_proxy(fixture)
@@ -140,12 +142,13 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
 
           allow(machine).to receive_message_chain(:communicate, :test).with("[ -f /etc/docker/config.json ]").and_return(true)
-          allow(machine).to receive_message_chain(:communicate, :download).with("/etc/docker/config.json", "/tmp/vagrant-proxyconf-docker-config.json")
+          allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/docker/config.json")
+          allow(machine).to receive_message_chain(:communicate, :download)
 
           docker_proxy.send(:docker_client_config_path)
         end
 
-        it { is_expected.to eq "/tmp/vagrant-proxyconf-docker-config.json" }
+        it { expect(File.exists?(subject)).to eq true }
       end
 
       context "when /etc/docker/config.json does not exist" do
@@ -161,10 +164,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           docker_proxy.send(:docker_client_config_path)
         end
 
-        it { is_expected.to eq "/tmp/vagrant-proxyconf-docker-config.json" }
         it do
-          expect(File.exists?("/tmp/vagrant-proxyconf-docker-config.json")).to eq true
-          expect(File.read("/tmp/vagrant-proxyconf-docker-config.json")).to eq "{}"
+          expect(File.exists?(subject)).to eq true
+          expect(File.read(subject)).to eq "{}"
         end
       end
     end
@@ -226,7 +228,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
           allow(docker_proxy).to receive(:disabled?).and_return(true)
 
-          mock_update_docker_client_config(machine, config_path)
+          mock_update_docker_client_config(machine)
 
           expected = JSON.pretty_generate(
             {
@@ -265,7 +267,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
           allow(docker_proxy).to receive(:disabled?).and_return(false)
 
-          mock_update_docker_client_config(machine, config_path)
+          mock_update_docker_client_config(machine)
           expected = JSON.pretty_generate(
             {
               "proxies" => {
@@ -339,7 +341,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           mock_write_docker_config(machine)
 
           # mock update_docker_client_config
-          mock_update_docker_client_config(machine, config_path)
+          mock_update_docker_client_config(machine)
 
           docker_proxy.send(:unconfigure_machine)
         end
@@ -380,7 +382,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           allow(docker_proxy).to receive(:disabled?).and_return(true)
 
           mock_write_docker_config(machine)
-          mock_update_docker_client_config(machine, config_path)
+          mock_update_docker_client_config(machine)
 
           docker_proxy.send(:unconfigure_machine)
         end

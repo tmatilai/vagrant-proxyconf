@@ -41,17 +41,18 @@ module VagrantPlugins
           return @docker_client_config_path if @docker_client_config_path
           return if !supports_config_json?
 
-          @docker_client_config_path = "/tmp/vagrant-proxyconf-docker-config.json"
+          @docker_client_config_path = tempfile(Hash.new)
 
           @machine.communicate.tap do |comm|
             if comm.test("[ -f /etc/docker/config.json ]")
-              comm.download("/etc/docker/config.json", @docker_client_config_path)
-            else
-              File.write(@docker_client_config_path, Hash.new)
+              logger.info('Downloading file /etc/docker/config.json')
+              comm.sudo("chmod 0644 /etc/docker/config.json")
+              comm.download("/etc/docker/config.json", @docker_client_config_path.path)
+              logger.info("Downloaded /etc/docker/config.json to #{@docker_client_config_path.path}")
             end
           end
 
-          @docker_client_config_path
+          @docker_client_config_path = @docker_client_config_path.path
         end
 
         def update_docker_client_config
@@ -76,21 +77,21 @@ module VagrantPlugins
 
           config_json = JSON.pretty_generate(data)
 
-          File.write(@docker_client_config_path, config_json)
+          @docker_client_config_path = tempfile(config_json)
 
           @machine.communicate.tap do |comm|
-            comm.upload(@docker_client_config_path, @docker_client_config_path)
-            comm.sudo("mv #{@docker_client_config_path} /etc/docker/config.json")
+            comm.upload(@docker_client_config_path.path, "/tmp/vagrant-proxyconf-docker-config.json")
+            comm.sudo("mkdir -p /etc/docker")
+            comm.sudo("chown root:root /etc/docker")
+            comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
             comm.sudo("chown root:root /etc/docker/config.json")
-            comm.sudo("rm -f #{@docker_client_config_path}")
+            comm.sudo("rm -f /tmp/vagrant-proxyconf-docker-config.json")
 
             comm.sudo("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")
             if !disabled?
               comm.sudo("echo DOCKER_CONFIG=/etc/docker >> /etc/environment")
             end
           end
-
-          File.unlink(@docker_client_config_path) if File.exists?(@docker_client_config_path)
 
           config_json
         end
