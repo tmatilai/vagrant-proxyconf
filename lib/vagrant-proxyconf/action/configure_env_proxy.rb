@@ -132,7 +132,7 @@ module VagrantPlugins
           env_config["FTP_PROXY"]   = config.ftp if config.ftp
           env_config["HTTP_PROXY"]  = config.http if config.http
           env_config["HTTPS_PROXY"] = config.https if config.https
-          env_config["NO_PROXY"]    = config.no_proxy if config.no_proxy
+          env_config["NO_PROXY"]    = config.no_proxy + ',' + @machine.ssh_info[:host] if config.no_proxy
 
           config_items = env_config.map do |k,v|
             <<-CONFIG.gsub(/^\s+/, '')
