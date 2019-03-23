@@ -9,13 +9,15 @@ RUN yum clean all && \
       curl \
       device-mapper-persistent-data \
       git \
+      initscripts \
       lvm2 \
       openssh-clients \ 
       openssh-server \ 
       rsync \ 
       sudo \
       wget \
-      yum-utils && \ 
+      yum-utils \ 
+      xfsprogs && \
     yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo && \
     yum clean expire-cache && \
     yum install -y docker-ce && \
@@ -31,10 +33,13 @@ RUN yum clean all && \
     mkdir -p /home/vagrant/.ssh && \
     touch /home/vagrant/.ssh/authorized_keys
 
+VOLUME [ "/sys/fs/cgroup" ]
+
 RUN grep -q 'OHlnVYCzRdK8jlqm8tehUc9c9WhQ==' /home/vagrant/.ssh/authorized_keys || echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ==" >> /home/vagrant/.ssh/authorized_keys && \
     chmod 0600 /home/vagrant/.ssh/authorized_keys && \
     chown vagrant:vagrant /home/vagrant/.ssh/authorized_keys
 
 # -e write logs to stderr
 # -D run in foreground
-CMD ["/usr/sbin/sshd", "-e", "-D"]
+# CMD ["/usr/sbin/sshd", "-e", "-D"]
+CMD ["/usr/sbin/init"]
