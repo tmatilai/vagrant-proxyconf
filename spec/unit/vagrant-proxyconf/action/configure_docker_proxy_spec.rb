@@ -12,7 +12,7 @@ def mock_write_docker_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/default/docker.new")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/default/docker.new")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("mv -f /etc/default/docker.new /etc/default/docker")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("systemctl restart docker || service docker restart || /etc/init.d/docker restart")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || systemctl restart docker || service docker restart || /etc/init.d/docker restart")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf /etc/default/docker.new")
 end
 

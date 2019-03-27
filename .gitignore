@@ -1,5 +1,6 @@
 /.bundle
 /.yardoc
+.vagrant
 /Gemfile.lock
 /doc
 /tmp

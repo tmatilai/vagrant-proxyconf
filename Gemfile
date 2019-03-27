@@ -30,6 +30,7 @@ group :development do
   gem 'pry'
   gem 'rb-readline'
   gem 'redcarpet'
+  gem 'serverspec'
   gem 'yard', '~> 0.9.11'
 end
 
