@@ -266,7 +266,36 @@ VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 * [vagrant-cachier](https://github.com/fgrehm/vagrant-cachier)<br/>
   An excellent Vagrant plugin that shares various cache directories among similar VM instances. Should work fine together with vagrant-proxyconf.
 
+## Installing a pre-release version
 
+* A [released](https://rubygems.org/gems/vagrant-proxyconf) pre-release version:
+
+  ```
+  vagrant plugin install --plugin-source https://rubygems.org/ --plugin-prerelease vagrant-proxyconf
+  ```
+
+* Development version from git repository:
+
+  ```
+  git clone https://github.com/tmatilai/vagrant-proxyconf.git
+  cd vagrant-proxyconf
+
+  # Optionally check out other than the master branch
+  git checkout <branch>
+
+  # If you don't have Ruby installed, you can use <path/to/vagrant>/embedded/bin/gem>.
+  # If you have Docker you can use the Ruby image:
+  # docker run -it --rm -v ${PWD}:/usr/src/myapp -w /usr/src/myapp ruby:2.6 gem build vagrant-proxyconf.gemspec
+  gem build vagrant-proxyconf.gemspec
+
+  vagrant plugin install vagrant-proxyconf-*.gem
+  ```
+
+  Paths to Vagrant's embedded gem:
+  * Linux: `/opt/vagrant/embedded/bin/gem`
+  * OS X: `/Applications/Vagrant/embedded/bin/gem`
+  
+  
 ## Development Known Issues
 
 
