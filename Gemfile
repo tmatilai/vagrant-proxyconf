@@ -27,6 +27,8 @@ gem 'rspec-its', '~> 1.0'
 
 group :development do
   gem 'guard-rspec'
+  gem 'pry'
+  gem 'rb-readline'
   gem 'redcarpet'
   gem 'yard', '~> 0.9.11'
 end
