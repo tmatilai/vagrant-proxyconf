@@ -1,5 +1,21 @@
-# 2.0.1 / _Not released yet_
+# 2.0.2 / _Not released yet_
 
+# 2.0.1 / 2019-03-31
+
+Improvements:
+
+  - Check for existence of HTTP_PROXY and HTTPS_PROXY environment variables.
+    If neither are set this plugin is automatically disabled.
+  - Correctly uses the Tempfile pattern now via commit. 8ee2a2bb146aeb9fb1b27c80814e9000eff34aa1
+
+Bug fixes:
+  - Docker proxy conf not set the first time the provisioner is used (trusty64) - #155
+  - Proxy doesn't work for Docker with systemd - #172
+  - Provisioning of docker fails - #180
+  - Docker provider: Guest-specific operations were attempted on a machine that is not ready for guest communication. - #181
+  - Provisioning of docker fails issue 180. - #182
+  - vagrant-proxyconf running on Win10 and provisioning with Docker. - #186
+  - Cannot force to write but without configuration. - #188
 
 # 2.0.0 / 2019-01-03
 
