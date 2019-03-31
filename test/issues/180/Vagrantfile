@@ -1,0 +1,31 @@
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define 'default' do |c|
+    c.vm.box = nil
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.enabled = false
+    end
+
+    c.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.expose = ['8888']
+      d.has_ssh = true
+      d.ports = ['8888:8888']
+    end
+  end
+
+  config.vm.define 'docker_host' do |c|
+    c.vm.box = "centos/7"
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.http     = ENV['HTTP_PROXY']
+      c.proxy.https    = ENV['HTTPS_PROXY']
+      c.proxy.no_proxy = ENV['NO_PROXY']
+    end
+
+    c.vm.provision "docker"
+  end
+
+end

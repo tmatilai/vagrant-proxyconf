@@ -66,13 +66,26 @@ module VagrantPlugins
               'default' => {}
             }
           else
-            data['proxies'] = {
-              'default' => {
-                'httpProxy'  => config.http,
-                'httpsProxy' => config.https,
-                'noProxy'    => config.no_proxy,
-              }
-            }
+
+            data['proxies'] = {} unless data.key?('proxies')
+            data['proxies']['default'] = {} unless data['proxies'].key?('default')
+
+            data['proxies']['default'].delete('httpProxy')
+            data['proxies']['default'].delete('httpsProxy')
+            data['proxies']['default'].delete('noProxy')
+
+            unless config.http == false || config.http == "" || config.http.nil?
+              data['proxies']['default']['httpProxy'] = config.http
+            end
+
+            unless config.https == false || config.https == "" || config.https.nil?
+              data['proxies']['default']['httpsProxy'] = config.https
+            end
+
+            unless config.no_proxy == false || config.no_proxy == "" || config.no_proxy.nil?
+              data['proxies']['default']['noProxy'] = config.no_proxy
+            end
+
           end
 
           config_json = JSON.pretty_generate(data)
@@ -165,9 +178,12 @@ module VagrantPlugins
         end
 
         def service_restart_command
-          ["systemctl restart #{docker}",
+          [
+            "kill -HUP `pgrep -f '#{docker}'`",
+            "systemctl restart #{docker}",
             "service #{docker} restart",
-            "/etc/init.d/#{docker} restart"].join(' || ')
+            "/etc/init.d/#{docker} restart",
+          ].join(' || ')
         end
 
         def docker_sed_script
