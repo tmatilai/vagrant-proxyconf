@@ -19,8 +19,6 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
   include_examples "apt proxy config", "http"
   include_examples "apt proxy config", "https"
   include_examples "apt proxy config", "ftp"
-  include_examples "apt proxy config", "verify_host"
-  include_examples "apt proxy config", "verify_peer"
 
   context "with both http and https proxies" do
     subject        { config_with(http: "10.2.3.4", https: "ssl-proxy:8443") }
@@ -33,8 +31,6 @@ describe VagrantPlugins::ProxyConf::Config::AptProxy do
     include_examples "apt proxy env var", "VAGRANT_APT_HTTP_PROXY", "http"
     include_examples "apt proxy env var", "VAGRANT_APT_HTTPS_PROXY", "https"
     include_examples "apt proxy env var", "VAGRANT_APT_FTP_PROXY", "ftp"
-    include_examples "apt proxy env var", "VAGRANT_APT_VERIFY_HOST", "verify_host"
-    include_examples "apt proxy env var", "VAGRANT_APT_VERIFY_PEER", "verify_peer"
   end
 
 end

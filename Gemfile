@@ -18,7 +18,7 @@ end
 #### End Added due to https://groups.google.com/forum/#!topic/vagrant-up/J8J6LmhzBqM/discussion
 
 gem 'vagrant',
-    git: 'https://github.com/mitchellh/vagrant.git',
+    git: 'https://github.com/hashicorp/vagrant.git',
     ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.4')
 
 gem 'rake'

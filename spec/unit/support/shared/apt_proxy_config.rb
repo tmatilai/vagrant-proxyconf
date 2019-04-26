@@ -8,6 +8,10 @@ end
 def conf_line(proto, name, port = 3142)
   if name == :direct
     %Q{Acquire::#{proto}::Proxy "DIRECT";\n}
+  elsif proto == :verify_peer
+    %Q{Acquire::https::Verify-Peer "#{name}";\n}
+  elsif proto == :verify_host
+    %Q{Acquire::https::Verify-Host "#{name}";\n}
   else
     port = ":#{port}" if port
     %Q{Acquire::#{proto}::Proxy "#{proto}://#{name}#{port}";\n}
@@ -62,6 +66,14 @@ shared_examples "apt proxy config" do |proto|
         subject        { config_with(proto => direct) }
         its(:enabled?) { should be_truthy }
         its(:to_s)     { should eq conf_line(proto, :direct) }
+      end
+    end
+
+    [:verify_peer, :verify_host].each do |verify|
+      context "with #{verify.inspect}" do
+        subject        { config_with(verify => "false") }
+        its(:enabled?) { should be_truthy }
+        its(:to_s)     { should eq conf_line(verify, "false") }
       end
     end
 

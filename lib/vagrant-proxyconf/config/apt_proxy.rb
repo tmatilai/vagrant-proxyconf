@@ -39,7 +39,15 @@ module VagrantPlugins
 
         # (see KeyMixin#config_for)
         def config_for(key, value)
-          %Q{Acquire::#{key.name}::Proxy #{value.inspect};\n} if value
+          if value
+            if key.name == :verify_host
+              %Q{Acquire::https::Verify-Host #{value.inspect};\n}
+            elsif key.name == :verify_peer
+              %Q{Acquire::https::Verify-Peer #{value.inspect};\n}
+            else
+              %Q{Acquire::#{key.name}::Proxy #{value.inspect};\n}
+            end
+          end
         end
 
         def finalize_uri(key, value)
@@ -71,7 +79,7 @@ module VagrantPlugins
           end
 
           def verify
-            value if ["true", "false"].to_set.contains? value
+            value if ["true", "false"].to_set.include? value
           end
 
           # Hash of deprecation warning sentinels
