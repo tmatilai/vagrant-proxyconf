@@ -20,6 +20,12 @@ module VagrantPlugins
         # @return [String] the FTP proxy
         key :ftp, env_var: 'VAGRANT_APT_FTP_PROXY'
 
+        # @return [String] whether APT should verify peer certificate
+        key :verify_peer, env_var: 'VAGRANT_APT_VERIFY_PEER'
+
+        # @return [String] whether APT should verify that certificate name matches server name
+        key :verify_host, env_var: 'VAGRANT_APT_VERIFY_HOST'
+
         def finalize!
           super
 
@@ -55,13 +61,17 @@ module VagrantPlugins
           end
 
           def to_s
-            direct || "#{prefix}#{value}#{suffix}"
+            direct || verify || "#{prefix}#{value}#{suffix}"
           end
 
           private
 
           def direct
             'DIRECT' if value.upcase == 'DIRECT'
+          end
+
+          def verify
+            value if ["true", "false"].to_set.contains? value
           end
 
           # Hash of deprecation warning sentinels
