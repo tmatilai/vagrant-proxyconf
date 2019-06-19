@@ -1,0 +1,48 @@
+# this should be the IP address of the :default box
+$PROXY_HOST ="10.0.2.2"
+$PROXY_PORT="8888"
+$PROXY_NO_PROXY=[
+  'localhost',
+]
+
+ENV['HTTP_PROXY']  = ENV.fetch('HTTP_PROXY',  "http://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['HTTPS_PROXY'] = ENV.fetch('HTTPS_PROXY', "https://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['NO_PROXY']    = ENV.fetch('NO_PROXY',    $PROXY_NO_PROXY.join(","))
+
+puts "HTTP_PROXY  = '#{ENV["HTTP_PROXY"]}'"
+puts "HTTPS_PROXY = '#{ENV["HTTPS_PROXY"]}'"
+puts "NO_PROXY    = '#{ENV["NO_PROXY"]}'"
+
+puts "vagrant-proxyconf is installed? #{Vagrant.has_plugin?('vagrant-proxyconf')}"
+
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define 'default' do |c|
+    c.vm.box = nil
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.enabled = false
+    end
+
+    c.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.expose = ["#{$PROXY_PORT}"]
+      d.has_ssh = true
+      d.ports = ["#{$PROXY_PORT}", "#{$PROXY_PORT}"].join(':')
+    end
+  end
+
+  config.vm.define 'docker_host' do |c|
+    c.vm.box = "centos/7"
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.http     = ENV['HTTP_PROXY']
+      c.proxy.https    = ENV['HTTPS_PROXY']
+      c.proxy.no_proxy = ENV['NO_PROXY']
+    end
+
+    c.vm.provision "docker"
+  end
+
+end

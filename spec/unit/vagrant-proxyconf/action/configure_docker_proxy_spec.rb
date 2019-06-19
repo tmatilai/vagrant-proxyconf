@@ -27,6 +27,8 @@ def mock_update_docker_client_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /etc/docker")
 end
 
+def mock_update_docker_systemd_config(machine)
+end
 
 describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
 
@@ -93,6 +95,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
 
         # update_docker_client_config mock
         allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
+        allow(docker_proxy).to receive(:supports_systemd?).and_return(false)
 
         @docker_proxy = docker_proxy
       end
@@ -101,14 +104,80 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         before :each do
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
           configure_docker_proxy(fixture)
+          allow(machine).to receive_message_chain(:communicate, :sudo).with(
+            "sed -e '/^export HTTP_PROXY=/ d\n/^export http_proxy=/ d\n/^export HTTPS_PROXY=/ d\n/^export https_proxy=/ d\n/^export NO_PROXY=/ d\n/^export no_proxy=/ d\n' /etc/default/docker > /etc/default/docker.new"
+          )
         end
 
         it 'update /etc/docker/config.json' do
-          allow(machine).to receive_message_chain(:communicate, :test).with('command -v systemctl').and_return('')
-
-          expect(@docker_proxy.send(:configure_machine)).to eq true
+            expect(@docker_proxy.send(:configure_machine)).to eq true
         end
       end
+
+      context 'and when configuring systemd' do
+        let(:app) { OpenStruct.new }
+        let(:env) { OpenStruct.new }
+        let(:machine) { double('machine') }
+
+        def configure_docker_proxy(fixture)
+          docker_proxy = described_class.new(app, env)
+          docker_proxy.instance_variable_set(:@machine, machine)
+
+          # #docker_client_config_path mock
+          fixture = docker_proxy.send(:tempfile, load_fixture(fixture)).path
+          docker_proxy.instance_variable_set(:@docker_client_config_path, fixture)
+
+          # #supported? mock
+          allow(machine).to receive_message_chain(:guest, :capability?).with(:docker_proxy_conf).and_return(true)
+          allow(machine).to receive_message_chain(:guest, :capability).with(:docker_proxy_conf).and_return('/etc/default/docker')
+
+          # #config mock
+          config = create_config_proxy(
+            :enabled  => true,
+            :http     => 'http://proxy-server-01.example.com:8080',
+            :https    => 'https://proxy-server-01.example.com:8080',
+            :no_proxy => 'localhost',
+          )
+
+          allow(machine).to receive_message_chain(:config, :proxy).and_return(config)
+          allow(machine).to receive_message_chain(:config, :public_send).with(:docker_proxy).and_return(config)
+          allow(machine).to receive_message_chain(:communicate, :test).with('command -v systemctl').and_return(true)
+
+          mock_write_docker_config(machine)
+          mock_update_docker_client_config(machine)
+
+          @docker_proxy = docker_proxy
+        end
+
+        context 'when directory: /etc/systemd/system/docker.service.d does not exist' do
+
+          before :each do
+            fixture = fixture_file("docker_client_config_json_enabled_proxy")
+            configure_docker_proxy(fixture)
+
+            # update_docker_client_config mock
+            allow(@docker_proxy).to receive(:supports_config_json?).and_return(false)
+            allow(@docker_proxy).to receive(:supports_systemd?).and_return(true)
+
+            # systemd_config mocking
+            allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/systemd/system/docker.service.d")
+            allow(machine).to receive_message_chain(:communicate, :upload).with(@docker_proxy.instance_variable_get(:@docker_systemd_config), "/tmp")
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('chown -R 0:0 /etc/systemd/system/docker.service.d/')
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('chmod 0644 /etc/systemd/system/docker.service.d/http-proxy.conf')
+            allow(machine).to receive_message_chain(:communicate, :test).with('command -v systemctl').and_return(false)
+            allow(machine).to receive_message_chain(:communicate, :test).with('diff -Naur /etc/systemd/system/docker.service.d/http-proxy.conf /tmp/vagrant-proxyconf-docker-systemd-config').and_return(false)
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('mv /tmp/vagrant-proxyconf-docker-systemd-config /etc/systemd/system/docker.service.d/http-proxy.conf')
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl daemon-reload')
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl restart docker')
+          end
+
+          it 'should create directory: /etc/systemd/system/docker.service.d' do
+            expect(@docker_proxy.send(:update_docker_systemd_config)).to eq true
+          end
+
+        end
+      end
+
     end
   end
 
@@ -323,6 +392,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           config_path = docker_proxy.send(:tempfile, load_fixture(fixture)).path
           docker_proxy.instance_variable_set(:@docker_client_config_path, config_path)
 
+          # to isolate this test, we turn of support for systemd
+          allow(docker_proxy).to receive(:supports_systemd?).and_return(false)
+
           allow(machine).to receive_message_chain(:guest, :capability?).with(:docker_proxy_conf).and_return(true)
           allow(machine).to receive_message_chain(:guest, :capability).with(:docker_proxy_conf).and_return('/etc/default/docker')
 
@@ -336,6 +408,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           )
           allow(machine).to receive_message_chain(:config, :proxy).and_return(config)
           allow(machine).to receive_message_chain(:config, :public_send).with(:docker_proxy).and_return(config)
+
 
           # mock write_docker_config
           mock_write_docker_config(machine)
@@ -360,6 +433,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           docker_proxy = described_class.new(app, env)
           docker_proxy.instance_variable_set(:@machine, machine)
           docker_proxy.instance_variable_set(:@version, [18, 9, 0])
+
+          # to isolate this test, we turn of support for systemd
+          allow(docker_proxy).to receive(:supports_systemd?).and_return(false)
 
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
           config_path = docker_proxy.send(:tempfile, load_fixture(fixture)).path
