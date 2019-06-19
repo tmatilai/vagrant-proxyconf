@@ -20,6 +20,7 @@ module VagrantPlugins
           detect_export
           write_docker_config
           update_docker_client_config
+          update_docker_systemd_config
 
           true
         end
@@ -33,6 +34,7 @@ module VagrantPlugins
 
           write_docker_config
           update_docker_client_config
+          update_docker_systemd_config
 
           true
         end
@@ -109,6 +111,64 @@ module VagrantPlugins
           config_json
         end
 
+        def update_docker_systemd_config
+          return if !supports_systemd?
+          changed = false
+
+          if disabled?
+            @machine.communicate.tap do |comm|
+              changed = true if comm.test('[ -f /etc/systemd/system/docker.service.d/http-proxy.conf ]')
+              changed = true if comm.test('[ -f /etc/systemd/system/docker.service.d/https-proxy.conf ]')
+
+              comm.sudo('rm -f /etc/systemd/system/docker.service.d/http-proxy.conf')
+              comm.sudo('rm -f /etc/systemd/system/docker.service.d/https-proxy.conf')
+              comm.sudo('systemctl daemon-reload')
+
+              if changed
+                comm.sudo("systemctl restart #{docker}")
+              end
+
+            end
+
+            changed = true
+            return changed
+          end
+
+          systemd_config = docker_systemd_config
+          @docker_systemd_config = tempfile(systemd_config).path
+
+          @machine.communicate.tap do |comm|
+
+            comm.sudo("mkdir -p /etc/systemd/system/docker.service.d")
+            comm.upload(@docker_systemd_config, "/tmp/vagrant-proxyconf-docker-systemd-config")
+
+            if comm.test("diff -Naur /etc/systemd/system/docker.service.d/http-proxy.conf /tmp/vagrant-proxyconf-docker-systemd-config")
+              # system config file is the same as the current config
+
+              changed = false
+            else
+              # system config file is not the same as the current config
+
+              comm.sudo("mv /tmp/vagrant-proxyconf-docker-systemd-config /etc/systemd/system/docker.service.d/http-proxy.conf")
+              changed = true
+            end
+
+            comm.sudo('chown -R 0:0 /etc/systemd/system/docker.service.d/')
+            comm.sudo('chmod 0644 /etc/systemd/system/docker.service.d/http-proxy.conf')
+
+            if changed
+              # there were changes so restart docker
+
+              comm.sudo('systemctl daemon-reload')
+              comm.sudo("systemctl restart #{docker}")
+            end
+
+          end
+
+          changed
+
+        end
+
         def docker
           if config_path && config_path.include?('docker.io')
             'docker.io'
@@ -143,6 +203,14 @@ module VagrantPlugins
           return false
         end
 
+        def supports_systemd?
+
+          @machine.communicate.tap do |comm|
+            comm.test('command -v systemctl') ? true : false
+          end
+
+        end
+
         def write_docker_config
           tmp = "/tmp/vagrant-proxyconf"
           path = config_path
@@ -173,7 +241,7 @@ module VagrantPlugins
 
         def detect_export
           @machine.communicate.tap do |comm|
-            comm.test('command -v systemctl') ? @export = '' : @export = 'export '
+            supports_systemd? ? @export = '' : @export = 'export '
           end
         end
 
@@ -207,6 +275,23 @@ module VagrantPlugins
             #{@export}no_proxy=\"#{config.no_proxy || ''}\"
           CONFIG
         end
+
+        def docker_systemd_config
+          return if disabled?
+
+          environment = []
+          environment << 'Environment="HTTP_PROXY='  + config.http     + '"' if config.http
+          environment << 'Environment="HTTPS_PROXY=' + config.https    + '"' if config.https
+          environment << 'Environment="NO_PROXY='    + config.no_proxy + '"' if config.no_proxy
+
+          return if !environment.any?
+
+          <<-SYSTEMD.gsub(/^\s+/, '')
+            [Service]
+            #{environment.join("\n")}
+          SYSTEMD
+        end
+
       end
     end
   end
