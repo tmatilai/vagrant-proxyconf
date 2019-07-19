@@ -1,4 +1,13 @@
-# 2.0.2 / _Not released yet_
+# 2.0.2 / _NOT_RELEASED_YET
+
+# 2.0.2 / 2019-07-19
+
+This is a bug fix release, please see the issues below for furthe
+details.  This fix should address some Docker proxy problems when using
+systemd.
+
+Bug Fixes:
+  - https://github.com/tmatilai/vagrant-proxyconf/issues/172
 
 # 2.0.1 / 2019-03-31
 
