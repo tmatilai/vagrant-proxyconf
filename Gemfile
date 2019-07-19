@@ -18,8 +18,8 @@ end
 #### End Added due to https://groups.google.com/forum/#!topic/vagrant-up/J8J6LmhzBqM/discussion
 
 gem 'vagrant',
-    git: 'https://github.com/mitchellh/vagrant.git',
-    ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.2')
+    git: 'https://github.com/hashicorp/vagrant.git',
+    ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.4')
 
 gem 'rake'
 gem 'rspec', '~> 3.1'
@@ -27,6 +27,7 @@ gem 'rspec-its', '~> 1.0'
 
 group :development do
   gem 'guard-rspec'
+  gem 'mini_portile2'
   gem 'pry'
   gem 'rb-readline'
   gem 'redcarpet'
