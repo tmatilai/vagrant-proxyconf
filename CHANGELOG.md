@@ -1,4 +1,11 @@
-# 2.0.3 / _NOT_RELEASED_YET
+# 2.0.4 / NOT_YET_RELEASED
+
+# 2.0.3 / 2019-07-23
+
+This is a bug fix release to address systemd and docker issues.
+
+Bug Fixes:
+  - https://github.com/tmatilai/vagrant-proxyconf/issues/172
 
 # 2.0.2 / 2019-07-19
 

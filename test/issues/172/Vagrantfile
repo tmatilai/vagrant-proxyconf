@@ -27,9 +27,10 @@ Vagrant.configure("2") do |config|
 
     c.vm.provider "docker" do |d|
       d.build_dir = "."
-      d.expose = ["#{$PROXY_PORT}"]
       d.has_ssh = true
-      d.ports = ["#{$PROXY_PORT}", "#{$PROXY_PORT}"].join(':')
+      d.ports = [
+        "#{$PROXY_PORT}:#{$PROXY_PORT}",
+      ]
     end
   end
 
