@@ -33,14 +33,11 @@ module VagrantPlugins
           b.use Builtin::Call, IsEnabled do |env, b2|
             # next if !env[:result]
 
-            # TODO: Do we really need to configure only specific proxies after the provisioner runs?
-            #       Shouldn't they already be configured by this point?
-            #       Cody Lane - Dec 2018
-            # b2.use ConfigureDockerProxy
-            # b2.use ConfigureGitProxy
-            # b2.use ConfigureNpmProxy
-            # b2.use ConfigurePearProxy
-            # b2.use ConfigureSvnProxy
+            b2.use ConfigureDockerProxy
+            b2.use ConfigureGitProxy
+            b2.use ConfigureNpmProxy
+            b2.use ConfigurePearProxy
+            b2.use ConfigureSvnProxy
           end
         end
       end
