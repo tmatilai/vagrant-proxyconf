@@ -21,7 +21,7 @@ bundle exec vagrant up default
   - **NOTE**: You'll need to use `docker exec <hash> -it bash` to get into the container
 
 
-### Box `docker_host`
+### Box `apt_host`
 
   - Vagrant should automatically instally docker-ce.
   - The box should come up and provision itself with the proxy settings

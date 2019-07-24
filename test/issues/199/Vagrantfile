@@ -1,0 +1,74 @@
+# this should be the IP address of the :default box
+$PROXY_HOST ="10.0.2.2"
+$PROXY_PORT="8888"
+$PROXY_NO_PROXY=[
+  'localhost',
+]
+
+ENV['HTTP_PROXY']  = ENV.fetch('HTTP_PROXY',  "http://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['HTTPS_PROXY'] = ENV.fetch('HTTPS_PROXY', "https://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['NO_PROXY']    = ENV.fetch('NO_PROXY',    $PROXY_NO_PROXY.join(","))
+
+puts "HTTP_PROXY  = '#{ENV["HTTP_PROXY"]}'"
+puts "HTTPS_PROXY = '#{ENV["HTTPS_PROXY"]}'"
+puts "NO_PROXY    = '#{ENV["NO_PROXY"]}'"
+
+puts "vagrant-proxyconf is installed? #{Vagrant.has_plugin?('vagrant-proxyconf')}"
+
+$APT_PROXY_ENABLED = ENV.fetch("VAGRANT_APT_PROXY_ENABLED", "true")
+
+if $APT_PROXY_ENABLED == "false"
+  $APT_PROXY_ENABLED = false
+else
+  $APT_PROXY_ENABLED = true
+end
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define 'default' do |c|
+    c.vm.box = nil
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.enabled = false
+    end
+
+    c.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.has_ssh = true
+      d.ports = [
+        "#{$PROXY_PORT}:#{$PROXY_PORT}",
+      ]
+    end
+  end
+
+  config.vm.define 'apt_host' do |c|
+    c.vm.box = "bento/ubuntu-18.04"
+
+    # ENV['VAGRANT_APT_VERIFY_HOST'] = "true"
+    # ENV['VAGRANT_APT_VERIFY_PEER'] = "false"
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.http     = ENV['HTTP_PROXY']
+      c.proxy.https    = ENV['HTTPS_PROXY']
+      c.proxy.no_proxy = ENV['NO_PROXY']
+      # uncomment the following to test different behaviors
+      # c.apt_proxy.verify_host = "true"
+      # c.apt_proxy.verify_peer = "false"
+      c.proxy.enabled = {
+        :apt => {
+          :enabled => $APT_PROXY_ENABLED,
+          :skip    => false,
+        },
+        :env => {
+          :enabled => false,
+          :skip    => false,
+        },
+        :git => {
+          :enabled => false,
+          :skip    => false,
+        }
+      }
+    end
+  end
+
+end

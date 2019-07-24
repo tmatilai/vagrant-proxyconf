@@ -237,6 +237,8 @@ VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 | apt       | `VAGRANT_APT_HTTP_PROXY`     | Configures APT http proxy     | Highest     |
 |           | `VAGRANT_APT_HTTPS_PROXY`    | Configures APT https proxy    | Highest     |
 |           | `VAGRANT_APT_FTP_PROXY`      | Configures APT ftp proxy      | Highest     |
+|           | `VAGRANT_APT_VERIFY_PEER`    | Configures APT Verify-Peer    | Highest     |
+|           | `VAGRANT_APT_VERIFY_HOST`    | Configures APT Verify-Host    | Highest     |
 | chef      | `VAGRANT_CHEF_HTTP_PROXY`    | Configures CHEF http proxy    | Highest     |
 |           | `VAGRANT_CHEF_HTTPS_PROXY`   | Configures CHEF https proxy   | Highest     |
 |           | `VAGRANT_CHEF_NO_PROXY`      | Configures CHEF no proxy      | Highest     |

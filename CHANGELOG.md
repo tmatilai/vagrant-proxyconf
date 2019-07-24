@@ -1,3 +1,81 @@
+# 2.0.5 / NOT_RELEASED_YET
+
+Credit to this release @greut. Thank you for your detailed information and for reporting a solution.
+
+This is a feature enhancement for the APT proxy configuration when using
+a proxy that is terminating SSL.  By default, these settings are left
+as-is and only enabled when a user wants to configure these settings.
+This feature supports enabling/disabling the follwoing settings
+
+#### file `/etc/apt/apt.conf.d/01proxy`
+
+```
+Acquire::https::Verify-Host
+Acquire::https::Verify-Peer
+```
+
+#### Configuration settings for `Acquire::https::Verify-Host` and `Acquire::https::Verify-Peer`
+
+  * The value for these settings must be a string.
+  * When `"true"` enable the setting
+  * When `"false"` disable the setting
+  * When `""` this setting is removed.
+
+#### Example Inside the Vagrantfile
+
+```
+Vagrant.configure("2") do |config|
+
+  config.vm.define 'apt_host' do |c|
+    c.vm.box = "bento/ubuntu-18.04"
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.http     = ENV['HTTP_PROXY']
+      c.proxy.https    = ENV['HTTPS_PROXY']
+      c.proxy.no_proxy = ENV['NO_PROXY']
+      c.apt_proxy.verify_host = "false"
+      c.apt_proxy.verify_peer = "false"
+
+      c.proxy.enabled = {
+        :apt => {
+          :enabled => true,
+          :skip    => false,
+        },
+        :env => {
+          :enabled => true,
+          :skip    => false,
+        },
+        :git => {
+          :enabled => true,
+          :skip    => false,
+        }
+      }
+    end
+  end
+
+end
+```
+
+#### Example setting the environment variables
+
+```
+export VAGRANT_APT_VERIFY_HOST="false"
+export VAGRANT_APT_VERIFY_PEER="false"
+vagrant up
+vagrant provision
+```
+
+**NOTE** If you change a setting in your `Vagrantfile` and the box is
+running, you can run `vagrant provision` or `vagrant reload` to adjust
+the settings.
+
+Supporting Issues:
+  - https://github.com/tmatilai/vagrant-proxyconf/issues/199
+
+Supporting Integration Tests:
+  - Look at the examples in directory [199](test/issues/199/)
+
+
 # 2.0.4 / 2019-07-24
 
 This is a bug fix release to address a logic issue for supporting docker
