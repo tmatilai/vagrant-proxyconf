@@ -1,4 +1,11 @@
-# 2.0.4 / NOT_YET_RELEASED
+# 2.0.4 / 2019-07-24
+
+This is a bug fix release to address a logic issue for supporting docker
+versions when attempting to configure a docker proxy.
+
+
+Bug Fixes:
+  - https://github.com/tmatilai/vagrant-proxyconf/issues/197
 
 # 2.0.3 / 2019-07-23
 

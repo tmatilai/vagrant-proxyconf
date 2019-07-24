@@ -197,10 +197,11 @@ module VagrantPlugins
 
           # https://docs.docker.com/network/proxy/#configure-the-docker-client
           # if docker version >= 17.07 it supports config.json
-          return true if major >= 17 && minor >= 7
-
           # docker version < 17.07 so it does not support config.json
-          return false
+          return false if major <= 17 && minor < 7
+
+          # docker version must be >= 17.07 so we return true
+          return true
         end
 
         def supports_systemd?
