@@ -20,6 +20,12 @@ module VagrantPlugins
         # @return [String] the FTP proxy
         key :ftp, env_var: 'VAGRANT_APT_FTP_PROXY'
 
+        # @return [String] whether APT should verify peer certificate
+        key :verify_peer, env_var: 'VAGRANT_APT_VERIFY_PEER'
+
+        # @return [String] whether APT should verify that certificate name matches server name
+        key :verify_host, env_var: 'VAGRANT_APT_VERIFY_HOST'
+
         def finalize!
           super
 
@@ -33,7 +39,15 @@ module VagrantPlugins
 
         # (see KeyMixin#config_for)
         def config_for(key, value)
-          %Q{Acquire::#{key.name}::Proxy #{value.inspect};\n} if value
+          if value
+            if key.name == :verify_host
+              %Q{Acquire::https::Verify-Host #{value.inspect};\n}
+            elsif key.name == :verify_peer
+              %Q{Acquire::https::Verify-Peer #{value.inspect};\n}
+            else
+              %Q{Acquire::#{key.name}::Proxy #{value.inspect};\n}
+            end
+          end
         end
 
         def finalize_uri(key, value)
@@ -55,13 +69,18 @@ module VagrantPlugins
           end
 
           def to_s
-            direct || "#{prefix}#{value}#{suffix}"
+            # direct || "#{prefix}#{value}#{suffix}"
+            direct || verify || "#{prefix}#{value}#{suffix}"
           end
 
           private
 
           def direct
             'DIRECT' if value.upcase == 'DIRECT'
+          end
+
+          def verify
+            value if ["true", "false"].to_set.include? value
           end
 
           # Hash of deprecation warning sentinels
