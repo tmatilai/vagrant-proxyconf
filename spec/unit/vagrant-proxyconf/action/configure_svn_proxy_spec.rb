@@ -4,6 +4,7 @@ require 'vagrant-proxyconf/action/configure_svn_proxy'
 def mock_write_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf", error_check: false)
   allow(machine).to receive_message_chain(:communicate, :upload)
+  allow(machine).to receive_message_chain(:communicate, :test).with('command -v sudo').and_return(true)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /tmp/vagrant-proxyconf")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:root /tmp/vagrant-proxyconf")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/subversion")
