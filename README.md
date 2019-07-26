@@ -332,3 +332,22 @@ unless ENV.key?('VAGRANT_INSTALLER_EMBEDDED_DIR')
     end
 end
 ```
+
+# Contributors
+
+* @tmatilai
+* @otahi
+* @jperville
+* @johnbellone
+* @SaschaGuenther
+* @mrsheepuk
+* @vboerchers
+* @rlaveycal
+* @pomeh
+* @mynamewastaken
+* @lawsonj2019
+* @jonekdahl
+* @hexmode
+* @craigmunro
+* @greut
+* @codylane

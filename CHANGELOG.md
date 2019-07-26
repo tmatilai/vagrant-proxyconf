@@ -1,6 +1,12 @@
 # 2.0.5 / NOT_RELEASED_YET
 
-Credit to this release @greut. Thank you for your detailed information and for reporting a solution.
+#### Deprecations:
+
+- Dropped support for vagrant 1.9.8 due to our tests failinging and it's more than 2 years old.
+
+#### Credits
+
+- Credit to this release goes to @greut. Thank you for your detailed information and for reporting a solution.
 
 This is a feature enhancement for the APT proxy configuration when using
 a proxy that is terminating SSL.  By default, these settings are left

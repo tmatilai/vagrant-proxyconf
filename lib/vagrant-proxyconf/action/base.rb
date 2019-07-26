@@ -87,13 +87,17 @@ module VagrantPlugins
           local_tmp = tempfile(config)
 
           logger.debug "Configuration (#{path}):\n#{config}"
+
           @machine.communicate.tap do |comm|
-            comm.sudo("rm -f #{tmp}", error_check: false)
             comm.upload(local_tmp.path, tmp)
-            comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
-            comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
-            comm.sudo("mkdir -p #{File.dirname(path)}")
-            comm.sudo("mv -f #{tmp} #{path}")
+            if comm.test("command -v sudo")
+              comm.sudo("chmod #{opts[:mode] || '0644'} #{tmp}")
+              comm.sudo("chown #{opts[:owner] || 'root:root'} #{tmp}")
+              comm.sudo("mkdir -p #{File.dirname(path)}")
+              comm.sudo("mv -f #{tmp} #{path}")
+            else
+              raise Vagrant::Errors::CommandUnavailable.new(file: "sudo")
+            end
           end
         end
 
