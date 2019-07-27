@@ -1,4 +1,6 @@
-# 2.0.5 / NOT_RELEASED_YET
+# 2.0.6 / NOT_RELEASED_YET
+
+# 2.0.5 / 2019-07-27
 
 #### Deprecations:
 
