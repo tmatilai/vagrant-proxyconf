@@ -1,4 +1,13 @@
-# 2.0.6 / NOT_RELEASED_YET
+# 2.0.7 / NOT_RELEASED_YET
+
+# 2.0.6 / 2019-08-09
+
+This is a bug fix release addressing a permissions problem with the docker proxy client config.
+The fixes the permissions problem setting /etc/docker/config.json from 0600 to 0644 permissions.
+
+#### Credits
+
+- Credit to this release goes to @takuto-h.
 
 # 2.0.5 / 2019-07-27
 
