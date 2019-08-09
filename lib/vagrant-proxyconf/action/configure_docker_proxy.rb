@@ -100,6 +100,7 @@ module VagrantPlugins
             comm.sudo("chown root:root /etc/docker")
             comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
             comm.sudo("chown root:root /etc/docker/config.json")
+            comm.sudo("chmod 0644 /etc/docker/config.json")
             comm.sudo("rm -f /tmp/vagrant-proxyconf-docker-config.json")
 
             comm.sudo("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")
