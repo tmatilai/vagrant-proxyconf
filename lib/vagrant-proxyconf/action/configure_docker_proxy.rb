@@ -155,6 +155,7 @@ module VagrantPlugins
             end
 
             comm.sudo('chown -R 0:0 /etc/systemd/system/docker.service.d/')
+            comm.sudo('touch /etc/systemd/system/docker.service.d/http-proxy.conf')
             comm.sudo('chmod 0644 /etc/systemd/system/docker.service.d/http-proxy.conf')
 
             if changed

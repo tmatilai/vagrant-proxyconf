@@ -164,6 +164,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
             allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/systemd/system/docker.service.d")
             allow(machine).to receive_message_chain(:communicate, :upload).with(@docker_proxy.instance_variable_get(:@docker_systemd_config), "/tmp")
             allow(machine).to receive_message_chain(:communicate, :sudo).with('chown -R 0:0 /etc/systemd/system/docker.service.d/')
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('touch /etc/systemd/system/docker.service.d/http-proxy.conf')
             allow(machine).to receive_message_chain(:communicate, :sudo).with('chmod 0644 /etc/systemd/system/docker.service.d/http-proxy.conf')
             allow(machine).to receive_message_chain(:communicate, :test).with('command -v systemctl').and_return(false)
             allow(machine).to receive_message_chain(:communicate, :test).with('diff -Naur /etc/systemd/system/docker.service.d/http-proxy.conf /tmp/vagrant-proxyconf-docker-systemd-config').and_return(false)
