@@ -1,15 +1,21 @@
+---
+
 language: ruby
 cache: bundler
 sudo: false
 
 before_install: ./travis/before_install
+install: bundle install --path .bundle/gems
+script: bundle exec rspec
 bundler_args: --without=development
 
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 
-rvm: 2.4.4
+rvm:
+  - 2.4.4
+
 matrix:
   include:
     - env: VAGRANT_VERSION=v2.2.4
