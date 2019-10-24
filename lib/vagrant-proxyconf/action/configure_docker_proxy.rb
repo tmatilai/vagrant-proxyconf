@@ -97,9 +97,9 @@ module VagrantPlugins
           @machine.communicate.tap do |comm|
             comm.upload(@docker_client_config_path.path, "/tmp/vagrant-proxyconf-docker-config.json")
             comm.sudo("mkdir -p /etc/docker")
-            comm.sudo("chown root:root /etc/docker")
+            comm.sudo("chown root:docker /etc/docker")
             comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
-            comm.sudo("chown root:root /etc/docker/config.json")
+            comm.sudo("chown root:docker /etc/docker/config.json")
             comm.sudo("chmod 0644 /etc/docker/config.json")
             comm.sudo("rm -f /tmp/vagrant-proxyconf-docker-config.json")
 
@@ -237,7 +237,7 @@ module VagrantPlugins
 
           # update config and restart docker when config changed
           comm.sudo("chmod 0644 #{path}.new")
-          comm.sudo("chown root:root #{path}.new")
+          comm.sudo("chown root:docker #{path}.new")
           comm.sudo("mv -f #{path}.new #{path}")
           comm.sudo(service_restart_command)
         end

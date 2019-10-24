@@ -1,0 +1,1 @@
+simpleTravisRunner(".travis.yml")
