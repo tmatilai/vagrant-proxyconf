@@ -19,7 +19,7 @@ end
 
 gem 'vagrant',
     git: 'https://github.com/hashicorp/vagrant.git',
-    ref: ENV.fetch('VAGRANT_VERSION', 'v2.2.4')
+    tag: ENV.fetch('VAGRANT_VERSION', 'v2.2.4')
 
 gem 'rake'
 gem 'rspec', '~> 3.1'

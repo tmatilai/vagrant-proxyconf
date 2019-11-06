@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+
+DEFAULT_RVM_RUBY="${DEFAULT_RVM_RUBY:-2.4.4}"
+
+RVM_HOME_DIR="${RVM_HOME_DIR:-${HOME}/.rvm/scripts/rvm}"
+
+VAGRANT_TEST_ISSUE="${VAGRANT_TEST_ISSUE:-180}"
+
+
+err() {
+
+  echo "ERR: $* exiting" >&2
+  exit 1
+
+}
+
+
+bundle_exec() {
+
+  local run_dir="test/issues/${VAGRANT_TEST_ISSUE}"
+
+  pushd "${run_dir}" || err "The directory: '${run_dir}' does not exist" && true
+
+  bundle exec $@
+
+  popd >>/dev/null 2>&1
+
+}
+
+
+enable_rvm_ruby() {
+
+  local ruby_version="${1:-${DEFAULT_RVM_RUBY}}"
+
+  shift
+  local persist="${1:-persist}"
+
+
+  [ -f "${RVM_HOME_DIR}" ] && . "${RVM_HOME_DIR}" >> /dev/null || true
+
+  rvm use "ruby-${ruby_version}" || err "Unable to switch to ruby ${ruby_version}"
+
+  [ -z "${persist}" ] || echo "${DEFAULT_RVM_RUBY}" > .ruby-version
+
+}
+
+
+enable_rbenv_ruby() {
+
+  local ruby_version="${1:-${DEFAULT_RVM_RUBY}}"
+
+  shift
+  local persist="${1:-persist}"
+
+  eval "$(rbenv init -)"
+
+  if [ -n "${persist}" ]; then
+
+    echo "${DEFAULT_RVM_RUBY}" > .ruby-version
+
+    rbenv shell "${DEFAULT_RVM_RUBY}"
+
+  fi
+
+  rbenv versions
+
+}
+
+vagrant_cmd() {
+
+  bundle_exec vagrant $@
+
+}
+
+
+install_gems() {
+
+  gem update --system --no-doc || err "Updating system gems"
+
+  rm -f Gemfile.lock
+  bundle install --path .bundle/gems
+
+}
+
+
+install_from_gemfile() {
+
+  [ -d ".bundle/gems" ] || install_gems
+
+}
+
+
+run_all_tests() {
+
+  vagrant_cmd status
+  bundle_exec rake spec
+
+}
+
+
+setup_test_env() {
+
+  whoami
+  env
+
+  ruby -v
+  gem list
+
+  install_from_gemfile
+
+  bundle show
+
+  update_docker_perms
+
+  vagrant_cmd plugin repair || true
+  vagrant_cmd status
+  vagrant_cmd up || err "Starting the virtual machine"
+  vagrant_cmd provision || err "Attempting to provision the virtual machine"
+
+  reset_docker_perms
+
+}
+
+
+reset_docker_perms() {
+
+  sudo chmod 0770 "$(readlink /var/run/docker.sock)"
+
+}
+
+update_docker_perms() {
+
+  sudo chmod 6770 "$(readlink /var/run/docker.sock)"
+
+}
+
+
+is_container_running() {
+
+  CONTAINER_ID=$(docker ps -a | grep ':8888' | awk '{print $1}')
+
+  [ -z "${CONTAINER_ID}" ] && return 0
+
+  echo "${CONTAINER_ID}"
+  return 1
+
+}
+
+
+initialize() {
+
+  [ -f /Users/jenkins/.bash_profile ] && . /Users/jenkins/.bash_profile || true
+  [ -f /Users/jenkins/.bashrc ] && . /Users/jenkins/.bashrc || true
+
+  command -v rvm >>/dev/null 2>&1 && enable_rvm_ruby "${DEFAULT_RVM_RUBY}" "persist" || true
+  command -v rbenv >>/dev/null 2>&1 && enable_rbenv_ruby "${DEFAULT_RVM_RUBY}" "persist" || true
+
+  CONTAINER_ID=$(is_container_running)
+  [ $? -ne 0 ] && docker rm -vf "${CONTAINER_ID}"
+
+  reset_docker_perms
+}
+
+initialize

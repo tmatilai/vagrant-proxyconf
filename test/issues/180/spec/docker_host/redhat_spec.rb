@@ -10,9 +10,9 @@ end
 describe file('/etc/docker/config.json') do
   it { should be_file }
   it { should exist }
-  it { should be_mode 600 }
+  it { should be_mode 644 }
   it { should be_owned_by "root" }
-  it { should be_grouped_into "root" }
+  it { should be_grouped_into "docker" }
 end
 
 context 'when proxy is enabled' do
