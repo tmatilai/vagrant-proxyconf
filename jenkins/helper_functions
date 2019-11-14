@@ -6,10 +6,12 @@ RVM_HOME_DIR="${RVM_HOME_DIR:-${HOME}/.rvm/scripts/rvm}"
 
 VAGRANT_TEST_ISSUE="${VAGRANT_TEST_ISSUE:-180}"
 
-
 err() {
 
   echo "ERR: $* exiting" >&2
+
+  reset_docker_perms || true
+
   exit 1
 
 }
@@ -54,6 +56,8 @@ enable_rbenv_ruby() {
 
   eval "$(rbenv init -)"
 
+  rbenv_install "${DEFAULT_RVM_RUBY}"
+
   if [ -n "${persist}" ]; then
 
     echo "${DEFAULT_RVM_RUBY}" > .ruby-version
@@ -66,6 +70,12 @@ enable_rbenv_ruby() {
 
 }
 
+rbenv_install() {
+
+    rbenv versions | grep -q "${1}" || rbenv install "${1}"
+
+}
+
 vagrant_cmd() {
 
   bundle_exec vagrant $@
@@ -74,6 +84,9 @@ vagrant_cmd() {
 
 
 install_gems() {
+
+  command -v bundle >>/dev/null 2>&1 || gem install bundler --no-doc
+  command -v rake >>/dev/null 2>&1 || gem install rake --no-doc
 
   gem update --system --no-doc || err "Updating system gems"
 
@@ -92,13 +105,19 @@ install_from_gemfile() {
 
 run_all_tests() {
 
+  set -e
+
   vagrant_cmd status
   bundle_exec rake spec
+
+  set +e
 
 }
 
 
 setup_test_env() {
+
+  set -e
 
   whoami
   env
@@ -119,18 +138,20 @@ setup_test_env() {
 
   reset_docker_perms
 
+  set +e
+
 }
 
 
 reset_docker_perms() {
 
-  sudo chmod 0770 "$(readlink /var/run/docker.sock)"
+  [ -L /var/run/docker.sock ] && sudo chmod 0770 "$(readlink /var/run/docker.sock)" || true
 
 }
 
 update_docker_perms() {
 
-  sudo chmod 6770 "$(readlink /var/run/docker.sock)"
+  [ -L /var/run/docker.sock ] && sudo chmod 6770 "$(readlink /var/run/docker.sock)" || true
 
 }
 
@@ -148,12 +169,33 @@ is_container_running() {
 
 
 initialize() {
+  reset_docker_perms
 
-  [ -f /Users/jenkins/.bash_profile ] && . /Users/jenkins/.bash_profile || true
-  [ -f /Users/jenkins/.bashrc ] && . /Users/jenkins/.bashrc || true
+  OS_TYPE="$(uname -s 2>>/dev/null)"
+
+  case "${OS_TYPE}" in
+
+    Darwin)
+      HOME_DIR_PREFIX="/Users"
+      ;;
+
+    *)
+      HOME_DIR_PREFIX="/home"
+      ;;
+
+  esac
+
+  [ -f ${HOME_DIR_PREFIX}/jenkins/.bash_profile ] && . ${HOME_DIR_PREFIX}/jenkins/.bash_profile || true
+  [ -f ${HOME_DIR_PREFIX}/jenkins/.bashrc ] && . ${HOME_DIR_PREFIX}/jenkins/.bashrc || true
 
   command -v rvm >>/dev/null 2>&1 && enable_rvm_ruby "${DEFAULT_RVM_RUBY}" "persist" || true
   command -v rbenv >>/dev/null 2>&1 && enable_rbenv_ruby "${DEFAULT_RVM_RUBY}" "persist" || true
+
+  command -v docker || err "Docker must be installed on this host."
+  command -v bsdtar || err "Please install bsdtar"
+
+  id
+  groups
 
   CONTAINER_ID=$(is_container_running)
   [ $? -ne 0 ] && docker rm -vf "${CONTAINER_ID}"
