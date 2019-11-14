@@ -1,4 +1,22 @@
-# 2.0.7 / NOT_RELEASED_YET
+# 2.0.7 / 2019-11-14
+
+This is a bug fix release.
+
+- Addresses issues with docker proxy configuration and permissions.
+
+#### Closed Issues
+
+- https://github.com/tmatilai/vagrant-proxyconf/milestone/3
+
+
+#### Credits
+
+Thank you to these folks how identified the bugs and provided
+workarounds.
+
+- @antoinetran
+- @tkang007
+
 
 # 2.0.6 / 2019-08-09
 
