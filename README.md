@@ -350,4 +350,5 @@ end
 * @hexmode
 * @craigmunro
 * @greut
+* @chucknelson
 * @codylane
