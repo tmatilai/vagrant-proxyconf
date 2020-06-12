@@ -108,11 +108,18 @@ module VagrantPlugins
 
         # @return [Tempfile] a temporary file with the specified content
         def tempfile(content)
-          Tempfile.new("vagrant").tap do |temp|
-            temp.binmode
-            temp.write(content)
-            temp.close
+          tempfile = Tempfile.new("vagrant-proxyconf")
+
+          begin
+            tempfile.tap do |tmp|
+              tmp.binmode
+              tmp.write(content)
+            end
+          ensure
+            tempfile.close
           end
+
+          tempfile
         end
 
         def cap_name

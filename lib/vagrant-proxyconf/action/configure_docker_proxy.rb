@@ -39,28 +39,28 @@ module VagrantPlugins
           true
         end
 
-        def docker_client_config_path
-          return @docker_client_config_path if @docker_client_config_path
+        def docker_client_config
+          return @docker_client_config if @docker_client_config
           return if !supports_config_json?
 
-          @docker_client_config_path = tempfile(Hash.new)
+          @docker_client_config = tempfile(Hash.new)
 
           @machine.communicate.tap do |comm|
             if comm.test("[ -f /etc/docker/config.json ]")
               logger.info('Downloading file /etc/docker/config.json')
               comm.sudo("chmod 0644 /etc/docker/config.json")
-              comm.download("/etc/docker/config.json", @docker_client_config_path.path)
-              logger.info("Downloaded /etc/docker/config.json to #{@docker_client_config_path.path}")
+              comm.download("/etc/docker/config.json", @docker_client_config.path)
+              logger.info("Downloaded /etc/docker/config.json to #{@docker_client_config.path}")
             end
           end
 
-          @docker_client_config_path = @docker_client_config_path.path
+          @docker_client_config
         end
 
         def update_docker_client_config
-          return if !supports_config_json? || !docker_client_config_path
+          return if !supports_config_json? || !docker_client_config
 
-          content = File.read(@docker_client_config_path)
+          content = File.read(@docker_client_config)
           data  = JSON.load(content)
 
           if disabled?
@@ -92,10 +92,10 @@ module VagrantPlugins
 
           config_json = JSON.pretty_generate(data)
 
-          @docker_client_config_path = tempfile(config_json)
+          @docker_client_config = tempfile(config_json)
 
           @machine.communicate.tap do |comm|
-            comm.upload(@docker_client_config_path.path, "/tmp/vagrant-proxyconf-docker-config.json")
+            comm.upload(@docker_client_config.path, "/tmp/vagrant-proxyconf-docker-config.json")
             comm.sudo("mkdir -p /etc/docker")
             comm.sudo("chown root:docker /etc/docker")
             comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
@@ -104,9 +104,6 @@ module VagrantPlugins
             comm.sudo("rm -f /tmp/vagrant-proxyconf-docker-config.json")
 
             comm.sudo("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")
-            if !disabled?
-              comm.sudo("echo DOCKER_CONFIG=/etc/docker >> /etc/environment")
-            end
           end
 
           config_json
@@ -136,12 +133,12 @@ module VagrantPlugins
           end
 
           systemd_config = docker_systemd_config
-          @docker_systemd_config = tempfile(systemd_config).path
+          @docker_systemd_config = tempfile(systemd_config)
 
           @machine.communicate.tap do |comm|
 
             comm.sudo("mkdir -p /etc/systemd/system/docker.service.d")
-            comm.upload(@docker_systemd_config, "/tmp/vagrant-proxyconf-docker-systemd-config")
+            comm.upload(@docker_systemd_config.path, "/tmp/vagrant-proxyconf-docker-systemd-config")
 
             if comm.test("diff -Naur /etc/systemd/system/docker.service.d/http-proxy.conf /tmp/vagrant-proxyconf-docker-systemd-config")
               # system config file is the same as the current config
