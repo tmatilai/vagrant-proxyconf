@@ -1,3 +1,5 @@
+# 2.0.9 / not yet released
+
 # 2.0.8 / 2020-06-10
 
 This is a bug fix release for windows users which fixes a bug with the
@@ -6,8 +8,8 @@ machine.
 
 #### Closed Issues
 
-- (tempfile implementation on windows doesn't always seem to work
-  #220)[https://github.com/tmatilai/vagrant-proxyconf/issues/220]
+- [tempfile implementation on windows doesn't always seem to work
+  #220](https://github.com/tmatilai/vagrant-proxyconf/issues/220)
 
 #### Credits
 
