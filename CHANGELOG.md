@@ -1,3 +1,23 @@
+# 2.0.9 / not yet released
+
+# 2.0.8 / 2020-06-10
+
+This is a bug fix release for windows users which fixes a bug with the
+tempfile creation when uploading and downloading files from the vagrant
+machine.
+
+#### Closed Issues
+
+- [tempfile implementation on windows doesn't always seem to work
+  #220](https://github.com/tmatilai/vagrant-proxyconf/issues/220)
+
+#### Credits
+
+Big thanks to @chucknelson for debugging and troubleshooting and getting
+to the bottom of this for windows users. Thank you!
+
+- @chucknelson
+
 # 2.0.7 / 2019-11-14
 
 This is a bug fix release.
