@@ -46,11 +46,11 @@ module VagrantPlugins
           @docker_client_config = tempfile(Hash.new)
 
           @machine.communicate.tap do |comm|
-            if comm.test("[ -f /etc/docker/config.json ]")
-              logger.info('Downloading file /etc/docker/config.json')
-              comm.sudo("chmod 0644 /etc/docker/config.json")
-              comm.download("/etc/docker/config.json", @docker_client_config.path)
-              logger.info("Downloaded /etc/docker/config.json to #{@docker_client_config.path}")
+            if comm.test("[ -f /home/vagrant/.docker/config.json ]")
+              logger.info('Downloading file /home/vagrant/.docker/config.json')
+              comm.sudo("chmod 0644 /home/vagrant/.docker/config.json")
+              comm.download("/home/vagrant/.docker/config.json", @docker_client_config.path)
+              logger.info("Downloaded /home/vagrant/.docker/config.json to #{@docker_client_config.path}")
             end
           end
 
@@ -96,11 +96,10 @@ module VagrantPlugins
 
           @machine.communicate.tap do |comm|
             comm.upload(@docker_client_config.path, "/tmp/vagrant-proxyconf-docker-config.json")
-            comm.sudo("mkdir -p /etc/docker")
-            comm.sudo("chown root:docker /etc/docker")
-            comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
-            comm.sudo("chown root:docker /etc/docker/config.json")
-            comm.sudo("chmod 0644 /etc/docker/config.json")
+            comm.sudo("mkdir -p /home/vagrant/.docker")
+            comm.sudo("mv /tmp/vagrant-proxyconf-docker-config.json /home/vagrant/.docker/config.json")
+            comm.sudo("chown -R vagrant:docker /home/vagrant/.docker")
+            comm.sudo("chmod 0644 /home/vagrant/.docker/config.json")
             comm.sudo("rm -f /tmp/vagrant-proxyconf-docker-config.json")
 
             comm.sudo("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")

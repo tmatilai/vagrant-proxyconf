@@ -18,14 +18,13 @@ end
 
 def mock_update_docker_client_config(machine)
   allow(machine).to receive_message_chain(:communicate, :upload)
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("mv /tmp/vagrant-proxyconf-docker-config.json /etc/docker/config.json")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:docker /etc/docker/config.json")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/docker/config.json")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /home/vagrant/.docker")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("mv /tmp/vagrant-proxyconf-docker-config.json /home/vagrant/.docker/config.json")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("chown -R vagrant:docker /home/vagrant/.docker")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /home/vagrant/.docker/config.json")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf-docker-config.json")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("sed -i.bak -e '/^DOCKER_CONFIG/d' /etc/environment")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("echo DOCKER_CONFIG=/etc/docker >> /etc/environment")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("mkdir -p /etc/docker")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:docker /etc/docker")
 end
 
 def mock_update_docker_systemd_config(machine)
@@ -73,8 +72,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         docker_proxy.instance_variable_set(:@machine, machine)
 
         # #docker_client_config mock
-        fixture = docker_proxy.send(:tempfile, load_fixture(fixture)).path
-        docker_proxy.instance_variable_set(:@docker_client_config, fixture)
+        fixture = fixture = docker_proxy.send(:tempfile, load_fixture(fixture))
+        docker_proxy.instance_variable_set(:@docker_client_config, fixture.path)
 
         # #supported? mock
         allow(machine).to receive_message_chain(:guest, :capability?).with(:docker_proxy_conf).and_return(true)
@@ -101,7 +100,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         @docker_proxy = docker_proxy
       end
 
-      context 'and when /etc/docker/config.json has proxy configuration' do
+      context 'and when /home/vagrant/.docker/config.json has proxy configuration' do
         before :each do
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
           configure_docker_proxy(fixture)
@@ -110,7 +109,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           )
         end
 
-        it 'update /etc/docker/config.json' do
+        it 'update /home/vagrant/.docker/config.json' do
             expect(@docker_proxy.send(:configure_machine)).to eq true
         end
       end
@@ -125,8 +124,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           docker_proxy.instance_variable_set(:@machine, machine)
 
           # #docker_client_config mock
-          fixture = docker_proxy.send(:tempfile, load_fixture(fixture)).path
-          docker_proxy.instance_variable_set(:@docker_client_config, fixture)
+          fixture = docker_proxy.send(:tempfile, load_fixture(fixture))
+          docker_proxy.instance_variable_set(:@docker_client_config, fixture.path)
 
           # #supported? mock
           allow(machine).to receive_message_chain(:guest, :capability?).with(:docker_proxy_conf).and_return(true)
@@ -204,7 +203,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
     end
 
     context "when supported" do
-      context "when /etc/docker/config.json exists" do
+      context "when /home/vagrant/.docker/config.json exists" do
         subject do
           docker_proxy = described_class.new(nil, nil)
           docker_proxy.instance_variable_set(:@machine, machine)
@@ -212,8 +211,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
 
           allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
 
-          allow(machine).to receive_message_chain(:communicate, :test).with("[ -f /etc/docker/config.json ]").and_return(true)
-          allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/docker/config.json")
+          allow(machine).to receive_message_chain(:communicate, :test).with("[ -f /home/vagrant/.docker/config.json ]").and_return(true)
+          allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /home/vagrant/.docker/config.json")
           allow(machine).to receive_message_chain(:communicate, :download)
 
           docker_proxy.send(:docker_client_config)
@@ -222,7 +221,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
         it { expect(File.exists?(subject.path)).to eq true }
       end
 
-      context "when /etc/docker/config.json does not exist" do
+      context "when /home/vagrant/.docker/config.json does not exist" do
         subject do
           docker_proxy = described_class.new(nil, nil)
           docker_proxy.instance_variable_set(:@machine, machine)
@@ -230,7 +229,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
 
           allow(docker_proxy).to receive(:supports_config_json?).and_return(true)
 
-          allow(machine).to receive_message_chain(:communicate, :test).with("[ -f /etc/docker/config.json ]").and_return(false)
+          allow(machine).to receive_message_chain(:communicate, :test).with("[ -f /home/vagrant/.docker/config.json ]").and_return(false)
 
           docker_proxy.send(:docker_client_config)
         end
@@ -282,7 +281,7 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
       end
     end
 
-    context "when /etc/docker/config.json is supported" do
+    context "when /home/vagrant/.docker/config.json is supported" do
 
       context "when configuration is disabled" do
         it do
@@ -292,7 +291,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           # mock a result that looks like proxy is configured for the config.json
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
           fixture_content = load_fixture(fixture)
-          config_path = docker_proxy.send(:tempfile, fixture_content).path
+
+          temp_filename = config_path = docker_proxy.send(:tempfile, fixture_content)
+          config_path = temp_filename.path
 
           docker_proxy.instance_variable_set(:@docker_client_config, config_path)
 
@@ -331,7 +332,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           # mock a result that looks like no proxy is configured for the config.json
           fixture = fixture_file("docker_client_config_json_no_proxy")
           fixture_content = load_fixture(fixture)
-          config_path = docker_proxy.send(:tempfile, fixture_content).path
+          temp_filename = config_path = docker_proxy.send(:tempfile, fixture_content)
+          config_path = temp_filename.path
 
           docker_proxy.instance_variable_set(:@docker_client_config, config_path)
 
@@ -391,7 +393,9 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           docker_proxy.instance_variable_set(:@version, [18, 9, 0])
 
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
-          config_path = docker_proxy.send(:tempfile, load_fixture(fixture)).path
+          temp_filename = config_path = docker_proxy.send(:tempfile, load_fixture(fixture))
+          config_path = temp_filename.path
+
           docker_proxy.instance_variable_set(:@docker_client_config, config_path)
 
           # to isolate this test, we turn of support for systemd
@@ -440,7 +444,8 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
           allow(docker_proxy).to receive(:supports_systemd?).and_return(false)
 
           fixture = fixture_file("docker_client_config_json_enabled_proxy")
-          config_path = docker_proxy.send(:tempfile, load_fixture(fixture)).path
+          temp_filename = docker_proxy.send(:tempfile, load_fixture(fixture))
+          config_path = temp_filename.path
           docker_proxy.instance_variable_set(:@docker_client_config, config_path)
 
           allow(machine).to receive_message_chain(:guest, :capability?).with(:docker_proxy_conf).and_return(true)
