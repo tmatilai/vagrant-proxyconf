@@ -1,6 +1,4 @@
-# 2.0.10 / Not yet released
-
-# 2.0.9 / 2020-07-02
+# 2.0.10 / 2020-07-03
 
 This is a bug fix release when provisioning docker hosts inside of
 vagrant. This version removes the hard coded DOCKER_CONFIG environment
@@ -13,7 +11,13 @@ and merged when the vagrant-proxy conf is being provisioned.
 
 #### Closed Issues
 
-- https://github.com/tmatilai/vagrant-proxyconf/issues/218
+- [Respect Existing Docker Config Location #218](https://github.com/tmatilai/vagrant-proxyconf/issues/218)
+
+
+# 2.0.9 / Not released
+
+A release tagging error caused this release to become a draft release
+and this will be re-released as 2.0.10.
 
 
 # 2.0.8 / 2020-06-10
