@@ -1,10 +1,28 @@
-# 2.0.9 / not yet released
+# 2.0.10 / Not yet released
+
+# 2.0.9 / 2020-07-02
+
+This is a bug fix release when provisioning docker hosts inside of
+vagrant. This version removes the hard coded DOCKER_CONFIG environment
+variable in /etc/environment and hard codes the client config to
+/home/vagrant/.docker/config.json. This is a temporary work around until
+the this can be refactored.
+
+Existing values in /home/vagrant/.docker/config.json should be preserved
+and merged when the vagrant-proxy conf is being provisioned.
+
+#### Closed Issues
+
+- https://github.com/tmatilai/vagrant-proxyconf/issues/218
+
 
 # 2.0.8 / 2020-06-10
 
 This is a bug fix release for windows users which fixes a bug with the
 tempfile creation when uploading and downloading files from the vagrant
 machine.
+
+
 
 #### Closed Issues
 

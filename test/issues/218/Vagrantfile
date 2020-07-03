@@ -1,0 +1,62 @@
+# this should be the IP address of the :default box
+$PROXY_HOST ="10.0.2.2"
+$PROXY_PORT="8888"
+$PROXY_NO_PROXY=[
+  'localhost',
+]
+
+ENV['HTTP_PROXY']  = ENV.fetch('HTTP_PROXY',  "http://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['HTTPS_PROXY'] = ENV.fetch('HTTPS_PROXY', "http://#{$PROXY_HOST}:#{$PROXY_PORT}")
+ENV['NO_PROXY']    = ENV.fetch('NO_PROXY',    $PROXY_NO_PROXY.join(","))
+
+puts "HTTP_PROXY  = '#{ENV["HTTP_PROXY"]}'"
+puts "HTTPS_PROXY = '#{ENV["HTTPS_PROXY"]}'"
+puts "NO_PROXY    = '#{ENV["NO_PROXY"]}'"
+
+puts "is vagrant-proxyconf installed? #{Vagrant.has_plugin?('vagrant-proxyconf')}"
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define 'default' do |c|
+    c.vm.box = nil
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.enabled = false
+    end
+
+    c.vm.provider "docker" do |d|
+      d.build_dir = "."
+      d.expose = ['8888']
+      d.has_ssh = true
+      d.ports = ['8888:8888']
+    end
+  end
+
+  config.vm.define 'docker_host' do |c|
+    c.vm.box = "centos/7"
+    c.vm.box_check_update = false
+
+    if Vagrant.has_plugin?('vagrant-proxyconf')
+      c.proxy.http     = ENV['HTTP_PROXY']
+      c.proxy.https    = ENV['HTTPS_PROXY']
+      c.proxy.no_proxy = ENV['NO_PROXY']
+    end
+
+    c.vm.provision "shell", path: "force-all-outbound-traffic-through-proxy.iptables"
+
+    if Vagrant.has_plugin?('vagrant-vbguest')
+      c.vbguest.auto_update = false
+      c.vbguest.auto_reboot = true
+    end
+
+    c.vm.provision "docker"
+
+    c.vm.synced_folder ".", "/vagrant",
+      disabled: false,
+      type: "sshfs",
+      ssh_opts_append: "-o Compression=yes -o ControlPersist=60s -o ControlMaster=auto",
+      sshfs_opts_append: "-o cache=no -o nonempty"
+
+  end
+
+end
