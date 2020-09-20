@@ -29,7 +29,7 @@ module VagrantPlugins
               unless comm.test("diff #{tmp_file} #{dst_file}")
                 # update config and restart docker when config changed
                 comm.sudo("mv -f #{tmp_file} #{dst_file}")
-                comm.sudo('systemctl daemon-reload')
+                comm.sudo('systemctl daemon-reload || initctl reload-configuration')
               end
               comm.sudo("rm -f #{tmp_file}")
             end
