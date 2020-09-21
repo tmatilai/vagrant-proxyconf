@@ -33,18 +33,14 @@ module VagrantPlugins
                 # ps -p1 | grep -q systemd && echo systemd || echo upstart
                 # see also https://wiki.ubuntu.com/SystemdForUpstartUsers
                 if comm.test("ps -p1 | grep -q systemd")
-                  comm.sudo("systemctl FOOO1 daemon-reload")
-                  comm.sudo("systemctl FOOO1 restart #{docker_command}")
+                  comm.sudo("systemctl daemon-reload")
+                  comm.sudo("systemctl restart #{docker_command}")
                 elsif comm.test("ps -p1 | grep -v -q systemd")
                   comm.sudo("initctl reload-configuration")
                   comm.sudo("initctl reload #{docker_command}")
                   comm.sudo("initctl restart #{docker_command}")
                 else
-                  comm.sudo("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
-                  #allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || systemctl restart docker || service docker restart || /etc/init.d/docker restart")
-                  #comm.sudo("systemctl daemon-reload ; initctl reload-configuration \|\| true")
-                  #comm.sudo("systemctl daemon-reload \|\| true")
-                  #comm.sudo("initctl reload-configuration \|\| true")
+                  comm.sudo("systemctl restart docker || systemctl restart docker.io || initctl restart docker || initctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
                 end
               end
               comm.sudo("rm -f #{tmp_file}")
