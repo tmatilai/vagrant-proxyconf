@@ -12,7 +12,8 @@ def mock_write_docker_config(machine)
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chmod 0644 /etc/default/docker.new")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("chown root:docker /etc/default/docker.new")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("mv -f /etc/default/docker.new /etc/default/docker")
-  allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || systemctl restart docker || service docker restart || /etc/init.d/docker restart")
+  #allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || systemctl restart docker || service docker restart || /etc/init.d/docker restart")
+  allow(machine).to receive_message_chain(:communicate, :sudo).with("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
   allow(machine).to receive_message_chain(:communicate, :sudo).with("rm -f /tmp/vagrant-proxyconf /etc/default/docker.new")
 end
 
@@ -168,8 +169,13 @@ describe VagrantPlugins::ProxyConf::Action::ConfigureDockerProxy do
             allow(machine).to receive_message_chain(:communicate, :test).with('command -v systemctl').and_return(false)
             allow(machine).to receive_message_chain(:communicate, :test).with('diff -Naur /etc/systemd/system/docker.service.d/http-proxy.conf /tmp/vagrant-proxyconf-docker-systemd-config').and_return(false)
             allow(machine).to receive_message_chain(:communicate, :sudo).with('mv /tmp/vagrant-proxyconf-docker-systemd-config /etc/systemd/system/docker.service.d/http-proxy.conf')
-            allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl daemon-reload')
-            allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl restart docker')
+            #allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl daemon-reload')
+            allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl daemon-reload || initctl reload-configuration || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ')
+            #allow(machine).to receive_message_chain(:communicate, :sudo).with('systemctl restart docker')
+			#allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` || systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart")
+            allow(machine).to receive_message_chain(:communicate, :sudo).with("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
+			#   allow(machine).to receive_message_chain(:communicate, :sudo).with("kill -HUP `pgrep -f 'docker'` || systemctl restart docker || service docker restart || /etc/init.d/docker restart")
+
           end
 
           it 'should create directory: /etc/systemd/system/docker.service.d' do

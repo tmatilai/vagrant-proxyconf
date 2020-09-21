@@ -119,10 +119,13 @@ module VagrantPlugins
 
               comm.sudo('rm -f /etc/systemd/system/docker.service.d/http-proxy.conf')
               comm.sudo('rm -f /etc/systemd/system/docker.service.d/https-proxy.conf')
-              comm.sudo('systemctl daemon-reload')
+              #comm.sudo('systemctl daemon-reload')
+              comm.sudo("systemctl daemon-reload || initctl reload-configuration || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
+              #comm.sudo("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
 
               if changed
-                comm.sudo("systemctl restart #{docker}")
+                #comm.sudo("systemctl restart #{docker}")
+                comm.sudo("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
               end
 
             end
@@ -157,8 +160,10 @@ module VagrantPlugins
             if changed
               # there were changes so restart docker
 
-              comm.sudo('systemctl daemon-reload')
-              comm.sudo("systemctl restart #{docker}")
+              #comm.sudo('systemctl daemon-reload')
+              comm.sudo("systemctl daemon-reload || initctl reload-configuration || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
+              #comm.sudo("systemctl restart #{docker}")
+              comm.sudo("systemctl restart docker || systemctl restart docker.io || service docker restart || service docker.io restart || /etc/init.d/docker restart || /etc/init.d/docker.io restart || kill -HUP `pgrep -f 'docker'` || kill -HUP `pgrep -f 'docker.io'` ")
             end
 
           end
