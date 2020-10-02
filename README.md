@@ -242,7 +242,7 @@ VAGRANT_APT_HTTP_PROXY="http://proxy.example.com:8080" vagrant up
 | chef      | `VAGRANT_CHEF_HTTP_PROXY`    | Configures CHEF http proxy    | Highest     |
 |           | `VAGRANT_CHEF_HTTPS_PROXY`   | Configures CHEF https proxy   | Highest     |
 |           | `VAGRANT_CHEF_NO_PROXY`      | Configures CHEF no proxy      | Highest     |
-| docker    | `VAGRANT_DOCKER_HTTP_PROXY`  | Configuers DOCKER http proxy  | Highest     |
+| docker    | `VAGRANT_DOCKER_HTTP_PROXY`  | Configures DOCKER http proxy  | Highest     |
 |           | `VAGRANT_DOCKER_HTTPS_PROXY` | Configures DOCKER https proxy | Highest     |
 |           | `VAGRANT_DOCKER_NO_PROXY`    | Configures DOCKER no proxy    | Highest     |
 | env       | `VAGRANT_ENV_HTTP_PROXY`     | Configures ENV http proxy     | Highest     |
