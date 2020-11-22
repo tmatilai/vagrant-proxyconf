@@ -18,6 +18,8 @@ rvm:
 
 matrix:
   include:
+    - env: VAGRANT_VERSION=v2.2.14
+    - env: VAGRANT_VERSION=v2.2.10
     - env: VAGRANT_VERSION=v2.2.9
     - env: VAGRANT_VERSION=v2.2.8
     - env: VAGRANT_VERSION=v2.2.7
