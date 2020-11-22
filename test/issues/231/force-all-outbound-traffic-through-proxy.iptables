@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -ex
+
+# OUTPUT:IN= OUT=eth0 SRC=10.0.2.15 DST=10.0.2.2 LEN=40 TOS=0x00 PREC=0x00 TTL=64 ID=61920 DF PROTO=TCP SPT=59780 DPT=8888 WINDOW=65535 RES=0x00 ACK URGP=0
+# OUTPUT:IN= OUT=eth0 SRC=10.0.2.15 DST=10.0.2.2 LEN=84 TOS=0x10 PREC=0x00 TTL=64 ID=22073 DF PROTO=TCP SPT=22 DPT=55694 WINDOW=47600 RES=0x00 ACK PSH URGP=0
+# OUTPUT:IN= OUT=eth0 SRC=10.0.2.15 DST=10.0.2.3 LEN=60 TOS=0x00 PREC=0x00 TTL=64 ID=30731 PROTO=UDP SPT=45910 DPT=53 LEN=40
+
+iptables -F OUTPUT
+iptables -Z OUTPUT
+
+iptables -A OUTPUT -d 10.0.2.2 -p tcp -m tcp --dport 8888 -j ACCEPT
+iptables -A OUTPUT -p tcp -m tcp --sport 22 -j ACCEPT
+iptables -A OUTPUT -p udp -m udp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p udp -m udp --dport 123 -j ACCEPT
+
+iptables -A OUTPUT -j LOG --log-prefix 'OUTPUT:DROPPED '
+
+iptables -P OUTPUT DROP

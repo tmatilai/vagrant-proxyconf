@@ -1,5 +1,32 @@
 # 2.0.10 / 2020-07-03
 
+## Important Notes
+
+These versions of Vagrant are officially supported by this plugin:
+
+* `2.2.4`
+* `2.2.9`
+* `2.2.10`
+* `2.2.14`
+
+These Vagrant versions are NOT supported:
+
+**NOTE:** The reason is they require special patches and this is not
+          the goal of this plugin to solve upstream issues here.
+          However, we will triage and help contribute fixes to
+          upstream dependencies as we have spare time but we also
+          appreciate help traige and fixes as well if you have time.
+
+* `2.2.5`
+* `2.2.6`
+* `2.2.7`
+* `2.2.11`
+* `2.2.12`
+* `2.2.13`
+
+
+## Description
+
 This is a bug fix release when provisioning docker hosts inside of
 vagrant. This version removes the hard coded DOCKER_CONFIG environment
 variable in /etc/environment and hard codes the client config to
