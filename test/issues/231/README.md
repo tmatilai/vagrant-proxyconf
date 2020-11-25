@@ -1,18 +1,34 @@
 Tests
 -----
 
-
-Lined to github issue [#218](https://github.com/tmatilai/vagrant-proxyconf/issues/218)
-
-
-If you are testing the current release of this plugin via bundler
+* Linked to github issue #231
+* If you are testing the current release of this plugin via bundler
 
 ```
-bundle exec vagrant up default
+bundle exec vagrant up
+```
+
+
+## To run all acceptance tests
+
+```
+bundle exec rake spec
+```
+
+## To get a list of availabe Rake tasks
+
+```
+bundle exec rake -T
+```
+
+* Example output
+
+```
+rake spec:_default     # Run serverspec tests to default
+rake spec:docker_host  # Run serverspec tests to docker_host
 ```
 
 ## Expect
-
 
 ### Box `default``
 
@@ -27,9 +43,8 @@ bundle exec vagrant up default
 
 ### Box `docker-host`
 
-  - Vagrant should automatically instally docker-ce.
+  - Vagrant should automatically install docker-ce.
   - The box should come up and provision itself with the proxy settings
     configured in your Vagrantfile.
-
 
   - **NOTE**: You can use `ssh` to connect to this container.

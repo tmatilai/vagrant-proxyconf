@@ -333,6 +333,24 @@ unless ENV.key?('VAGRANT_INSTALLER_EMBEDDED_DIR')
 end
 ```
 
+# Development Environment Setup
+
+**NOTE:** This should all be performed in the directory that you have
+          git cloned the source.
+
+**NOTE:** This also assumes you are using recent `MacOS >= Catalina` or
+          recent Linux.
+
+- Install `ruby 2.6.6` which is currently supported on `Vagrant 2.2.5` to `Vagrant 2.2.14`
+- run `make`
+- After ensuring you are running `ruby 2.6.6` and that you have have
+  succesfully bundled `vagrant-proxyconf` you may test the current state
+  of the plugin. For example, let's say you wanted to test #231
+  acceptance tests.
+    - You would first `cd test/issues/231/`
+    - Then `bundle exec vagrant up`
+    - Then `bundle exec rake spec`
+
 # Contributors
 
 * @tmatilai
