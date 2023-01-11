@@ -55,7 +55,9 @@ module VagrantPlugins
             logger.info("Setting #{key} to #{value}")
             @machine.communicate.sudo(command)
           else
-            logger.info("Not setting #{key}")
+            command = "[Environment]::SetEnvironmentVariable(\"#{key}\",$null,\"Machine\")"
+            logger.info("Removing #{key} environment variable")
+            @machine.communicate.sudo(command)
           end
         end
 
