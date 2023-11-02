@@ -23,10 +23,7 @@ module VagrantPlugins
             comm.sudo("rm -f #{tmp}", error_check: false)
             comm.upload(ProxyConf.resource("yum_config.awk"), tmp)
             comm.sudo("touch #{path}")
-            comm.sudo("gawk -f #{tmp} #{proxy_params} #{path} > #{path}.new")
-            comm.sudo("chmod 0644 #{path}.new")
-            comm.sudo("chown root:root #{path}.new")
-            comm.sudo("mv -f #{path}.new #{path}")
+            comm.sudo("gawk -i inplace -f #{tmp} #{proxy_params} `realpath #{path}`")
             comm.sudo("rm -f #{tmp}")
           end
 
@@ -38,7 +35,7 @@ module VagrantPlugins
 
           @machine.communicate.tap do |comm|
             if comm.test("grep '^proxy' #{config_path}")
-              comm.sudo("sed -i.bak -e '/^proxy/d' #{config_path}")
+              comm.sudo("sed -i.bak -e '/^proxy/d' `realpath #{config_path}`")
             end
           end
 
